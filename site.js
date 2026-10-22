@@ -215,10 +215,11 @@
         href = u.section ? "#" + u.section : "#";
       }
       var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
+      var secchip = u.section_title ? '<span class="upd-secin">in ' + esc(u.section_title) + '</span>' : "";
       return '<div class="upd" id="' + esc(u.id) + '">' +
         '<a class="upd-row" href="' + href + '">' +
         '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
-        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + '</span>' +
+        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + secchip + '</span>' +
         SVG_DISC + '</a></div>';
     }
 
@@ -245,13 +246,27 @@
     }
     function groupHTML(g) {
       var tick = g.ticker ? '<span class="upd-tick">' + esc(g.ticker) + '</span>' : "";
-      var label = tick + esc(when(g));
       var n = g.items.length;
+      var dots = g.items.map(function (u) {
+        var c = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
+        return '<span class="upd-dot ' + c + '"></span>';
+      }).join("");
+      var pos = 0, neg = 0;
+      g.items.forEach(function (u) {
+        if (u.sentiment === "positive") pos++;
+        else if (u.sentiment === "negative") neg++;
+      });
+      var dc = neg > 0 ? "neg" : pos > 0 ? "pos" : "";
+      var prev = g.items[0] && g.items[0].title
+        ? '<span class="upd-gprev"><span class="upd-dots">' + dots + '</span><span class="upd-gprevt">' +
+          esc(g.items[0].title) + (n > 1 ? "  + " + (n - 1) + " more" : "") + '</span></span>' : "";
       var rows = g.items.map(rowHTML).join("");
       return '<div class="upd-g">' +
         '<button class="upd-ghead" data-gtoggle aria-expanded="false">' +
-        '<span class="upd-gtitle">' + label + '</span>' +
-        '<span class="upd-gcount">' + n + '</span>' + SVG_GCHEV + '</button>' +
+        '<span class="upd-gmain">' +
+        '<span class="upd-gtop"><span class="upd-gdate">' + esc(when(g)) + '</span>' + tick + '</span>' +
+        prev + '</span>' +
+        '<span class="upd-gcount ' + dc + '">' + n + '</span>' + SVG_GCHEV + '</button>' +
         '<div class="upd-gbody"><div class="upd-gbody-in">' + rows + '</div></div></div>';
     }
     var GPAGE = 8;
@@ -271,6 +286,11 @@
       for (var i = 0; i < olds.length; i++) olds[i].parentNode.removeChild(olds[i]);
       shown = 0;
       renderMore();
+      var first = list.querySelector(".upd-g [data-gtoggle]");
+      if (first && !first.classList.contains("open")) {
+        first.classList.add("open");
+        first.setAttribute("aria-expanded", "true");
+      }
     }
 
     /* group expand/collapse */

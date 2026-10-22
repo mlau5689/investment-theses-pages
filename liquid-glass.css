@@ -306,13 +306,24 @@ body { transition: background-color .5s var(--ease-ios); }
   background-repeat: no-repeat; background-position: right 10px center; background-size: 13px; }
 .upd-select:active { opacity: .7; }
 
-/* batch groups: one (date, time, thesis) cluster, collapsed by default */
+/* batch groups: one (date, time, thesis) cluster; newest auto-expanded */
 .upd-g { border-top: 1px solid var(--hair); }
 .upd-g:first-child { border-top: 0; }
-.upd-ghead { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 20px; background: none; border: 0; cursor: pointer; text-align: left; font-family: var(--font); }
+.upd-ghead { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 20px 12px; background: none; border: 0; cursor: pointer; text-align: left; font-family: var(--font); }
 .upd-ghead:active { opacity: .7; }
-.upd-gtitle { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
-.upd-gcount { font: 700 12px/1 var(--mono); color: var(--ink-3); background: rgba(120,120,128,.14); padding: 6px 10px; border-radius: 999px; }
+.upd-gmain { flex: 1; min-width: 0; display: block; }
+.upd-gtop { display: flex; align-items: center; gap: 8px; }
+.upd-gdate { font-size: 16px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+.upd-gprev { display: flex; align-items: center; gap: 7px; margin-top: 4px; min-width: 0; }
+.upd-dots { display: inline-flex; gap: 3px; flex: none; }
+.upd-dot { width: 7px; height: 7px; border-radius: 50%; }
+.upd-dot.pos { background: #30d158; }
+.upd-dot.neg { background: #ff453a; }
+.upd-dot.neu { background: rgba(120,120,128,.45); }
+.upd-gprevt { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; color: var(--ink-3); }
+.upd-gcount { flex: none; font: 700 13px/1 var(--mono); color: var(--ink-3); background: rgba(120,120,128,.14); padding: 7px 11px; border-radius: 999px; }
+.upd-gcount.pos { color: #1a7f37; background: rgba(48,209,88,.14); }
+.upd-gcount.neg { color: #c81e1e; background: rgba(255,69,58,.12); }
 .upd-gchev { flex: none; width: 16px; height: 16px; color: var(--ink-3); transition: transform .3s var(--ease-ios); }
 .upd-ghead.open .upd-gchev { transform: rotate(90deg); }
 .upd-gbody { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease-ios); }
@@ -320,3 +331,5 @@ body { transition: background-color .5s var(--ease-ios); }
 .upd-gbody-in { overflow: hidden; min-height: 0; }
 .upd-gbody-in .upd { border-top: 1px solid var(--hair); }
 .upd-gbody-in .upd-row { padding-left: 26px; }
+/* impacted-section chip: what thesis area this update hit */
+.upd-secin { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--ink-3); background: rgba(120,120,128,.12); padding: 3px 9px; border-radius: 999px; }
