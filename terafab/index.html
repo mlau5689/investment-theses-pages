@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Terafab Endgame: What / Why / How / When</title>
+  <script>try{var t=localStorage.getItem("thesis-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="../liquid-glass.css?v=20261021j">
+<style>
+/* TERAFAB page specifics (kept local; shared system lives in liquid-glass.css) */
+/* Terafab page specifics */
+.viz-source { color: var(--ink-3); font-size: 12px; margin: 12px 0 28px; text-align: center; }
+.diagram { width: 100%; height: auto; display: block; color: var(--ink); }
+.callout.purple { border-left-color: var(--purple); }
+/* Timeline */
+.tl { list-style: none; padding: 0; margin: 24px 0 8px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 9px; top: 12px; bottom: 12px; width: 2px; border-radius: 2px; background: var(--hair); }
+.tl li { position: relative; padding: 0 0 22px 42px; margin: 0; }
+.tl li:last-child { padding-bottom: 4px; }
+.tl li::before { content: ""; position: absolute; left: 1px; top: 5px; width: 18px; height: 18px; border-radius: 50%; background: var(--card-solid); border: 3px solid var(--ink-3); }
+.tl li.past::before { border-color: var(--green); background: var(--green); }
+.tl li.now::before { border-color: var(--orange); background: var(--orange); box-shadow: 0 0 0 5px var(--orange-t); }
+.tl .tl-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.tl .date { font: 600 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--blue); }
+.tl li.past .date { color: var(--ink-3); }
+.tl .what { font-size: 15px; color: var(--ink-2); margin: 0; }
+</style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <div class="hero">
+        <p class="kicker">PROJECT · Terafab · Endgame analysis</p>
+        <h1>Terafab Endgame</h1>
+<p class="byline">by <strong>Michael S. Lau</strong></p>
+        <p class="dek">What you&rsquo;re trying to do, why, how, and when, in one page.</p>
+        <p class="meta">End goal summary &middot; Snapshot October 21, 2026</p>
+      </div>
+      <div class="callout warn">
+        <p><strong>Framework for analysis, not investment advice.</strong> Verify every fact independently before acting. Every trade stays manual.</p>
+      </div>
+
+      <section id="what"><div class="section">
+        <p class="section-kicker">01</p>
+        <h2>What: the end goal</h2>
+        <div class="glass card">
+          <p class="lede"><strong>Own both parents of Terafab, SpaceX (SPCX, including xAI) and Tesla (TSLA), to capture the maximum share of the value created by their joint AI-chip fab, plus the merger optionality around it.</strong></p>
+          <p><strong>Contested premise:</strong> "both parents" is itself one possible outcome of the operator question, now formally in dispute (see below). Under TSMC&rsquo;s stated position, the Musk companies could end up anchor customers of a TSMC-owned-and-operated fab rather than its parents. The staged TSLA leg stays the event-driven kicker and the hedge in either outcome.</p>
+          <p>SPCX is the core compounder. The staged TSLA leg is the event-driven kicker <em>and</em> the hedge. Whichever way the corporate structure resolves, merged, partnered, or separate, the fab economics land in the portfolio.</p>
+        </div>
+        <div class="callout purple">
+          <h3>The operator question: contested as of Oct 21, 2026</h3>
+          <p>The two principals are on record with incompatible positions on who owns and runs Terafab:</p>
+          <ul>
+            <li><strong>Musk (Oct 7):</strong> SpaceX and Tesla will build and run the fab themselves. "No, we will build and run the fab. ZERO doubt... Maybe TSMC subleases part of the Terafab if they want."</li>
+            <li><strong>TSMC Chairman/CEO C.C. Wei (Oct 15, Q3 earnings call):</strong> Terafab talks are real, TSMC teams are in Texas evaluating, and the fab "has got to be run by TSMC," nonnegotiable. Ownership left open: a wholly TSMC-owned facility or a partnership.</li>
+          </ul>
+          <p>This is the gating variable for the thesis: it decides who captures the operating margin and the process expertise, and whether Terafab is a Musk-network asset or a TSMC asset with the Musk companies as anchor customers. Intel CEO Lip-Bu Tan has separately confirmed a Terafab partner role (Oct 9); scope still undefined, and it sits on both sides of the operator binary.</p>
+        </div>
+      </div></section>
+
+      <section id="why"><div class="section">
+        <p class="section-kicker">02</p>
+        <h2>Why: the Terafab economics</h2>
+        <ul class="facts">
+          <li><b>Chips are the binding constraint.</b><span>SpaceX&rsquo;s S-1 calls chip production &ldquo;one of the primary bottlenecks to AI&rsquo;s continued growth.&rdquo; Whoever owns the fab owns the margin layer everyone else rents.</span></li>
+          <li><b>Demand is internal and already contracted.</b><span>Colossus (xAI), Starlink/Starshield satellites, Optimus (Musk calls Terafab &ldquo;critical&rdquo; to scaling the robot), plus FSD/Cybercab. Externally, the Google AI compute pact ($920M/month for 32 months) proves third parties will buy SpaceX compute.</span></li>
+          <li><b>Full-stack control.</b><span>The pair claims &ldquo;greater control over the full physical AI stack than any other AI player.&rdquo; Silicon to orbit to robot, no NVIDIA tax, but the silicon layer is precisely what is now contested. If TSMC owns or operates the fab, part of the NVIDIA tax is replaced by TSMC&rsquo;s operating margin and process control. (See the operator question above.)</span></li>
+          <li><b>Derisking from Taiwan.</b><span>Terafab is also a break from dependence on Taiwanese foundries, the concentration risk if China moves on Taiwan. Putting AI-chip supply inside U.S. borders is the strategic point. And TSMC is not merely at the table: on Oct 15 Chairman/CEO C.C. Wei confirmed Terafab talks are real, said TSMC teams are in Texas evaluating, and set a nonnegotiable condition: the fab "has got to be run by TSMC." Ownership is open (wholly TSMC-owned or a partnership); the operator question is formally contested between the two principals.</span></li>
+          <li><b>Two parents, one fab, zero leakage.</b><span>Owning both companies means Terafab&rsquo;s value reaches you however it&rsquo;s split between them, and the merger, if it happens, simply internalizes it.</span></li>
+        </ul>
+      </div></section>
+
+      <section id="how"><div class="section">
+        <p class="section-kicker">03</p>
+        <h2>How: the position</h2>
+        <div class="glass card">
+<svg class="diagram" viewBox="0 0 820 400" role="img" aria-label="Position diagram: SPCX core and TSLA leg feeding Terafab, with a pair hedge between them">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="var(--blue)"/>
+    </marker>
+    <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="var(--orange)"/>
+    </marker>
+  </defs>
+  <!-- hedge arc -->
+  <path d="M125,138 C260,50 560,50 695,138" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="7,5"/>
+  <text x="410" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">pair hedge</text>
+  <text x="410" y="60" text-anchor="middle" font-size="12" fill="var(--ink-3)">merger dilution SPCX &#8594; TSLA, captured on both sides</text>
+  <!-- SPCX box -->
+  <rect x="30" y="150" width="190" height="112" rx="14" fill="var(--blue-t)" stroke="var(--blue)" stroke-width="2"/>
+  <text x="125" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="var(--blue)">SPCX CORE</text>
+  <text x="125" y="208" text-anchor="middle" font-size="12" fill="currentColor">acquirer + fundamentals</text>
+  <text x="125" y="228" text-anchor="middle" font-size="12" fill="var(--ink-3)">~$148 basis &middot; hold</text>
+  <text x="125" y="248" text-anchor="middle" font-size="12" fill="var(--ink-3)">Starlink &middot; launch &middot; compute</text>
+  <!-- TERAFAB box -->
+  <rect x="335" y="140" width="150" height="132" rx="14" fill="var(--orange-t)" stroke="var(--orange)" stroke-width="2"/>
+  <text x="410" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="var(--orange)">TERAFAB</text>
+  <text x="410" y="202" text-anchor="middle" font-size="12" fill="currentColor">the prize</text>
+  <text x="410" y="222" text-anchor="middle" font-size="12" fill="currentColor">fab margin</text>
+  <text x="410" y="242" text-anchor="middle" font-size="12" fill="currentColor">full-stack control</text>
+  <!-- TSLA box -->
+  <rect x="600" y="150" width="190" height="112" rx="14" fill="var(--blue-t)" stroke="var(--blue)" stroke-width="2"/>
+  <text x="695" y="186" text-anchor="middle" font-size="16" font-weight="700" fill="var(--blue)">TSLA LEG</text>
+  <text x="695" y="208" text-anchor="middle" font-size="12" fill="currentColor">target premium + hedge</text>
+  <text x="695" y="228" text-anchor="middle" font-size="12" fill="var(--ink-3)">staged &middot; 3 tranches</text>
+  <text x="695" y="248" text-anchor="middle" font-size="12" fill="var(--ink-3)">not yet entered</text>
+  <!-- demand arrows into terafab -->
+  <line x1="220" y1="172" x2="330" y2="172" stroke="var(--blue)" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="275" y="162" text-anchor="middle" font-size="11" fill="var(--ink-3)">silicon demand</text>
+  <line x1="600" y1="172" x2="490" y2="172" stroke="var(--blue)" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="545" y="162" text-anchor="middle" font-size="11" fill="var(--ink-3)">silicon demand</text>
+  <!-- margin arrows back -->
+  <line x1="330" y1="232" x2="220" y2="232" stroke="var(--orange)" stroke-width="2" marker-end="url(#arrG)"/>
+  <text x="275" y="250" text-anchor="middle" font-size="11" fill="var(--ink-3)">fab margin</text>
+  <line x1="490" y1="232" x2="600" y2="232" stroke="var(--orange)" stroke-width="2" marker-end="url(#arrG)"/>
+  <text x="545" y="250" text-anchor="middle" font-size="11" fill="var(--ink-3)">fab margin</text>
+  <!-- demand drivers -->
+  <text x="125" y="300" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">feeds on</text>
+  <text x="125" y="318" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">Colossus &middot; Starlink/Starshield</text>
+  <text x="125" y="334" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">$920M/mo Google compute pact</text>
+  <text x="695" y="300" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">feeds on</text>
+  <text x="695" y="318" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">Optimus &middot; FSD / Cybercab</text>
+  <text x="695" y="334" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">energy &middot; ~19M SPCX shares held</text>
+  <text x="410" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">why it wins</text>
+  <text x="410" y="330" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">no NVIDIA tax &middot; internal demand first</text>
+</svg>
+          <p class="viz-source">Capital flows to both parents; silicon demand flows to the fab; margin flows back. The dashed hedge means a merger can&rsquo;t transfer value away from you.</p>
+        </div>
+        <ul class="facts">
+          <li><b>SPCX core:</b><span>hold. Wins on Starlink, launch cadence, and orbital compute with or without a merger.</span></li>
+          <li><b>TSLA leg (staged):</b><span>(1) discounted entry on China-restructuring weakness, (2) merger speculation / target premium, (3) dilution hedge: if SpaceX issues premium-priced shares to buy Tesla, the TSLA leg catches the receiving side, (4) standalone floor: autonomy, robotics, energy, Terafab, and Tesla&rsquo;s verified ~19M-share SpaceX stake.</span></li>
+        </ul>
+        <h3>Same $X, two ways to own the future</h3>
+        <p>Put the full $X into SpaceX today, or split it into $(X&minus;Y) of SpaceX and $Y of Tesla. Either way the same total capital is invested in the same future: the two companies and their joint Terafab bet. The split exists for one reason: if a merger happens, the TSLA shares collect the takeover premium, offsetting the dilution on the SpaceX side, leaving you with the same, or more, of the combined company. If no merger comes, the full $X is still at work in both names.</p>
+        <div class="glass card">
+<svg class="diagram" viewBox="0 0 820 600" role="img" aria-label="Option A: all X in SpaceX versus Option B: X minus Y in SpaceX plus Y in Tesla, compared across merger and no-merger scenarios">
+  <text x="410" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">Same $X, two ways to own the future</text>
+  <text x="410" y="50" text-anchor="middle" font-size="12" fill="var(--ink-3)">Illustrative, not a forecast. $X = $100k total; $Y = $30k to TSLA (illustrative split); takeover premium &#960; = 30%.</text>
+
+  <text x="20" y="86" font-size="13" font-weight="700" fill="currentColor">The starting choice: identical capital, identical thesis</text>
+  <text x="20" y="127" font-size="12.5" fill="currentColor">A &middot; $X all in SPCX</text>
+  <rect x="200" y="102" width="560" height="40" fill="var(--blue)"/>
+  <text x="480" y="127" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">$100,000 &#8594; SpaceX (SPCX)</text>
+  <text x="20" y="183" font-size="12.5" fill="currentColor">B &middot; $(X&minus;Y) SPCX + $Y TSLA</text>
+  <rect x="200" y="158" width="392" height="40" fill="var(--blue)"/>
+  <text x="396" y="183" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">$70,000 &#8594; SPCX</text>
+  <rect x="592" y="158" width="168" height="40" fill="var(--green)"/>
+  <text x="676" y="183" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">$30,000 &#8594; TSLA</text>
+  <text x="410" y="222" text-anchor="middle" font-size="12.5" fill="var(--ink-3)">Same $100k. Same belief: the SpaceX + Tesla + Terafab future.</text>
+
+  <text x="20" y="260" font-size="14" font-weight="700" fill="currentColor">Scenario 1 &middot; Merger closes</text>
+  <text x="20" y="278" font-size="12" fill="var(--ink-3)">SpaceX issues new shares at a premium to buy Tesla: SPCX holders diluted, TSLA holders paid the premium.</text>
+  <text x="20" y="312" font-size="12.5" fill="currentColor">A</text>
+  <rect x="200" y="292" width="440" height="36" fill="var(--ink-3)" fill-opacity="0.3"/>
+  <text x="420" y="315" text-anchor="middle" font-size="12.5" font-weight="700" fill="currentColor">667 sh &middot; diluted by the issuance</text>
+  <text x="20" y="358" font-size="12.5" fill="currentColor">B</text>
+  <rect x="200" y="338" width="480" height="36" fill="var(--green)"/>
+  <text x="440" y="361" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">727 sh &middot; TSLA premium captured</text>
+  <text x="200" y="394" font-size="13" font-weight="700" fill="var(--green)">&#10003; B/A = 1 + (Y/X)&#183;&#960; = 1.09: the same $100k ends with ~9% more of the combined company.</text>
+
+  <text x="20" y="432" font-size="14" font-weight="700" fill="currentColor">Scenario 2 &middot; No merger, or an attempt that fails</text>
+  <text x="20" y="450" font-size="12" fill="var(--ink-3)">No new shares issued. Nothing converts, nothing dilutes.</text>
+  <text x="20" y="482" font-size="12.5" fill="currentColor">A</text>
+  <rect x="200" y="462" width="560" height="36" fill="var(--blue)"/>
+  <text x="480" y="485" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">$100k compounding in SpaceX&#8217;s future</text>
+  <text x="20" y="528" font-size="12.5" fill="currentColor">B</text>
+  <rect x="200" y="508" width="392" height="36" fill="var(--blue)"/>
+  <text x="396" y="531" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">$70k SPCX</text>
+  <rect x="592" y="508" width="168" height="36" fill="var(--green)"/>
+  <text x="676" y="531" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">$30k TSLA</text>
+  <text x="200" y="570" font-size="13" font-weight="700" fill="var(--green)">&#10003; The full $X stays invested in the two-company future, simply split across both parents.</text>
+</svg>
+          <p class="viz-source">The split costs nothing where nothing happens, and pays where the merger does. Assumes the $Y is accumulated pre-announcement at undisturbed prices, the playbook&rsquo;s no-chase rule. Bar widths proportional to the illustrative share counts.</p>
+        </div>
+      </div></section>
+
+      <section id="when"><div class="section">
+        <p class="section-kicker">04</p>
+        <h2>When: the timing map</h2>
+        <ul class="tl">
+          <li class="past">
+            <div class="tl-head"><span class="date">Feb 2026</span><span class="pill green">DONE</span></div>
+            <p class="what">SpaceX acquires xAI, all-stock. Template set: SpaceX is the acquirer, stock is the currency.</p>
+          </li>
+          <li class="past">
+            <div class="tl-head"><span class="date">Jun 2026</span><span class="pill green">DONE</span></div>
+            <p class="what">SPCX IPO at $135. Public entry opens.</p>
+          </li>
+          <li class="past">
+            <div class="tl-head"><span class="date">Jul 30, 2026</span><span class="pill amber">WATCH</span></div>
+            <p class="what">WSJ: Tesla prepping China separation; Musk denies. Last P1-grade signal: the denial still stands uncontradicted.</p>
+          </li>
+          <li class="past">
+            <div class="tl-head"><span class="date">Sep 25, 2026</span><span class="pill green">DONE</span></div>
+            <p class="what">Your SPCX entry ~$148. Core established.</p>
+          </li>
+          <li class="past">
+            <div class="tl-head"><span class="date">Oct 9, 2026</span><span class="pill green">DONE</span></div>
+            <p class="what">Up to 328.4M shares unlocked. Overhang, not thesis damage. Weakness here is noise.</p>
+          </li>
+          <li class="now">
+            <div class="tl-head"><span class="date">~Oct 22 &amp; 26, 2026</span><span class="pill blue">HOLD</span></div>
+            <p class="what">~1.3B shares (largest 2026 release) eligible ~Thu Oct 22, the second full trading day after Q3 earnings (Oct 20): the earnings reaction and the supply event overlap, as in August. Oct 24 tranche (up to 328.4M; first tradeable Mon Oct 26). Then ~797.6M after Dec 8. By early December ~40% of ~13.6B shares could be tradeable vs ~21% now. Supply, not fundamentals. Weakness here is noise.</p>
+          </li>
+          <li class="now">
+            <div class="tl-head"><span class="date">Oct 14, 2026</span><span class="pill amber">WATCH</span></div>
+            <p class="what">ASML CFO names "Elon Musk and his TeraFab" as a customer with expansion plans; "still kicking the tyres on the exact size of that opportunity." First supplier-side confirmation of Terafab in a major equipment vendor's 2027+ capacity planning (Reuters). Equipment bottleneck confirmed real: ASML says AI demand exceeds chip-tool capacity through 2028.</p>
+          </li>
+          <li>
+            <div class="tl-head"><span class="date">May/Jun 2027</span><span class="pill amber">WATCH</span></div>
+            <p class="what">Terafab first functional test chip (SRAM) targeted at the Austin research fab (Musk, Oct 20 SpaceX Q3 call; Reuters). First-chip date + type now concrete: partial progress on the research-fab needle; process node and hiring pace still unknown.</p>
+          </li>
+          <li>
+            <div class="tl-head"><span class="date">Q3 2028</span><span class="pill amber">WATCH</span></div>
+            <p class="what">Terafab volume-production target at Gibbons Creek, Grimes County, Texas. Musk: "very aggressive," "big error bars," Q4 '28 also within "the set of possible outcomes" (Oct 20 Q3 call; Reuters). The first official dates; a Musk claim, not yet independently verifiable. Long-term goal: 1 terawatt of compute per year. Covered by the signal scans.</p>
+          </li>
+          <li>
+            <div class="tl-head"><span class="date">Through 2027</span><span class="pill red">ARMED</span></div>
+            <p class="what">China-separation paper trail (supplier purge aimed ~2027). Tranche 1 and 2 triggers live here: buy the fear, not the rumor.</p>
+          </li>
+          <li>
+            <div class="tl-head"><span class="date">By Dec 31, 2027</span><span class="pill red">ARMED</span></div>
+            <p class="what">Prediction markets: 64% merger odds (recorded Oct 19). The event window: trim 25&ndash;50% of the TSLA leg into a confirmed-announcement spike.</p>
+          </li>
+          <li>
+            <div class="tl-head"><span class="date">Apr 3, 2027</span><span class="pill purple">REVIEW</span></div>
+            <p class="what">Thesis wind-down review. Zero P1 signals in 6 months &rarr; exit the TSLA leg, keep the SPCX core.</p>
+          </li>
+        </ul>
+      </div></section>
+
+      <section id="hedge"><div class="section">
+        <p class="section-kicker">05</p>
+        <h2>Hedge map: what each event does to you</h2>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>If this happens</th><th>The risk</th><th>The hedge / response</th></tr></thead>
+            <tbody>
+              <tr><td>SPCX dips on the Oct lockup tranches</td><td>None to the thesis: insider supply, not fundamentals</td><td>Core hold; no action</td></tr>
+              <tr><td>China divestiture headline, TSLA drops</td><td>Catching a falling knife</td><td>Tranche 2 buys the fear in stages; the standalone floor bounds the downside</td></tr>
+              <tr><td>Merger announced, TSLA spikes</td><td>Giving the premium back</td><td>Trim 25&ndash;50% into strength; keep the rest plus the core</td></tr>
+              <tr><td>SpaceX overpays in stock</td><td>SPCX dilution</td><td>The TSLA leg catches the receiving side; the pair nets it out</td></tr>
+              <tr><td>No merger by Apr 2027</td><td>Dead money in the TSLA leg</td><td>Wind the leg down; SPCX core and Tesla standalone (autonomy, robotics, energy, Terafab, SpaceX stake) carry on</td></tr>
+              <tr><td>Terafab delayed</td><td>AI-chip narrative weakens</td><td>Demand is internal and contracted; the position is sized for patience, not timing</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div></section>
+
+      <section id="empire"><div class="section">
+        <p class="section-kicker">06</p>
+        <h2>The empire: every company is a supporting character</h2>
+        <p class="intro">No Elon Musk company stands alone, and the Terafab endgame runs through all of them. Each company is a supporting character in the others' stories and a potential future merger. Two combinations are already complete:</p>
+        <ul class="facts">
+          <li><b>xAI acquired X, March 28, 2025</b><span>(verified): all-stock; xAI at $80B, X at $33B. Rationale: combine "the data, models, compute, distribution and talent."</span></li>
+          <li><b>SpaceX acquired xAI, February 2, 2026</b><span>(verified): all-stock; SpaceX at $1T, xAI at $250B; closed May 2026, rebranded SpaceXAI July 2026. SpaceX's ~$8B 2025 profit funds xAI's cash burn.</span></li>
+        </ul>
+        <p>Terafab itself is an empire project: first reported as a $20-25B chip fabrication joint effort spanning Tesla, SpaceX, and xAI, targeting 2nm process for orbital data centers, but public records exposed in October 2026 (Grimes County notices, reported by ENR, Realty Today, Dealroom, Houston Business Journal, and KBTX) point to a much larger gated buildout: ~$55B for the initial phases, up to $119B across four phases through 2036, with go/no-go decisions per phase (Phase 2 decisions no earlier than the end of the first construction cycle). The demand is internal and contracted across the empire before a single outside customer exists, though who owns and runs the fab is now formally contested (see the operator question above); the empire framing describes the demand and funding side regardless of the outcome.</p>
+        <ul class="facts">
+          <li><b>xAI / SpaceXAI (the brain):</b><span>Grok runs in Tesla vehicles (agentic vehicle control since September 2026); Tesla Megapacks power the Colossus 2 data center (720 containers, 3.3 GWh, the largest grid-connected battery in the US; ~$1B in Megapack sales to the cluster). Tesla's $2B xAI investment converted to a sub-1% SpaceX holding. Joint "Digital Optimus" project confirmed March 2026.</span></li>
+          <li><b>X (the data refinery):</b><span>Grok trains on the real-time corpus of 600M+ users; the empire's broadcast wire. Musk announces milestones there first.</span></li>
+          <li><b>Neuralink (the longest-dated call option):</b><span>26+ implants by mid-2026; $650M Series E at $9B (June 2025), secondary marks near $54-60B; $0 revenue. Musk's stated endgame is Neuralink plus Optimus. Nothing demonstrated yet.</span></li>
+          <li><b>The Boring Company (the physical infrastructure arm):</b><span>$3B Series D at $23B (September 2026, UAE-led). Vegas Loop runs Teslas with FSD trials; the Giga Texas Cybertunnel (online 2025) serves Tesla logistics.</span></li>
+        </ul>
+        <div class="callout">
+          <h3>Why this matters for the Terafab position</h3>
+          <p>The chip fab's customers, its power infrastructure (Megapacks), its AI workloads (Grok, Optimus), and its funding (SpaceX profits) all live inside the same empire. Terafab is not a merchant foundry bet; it is vertical integration of the empire's own AI stack, from silicon to orbit. A SpaceX-Tesla combination would put the fab, the robots, and the intelligence under one capitalization table, which is the endgame this document is sized for.</p>
+        </div>
+      </div></section>
+
+      <div class="site-footer">
+        <p class="muted" style="font-size:13px; margin-bottom: 24px;">Positions as of Oct 19, 2026: SPCX starter ~$148 (Sep 25, 2026); no TSLA position yet; three tranches armed. Monitors: twice-daily signal scans, weekday tactical price check, Monday deep check. Every trade manual. Framework for analysis, not investment advice.</p>
+<footer style="margin-top:3rem;border-top:1px solid #e3e3e3;padding:1.5rem 1rem;font-size:.82rem;color:#555;line-height:1.65"><div style="max-width:860px;margin:0 auto"><strong>Disclaimer.</strong> This document is published by <strong>Michael S. Lau</strong> for educational and informational purposes only. It is not investment advice, financial advice, trading advice, or a recommendation to buy, sell, or hold any security. No advisory, fiduciary, or client relationship is created by your reading it: the author does not know your financial situation, investment objectives, or tolerance for risk, and nothing here is tailored to any individual. The analysis reflects the author&rsquo;s personal research and opinions, may contain errors or outdated information, and should be verified against primary sources before reliance. Forward-looking statements are inherently uncertain and subject to change. Past performance is not indicative of future results. The author may hold positions in securities discussed. Consult a licensed financial advisor before making investment decisions. The author bears no liability for any loss arising from reliance on these materials.</div></footer>
+      </div>
+    </div>
+  </main>
+<script src="../site.js?v=20261021g" defer></script>
+</body>
+</html>

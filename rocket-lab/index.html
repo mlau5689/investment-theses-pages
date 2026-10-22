@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Rocket Lab Deep Analysis</title>
+  <script>try{var t=localStorage.getItem("thesis-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="../liquid-glass.css?v=20261021j">
+<style>
+/* ROCKET-LAB page specifics (kept local; shared system lives in liquid-glass.css) */
+/* Rocket Lab page specifics, Liquid Glass language */
+/* Chart cards */
+.chart-card { background: var(--card); border: 1px solid var(--hair); border-radius: var(--r); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); box-shadow: var(--shadow); padding: 24px; margin: 18px 0; }
+.chart-card h3 { margin-bottom: 4px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.chart-card .chart-note { color: var(--ink-3); font-size: 13px; margin-bottom: 14px; }
+
+:root { --accent: var(--blue); --muted: var(--ink-3); --faint: rgba(142,142,147,.18); --amber: var(--orange); }
+@media (prefers-color-scheme: dark) { :root { --faint: rgba(142,142,147,.24); } }
+/* Layout + TOC */
+.layout { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 48px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+/* Hero */
+.hero-grid { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(300px,.65fr); gap: 40px; align-items: end; }
+@media (max-width: 720px) { .hero-grid { grid-template-columns: 1fr; } }
+/* Charts */
+.chart { width: 100%; min-height: 300px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* Viz text */
+.viz-sub { color: var(--ink-2); font-size: 13.5px; }
+.viz-source { color: var(--ink-3); font-size: 11.5px; margin-top: 10px; }
+.viz h3 { margin-bottom: 8px; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+/* Visual grids */
+.visual-board { display: grid; gap: 14px; }
+.visual-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; align-items: start; }
+@media (max-width: 720px) { .visual-grid { grid-template-columns: 1fr; } }
+/* Sources */
+.src { font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+/* Lead */
+.lead { font-size: 19px; line-height: 1.6; color: var(--ink); }
+/* Legend */
+.legend-row { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 13px; color: var(--ink-3); margin: 12px 0; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 4px; background: var(--blue); margin-right: 7px; vertical-align: -1px; }
+.swatch.dark { background: var(--ink-3); }
+/* Moat matrix */
+.moat-grid { display: grid; grid-template-columns: 150px repeat(3, minmax(0,1fr)); border-radius: var(--r-sm); overflow: hidden; border: 1px solid var(--hair); background: var(--card); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); box-shadow: var(--shadow); margin: 20px 0; }
+.moat-cell { padding: 14px; border-bottom: 1px solid var(--hair); font-size: 13px; color: var(--ink-2); }
+.moat-cell.label { font-weight: 700; color: var(--ink); }
+.moat-cell.head { font: 600 10.5px/1.4 var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; }
+@media (max-width: 720px) { .moat-grid { grid-template-columns: 1fr 1fr; } }
+/* Breakpoint viz */
+.breakpoint { display: grid; grid-template-columns: 1fr 84px 1fr; align-items: stretch; gap: 12px; margin-top: 16px; }
+.breakpoint-side { background: var(--card); border: 1px solid var(--hair); border-radius: var(--r-sm); padding: 18px; box-shadow: var(--shadow); }
+.breakpoint-side strong { display: block; font-size: clamp(24px, 4vw, 36px); letter-spacing: -.045em; line-height: 1; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.breakpoint-side span { color: var(--ink-3); font-size: 12px; }
+.breakpoint-gate { display: grid; place-items: center; text-align: center; color: var(--blue); font: 600 10px/1.35 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+@media (max-width: 640px) { .breakpoint { grid-template-columns: 1fr; } }
+/* Decade timeline */
+.decade-event { position: relative; padding: 16px 0 16px 28px; border-bottom: 1px solid var(--hair); }
+.decade-event:last-child { border-bottom: none; }
+.decade-event::before { content: ""; position: absolute; left: 2px; top: 22px; width: 11px; height: 11px; border-radius: 50%; background: var(--blue); border: 2px solid var(--card-solid); box-shadow: 0 0 0 1px var(--hair); }
+.decade-event b { display: block; font: 600 11px/1.3 var(--mono); color: var(--blue); letter-spacing: .05em; }
+.decade-event strong { display: block; margin: 5px 0; font-size: 14px; line-height: 1.35; }
+.decade-event span { color: var(--ink-3); font-size: 12px; line-height: 1.4; }
+/* Dependencies */
+.dependency { border-bottom: 1px solid var(--hair); padding: 22px 0; display: grid; grid-template-columns: 46px minmax(0,1fr) 132px; gap: 18px; align-items: start; }
+.dependency:first-of-type { border-top: 1px solid var(--hair); }
+.dependency .rank { font: 600 26px/1 var(--mono); color: var(--blue); }
+.dependency h3 { margin-bottom: 7px; font-size: 17px; }
+.dependency p { margin: 0; color: var(--ink-2); }
+.confidence { text-align: right; }
+@media (max-width: 640px) { .dependency { grid-template-columns: 1fr; } .confidence { text-align: left; } }
+/* Yield path */
+.yield-path { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 8px; }
+.yield-path b { font-size: 20px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.yield-path i { color: var(--blue); font: 600 14px/1 var(--mono); font-style: normal; }
+</style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <div class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">RKLB · Rocket Lab · Deep analysis</p>
+            <h1>A premium-priced challenger at the edge of proof.</h1>
+<p class="byline">by <strong>Michael S. Lau</strong></p>
+            <p class="dek">Rocket Lab’s operating business is strengthening. Its stock already prices in the harder future: an unflown medium-lift rocket, an unclosed $8B acquisition, clean defense-contract execution, and an end to equity-funded growth.</p>
+          </div>
+          <aside class="glass verdict">
+            <div class="vlabel">One-sentence verdict</div>
+            <div>The upside is real, but today’s investor is paying for four difficult transitions before the cash flows exist.</div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="metrics" aria-label="Rocket Lab market and operating snapshot">
+        <div class="glass metric"><span class="label">Share price</span><span class="value">$50.90</span><span class="note">Oct. 20, 2026 close (−0.90% on the day) <a class="src" href="https://www.marketbeat.com/stocks/NASDAQ/RKLB/chart/">closes↗</a></span></div>
+        <div class="glass metric"><span class="label">Market cap</span><span class="value">~$34.0B</span><span class="note">Economic basis: ~668M shares × $50.90, incl. ~41M convertible preferred <a class="src" href="https://www.fool.com/investing/2026/09/22/rocket-lab-sold-usd1-9-billion-of-new-stock-to-pay-for-iridium-here-s-the-dilution-math/">source↗</a></span></div>
+        <div class="glass metric"><span class="label">TTM revenue</span><span class="value">$769M</span><span class="note">~44× trailing sales</span></div>
+        <div class="glass metric"><span class="label">Q2 revenue</span><span class="value">$234M</span><span class="note">+62% year over year <a class="src" href="https://files.quartr.com/reports/a8c693ff911344feee76b75f508473a6-2026-08-10-20-09-38.pdf">Q2 letter↗</a></span></div>
+        <div class="glass metric"><span class="label">Risk temperature</span><span class="value">β 3.17</span><span class="note">52-week range $37.57–$151.00</span></div>
+      </div>
+
+      <div class="layout">
+        <nav class="toc" aria-label="Analysis sections">
+          <p>Contents</p>
+          <a href="#thesis">Thesis in one page</a>
+          <a href="#visuals">Visual investment map</a>
+          <a href="#business">Detailed business</a>
+          <a href="#financials">Income statement</a>
+          <a href="#balance">Balance sheet</a>
+          <a href="#iridium">Iridium deal</a>
+          <a href="#neutron">Neutron</a>
+          <a href="#dependencies">Dependencies</a>
+          <a href="#competition">Competition</a>
+          <a href="#decade-test">2030–2036 decade test</a>
+          <a href="#scenarios">Scenarios</a>
+          <a href="#investor">Investor lens</a>
+          <a href="#monitor">What to watch</a>
+          <a href="#sources">Sources & caveats</a>
+          <div class="legend">A = reported actual<br>E = analyst estimate<br>Guide = company guidance</div>
+        </nav>
+
+        <article>
+          <section id="thesis">
+            <div class="section">
+<p class="section-kicker">01 / 12</p>
+<h2>The thesis in one page</h2>
+<p class="intro">The current company is good. The valuation requires the next company to arrive on schedule.</p>
+            <p class="lead">Rocket Lab is no longer mainly a small-rocket company. In Q2 2026, <strong>Space Systems produced 81% of revenue</strong>; Launch Services produced 19%. Its defensible near-term engine is components, spacecraft, and government programs,not Electron alone. <a class="src" href="https://www.cestriancapitalresearch.com/rocket-lab-nasdaq-rklb-stock-rating-accumulate-after-q2-fy12-26-earnings/">Cestrian↗</a></p>
+            <div class="grid-3">
+              <div class="glass card"><span class="mini">What is working</span><h3>Scale and backlog</h3><p><strong>$234.1M</strong> Q2 revenue, <strong>36.1%</strong> GAAP gross margin, and <strong>$2.36B</strong> backlog,up 137% year over year. <a class="src" href="https://files.quartr.com/reports/a8c693ff911344feee76b75f508473a6-2026-08-10-20-09-38.pdf">company↗</a></p></div>
+              <div class="glass card"><span class="mini">What is not working yet</span><h3>Self-funded economics</h3><p>TTM free cash flow is about <strong>-$371M</strong>; Q2 net loss was <strong>-$49.3M</strong>. The company’s growth capital has come from equity, not operating cash. <a class="src" href="https://www.ainvest.com/news/missing-cash-rocket-lab-record-quarter-2608/">AInvest↗</a></p></div>
+              <div class="glass card"><span class="mini">What the price assumes</span><h3>Four clean transitions</h3><p>Neutron flies, Iridium closes and integrates, defense programs hold margin, and dilution slows before the market stops funding it.</p></div>
+            </div>
+            <div class="callout danger">
+              <h3>The valuation is the central risk</h3>
+              <p>At $50.90 (the Oct. 20, 2026 close), the economic share count is about <strong>668M</strong>: ~627M common shares (Sept. 15) plus ~41M Series A convertible participating preferred shares, which the company itself includes in its share guidance and which convert one-for-one into common. That is roughly <strong>$34.0B</strong> of equity value, or <strong>~44× TTM revenue</strong> of $769M. Common-share-only market caps understate the price by the preferred block. Either basis already prices RKLB like a scaled platform, while Neutron remains unflown and Iridium unclosed. <a class="src" href="https://www.fool.com/investing/2026/09/22/rocket-lab-sold-usd1-9-billion-of-new-stock-to-pay-for-iridium-here-s-the-dilution-math/">preferred↗</a></p>
+            </div>
+          </div>
+          </section>
+
+          <section id="visuals">
+            <div class="section">
+<p class="section-kicker">Visual brief</p>
+<h2>The investment, in eight pictures</h2>
+<p class="intro">The trajectory is strong; the funding and execution map explain why the equity remains binary.</p>
+            <div class="visual-board">
+              <div class="visual-grid">
+                <div class="glass card">
+                  <h3>Revenue keeps climbing; the next margin print steps down</h3>
+                  <p class="viz-sub">Quarterly revenue ($M) with reported GAAP gross margin; Q3 2026 is company guidance.</p>
+                  <div id="combo-chart" class="chart" role="img" aria-label="Revenue rose from 104.8 million dollars in Q3 2024 to 234.1 million in Q2 2026, while Q3 2026 gross margin guidance falls to 29 to 31 percent"></div>
+                  <p class="viz-source">Source: Rocket Lab quarterly releases; Q3 2026 guidance 29–31%. Earlier margin points not confirmed are left blank.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>The company is more systems than rocket</h3>
+                  <p class="viz-sub">Revenue mix by period. Latest quarter shows an 81% Space Systems concentration.</p>
+                  <div id="mix-chart" class="chart" role="img" aria-label="Space Systems was 71 percent of 2024 revenue, 67 percent of 2025 revenue, and 81 percent of Q2 2026 revenue"></div>
+                  <p class="viz-source">Sources: FY2025 10-K summary ($403M systems / $199M launch); FY2024 ($311M / $125.2M); Q2 2026 shareholder letter ($189.5M / $44.6M).</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Dilution financed the leap</h3>
+                  <p class="viz-sub">Common shares outstanding, millions; annotations show equity funding.</p>
+                  <div id="dilution-chart" class="chart" role="img" aria-label="Common shares rose from 544 million at the end of 2025 to 627 million in September 2026 after two ATM equity raises; about 41 million convertible participating preferred shares sit on top of that, for roughly 668 million economic shares"></div>
+                  <p class="viz-source">Sources: Q2 filing; Sept. 15 ATM completion. H1 ATM raised $1.53B; Aug–Sept ATM raised $1.944B.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Cash buys time; Iridium changes the maturity map</h3>
+                  <p class="viz-sub">Cash-only runway at the current ~$92.8M quarterly FCF burn. Static arithmetic,not management guidance.</p>
+                  <div class="runway" aria-label="Standalone cash supports about 23 quarters of current burn; simplified post-deal cash supports about 13 quarters; convert notes mature in 2029 and the Iridium term loan in 2030">
+                    <div class="runway-marker" style="left:42.3%"><span>Q1 2029<br>$13.1M converts</span></div>
+                    <div class="runway-marker" style="left:65.4%"><span>Q3 2030<br>$1.775B term loan</span></div>
+                    <div class="runway-axis"><div class="runway-cash"></div></div>
+                    <div class="runway-axis"><div class="runway-deal"></div></div>
+                    <div class="runway-label"><span>Now</span><span>26-quarter scale</span></div>
+                  </div>
+                  <div class="legend-row"><span><i class="swatch" style="background:var(--green)"></i>Standalone cash: ~23 quarters</span><span><i class="swatch" style="background:var(--amber)"></i>Simplified post-deal cash: ~13 quarters</span><span><i class="swatch" style="background:var(--red)"></i>Debt maturity</span></div>
+                  <p class="viz-source">Sources: Q2 2026 cash $2.129B; TTM FCF -$371M; $1.944B ATM; ~$2.9B Iridium cash consideration; Iridium term loan matures Sept. 2030.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Launch price is not one market</h3>
+                  <p class="viz-sub">Indicative $/kg to LEO on a logarithmic bar scale. Dedicated and rideshare products are not apples-to-apples.</p>
+                  <div class="cost-bars" role="img" aria-label="Electron costs 15 to 25 thousand dollars per kilogram, SpaceX rideshare around 7 thousand, Neutron target around 3.8 thousand, and Starship aspiration under 100">
+                    <div class="cost-row electron"><b>Electron</b><div class="cost-track"><div class="cost-fill" style="width:100%"></div></div><span>$15–25k</span></div>
+                    <div class="cost-row"><b>F9 rideshare</b><div class="cost-track"><div class="cost-fill" style="width:84%"></div></div><span>~$7k</span></div>
+                    <div class="cost-row neutron"><b>Neutron target</b><div class="cost-track"><div class="cost-fill" style="width:77%"></div></div><span>~$3.8k</span></div>
+                    <div class="cost-row starship"><b>Starship goal</b><div class="cost-track"><div class="cost-fill" style="width:36%"></div></div><span>&lt;$100</span></div>
+                  </div>
+                  <p class="viz-source">Sources: research report launch pricing; Electron is dedicated, Falcon 9 figure is rideshare, Neutron and Starship are targets,not demonstrated economics.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Four binaries, one sequence</h3>
+                  <p class="viz-sub">The equity needs engineering, M&amp;A, program economics, then self-funding.</p>
+                  <div class="binary-line">
+                    <div class="binary-stop"><strong>Neutron flies</strong><span>2027 (delayed Oct. 14) · low certainty</span></div>
+                    <div class="binary-stop"><strong>Iridium closes</strong><span>Mid-2027 · moderate</span></div>
+                    <div class="binary-stop"><strong>Contracts hold margin</strong><span>2026–28 · moderate</span></div>
+                    <div class="binary-stop"><strong>GAAP profit</strong><span>~2028E · low–moderate</span></div>
+                  </div>
+                  <p class="viz-source">Sources: Rocket Lab guidance, transaction timeline, award disclosures, BofA estimates.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Iridium deal structure</h3>
+                  <p class="viz-sub">Rocket Lab is buying recurring cash flow with cash, stock, and an inherited debt stack.</p>
+                  <div class="diagram-row">
+                    <div class="diagram-node"><strong>$27 cash</strong><span>per Iridium share · ~$2.9B total cash consideration</span></div>
+                    <div class="diagram-arrow">+</div>
+                    <div class="diagram-node"><strong>$27 stock</strong><span>0.2400–0.4000 RKLB shares; $67.50–$112.50 collar</span></div>
+                    <div class="diagram-arrow">+</div>
+                    <div class="diagram-node"><strong>$1.775B debt</strong><span>Iridium term loan remains; Rocket Lab USA guarantee after close</span></div>
+                  </div>
+                  <div class="deal-split"><div><strong>Bridge: $0</strong><span>$3.6B commitment terminated after ATM funding</span></div><div><strong>Close: mid-2027</strong><span>FCC and other approvals remain</span></div></div>
+                  <p class="viz-source">Sources: Rocket Lab S-4; Sept. 15 financing release; Iridium 10-K.</p>
+                </div>
+
+                <div class="glass card">
+                  <h3>Outcome map</h3>
+                  <p class="viz-sub">Street-anchored 12–24 month zones. Conditions matter more than the target.</p>
+                  <div class="cases">
+                    <div class="case bull"><h3>Bull</h3><div class="target">$130–150</div><ul><li>Neutron succeeds by Q1’27</li><li>Iridium accretive</li><li>2028 revenue ~$2.5B+</li></ul></div>
+                    <div class="case base"><h3>Base</h3><div class="target">$105–115</div><ul><li>Neutron slips, then works</li><li>Margins recover</li><li>2028 revenue ~$2.2B</li></ul></div>
+                    <div class="case bear"><h3>Bear</h3><div class="target">$37–65</div><ul><li>Delay or failure</li><li>Integration friction</li><li>Multiple compresses</li></ul></div>
+                  </div>
+                  <p class="viz-source">Source: analyst consensus and coverage synthesized in the research report; scenarios are estimates, not company guidance.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </section>
+
+          <section id="business">
+            <div class="section">
+<p class="section-kicker">02 / 12</p>
+<h2>The business engine</h2>
+<p class="intro">A vertically integrated space supplier with a launch franchise,not a miniature SpaceX.</p>
+            <div class="grid-2">
+              <div class="glass card">
+                <span class="mini">Q2 2026 revenue mix</span>
+                <span class="big">81 / 19</span>
+                <div class="split-bar" role="img" aria-label="Space Systems 81 percent of Q2 2026 revenue; Launch Services 19 percent"><span class="systems"></span><span class="launch"></span></div>
+                <div class="legend-row"><span><i class="swatch"></i>Space Systems · $189.5M</span><span><i class="swatch dark"></i>Launch · $44.6M</span></div>
+              </div>
+              <div class="glass card"><span class="mini">Backlog at June 30</span><span class="big">$2.36B</span><p><strong>60%</strong> Space Systems and <strong>40%</strong> Launch. About 45% is expected to convert within 12 months. <a class="src" href="https://www.zacks.com/stock/news/2987132/rocket-lab-corporation-rklb-down-177-since-last-earnings-report-can-it-rebound">Zacks↗</a></p></div>
+            </div>
+
+            <ul class="fact-list" aria-label="Rocket Lab business lines">
+              <li><b>Space Systems</b><span>Reaction wheels, star trackers, solar panels, radios, separation systems, spacecraft buses, sensor payloads, and complete constellation builds. Multi-year design cycles create stickier revenue than launch.</span></li>
+              <li><b>Electron</b><span>Dedicated ~300 kg small launch, priced around $8–10M. It wins on orbit, schedule, and precision,not on price per kilogram. 2025 delivered 21 launches at 100% mission success; 2026 reached 97 flights through Sept. 26. <a class="src" href="https://www.nasaspaceflight.com/2026/05/rocket-lab-q1-2026/">NSF↗</a></span></li>
+              <li><b>HASTE</b><span>Suborbital Electron variant for hypersonic defense tests; a $30M three-flight Anduril contract was signed in Q1 2026.</span></li>
+              <li><b>Acquisitions</b><span>GEOST added EO/IR payloads; Mynaric added laser terminals for $155.3M; Motiv added space robotics and precision mechanisms. This is vertical integration by acquisition. <a class="src" href="https://www.stocktitan.net:443/sec-filings/RKLB/8-k-rocket-lab-corp-reports-material-event-ca34c359940b.html">Mynaric 8-K↗</a></span></li>
+            </ul>
+
+            <div class="table-card">
+              <table>
+                <thead><tr><th>Program</th><th>Value</th><th>Why it matters</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Program">SDA Tracking Layer T3</td><td data-label="Value">$816M</td><td data-label="Why it matters">18 satellites; largest company award; proves prime-contractor status.</td></tr>
+                  <tr><td data-label="Program">Space Force SB-AMTI</td><td data-label="Value">$397M incl. options</td><td data-label="Why it matters">Build, launch on Neutron, and operate Flatellites; first Neutron defense mission. <a class="src" href="https://www.globenewswire.com/news-release/2026/08/04/3338977/0/en/rocket-lab-awarded-397-million-contract-to-build-and-launch-flatellites-for-u-s-space-force-s-space-based-airborne-moving-target-indicator-program.html">award↗</a></td></tr>
+                  <tr><td data-label="Program">Space Force missions</td><td data-label="Value">Up to $266M</td><td data-label="Why it matters">Up to 18 missions; deepens national-security exposure.</td></tr>
+                  <tr><td data-label="Program">Synspective</td><td data-label="Value">Undisclosed</td><td data-label="Why it matters">20 launches for 2028–2031; largest Electron contract; 47 total Synspective missions. <a class="src" href="https://www.advanced-television.com/2026/10/02/rocket-lab-wins-synspective-contract/">Oct. 2 report↗</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </section>
+
+          <section id="financials">
+            <div class="section">
+<p class="section-kicker">03 / 12</p>
+<h2>Income statement: growth outruns the losses</h2>
+<p class="intro">Revenue and gross margin are improving. Operating expenses and absolute losses remain large.</p>
+            <div class="chart-card">
+              <h3>Quarterly revenue</h3>
+              <p class="chart-note">Reported revenue, $ millions. Four consecutive quarterly records.</p>
+              <div id="revenue-chart" class="chart" role="img" aria-label="Quarterly revenue rose from 155.1 million dollars in Q3 2025 to 234.1 million dollars in Q2 2026"></div>
+              <p class="chart-source">Sources: Rocket Lab releases and reported quarterly coverage. Q3 2025 <a href="https://ts2.tech/en/rocket-lab-rklb-soars-after-q3-beat-record-155m-revenue-stronger-margins-and-2026-neutron-launch-in-sight-nov-11-2025/">TS2</a>; Q2 2026 <a href="https://files.quartr.com/reports/a8c693ff911344feee76b75f508473a6-2026-08-10-20-09-38.pdf">shareholder letter</a>.</p>
+            </div>
+            <div class="table-card" style="margin:18px 0 24px">
+              <table>
+                <thead><tr><th>GAAP income statement</th><th>Q2 2026A</th><th>Q2 2025A</th><th>Change / read-through</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="GAAP line">Revenue</td><td data-label="Q2 2026A">$234.1M</td><td data-label="Q2 2025A">$144.5M</td><td data-label="Read-through">+62%; product revenue nearly doubled.</td></tr>
+                  <tr><td data-label="GAAP line">Cost of revenue</td><td data-label="Q2 2026A">$149.5M</td><td data-label="Q2 2025A">$98.1M</td><td data-label="Read-through">+52%; slower than revenue.</td></tr>
+                  <tr><td data-label="GAAP line">Gross profit / margin</td><td data-label="Q2 2026A">$84.6M / 36.1%</td><td data-label="Q2 2025A">$46.4M / 32.1%</td><td data-label="Read-through">~4 points of margin expansion.</td></tr>
+                  <tr><td data-label="GAAP line">R&amp;D</td><td data-label="Q2 2026A">$82.4M</td><td data-label="Q2 2025A">$66.1M</td><td data-label="Read-through">Neutron keeps development spend high.</td></tr>
+                  <tr><td data-label="GAAP line">SG&amp;A</td><td data-label="Q2 2026A">$59.7M</td><td data-label="Q2 2025A">$39.9M</td><td data-label="Read-through">Acquisition and scaling burden.</td></tr>
+                  <tr><td data-label="GAAP line">Operating loss</td><td data-label="Q2 2026A">-$57.5M</td><td data-label="Q2 2025A">-$59.6M</td><td data-label="Read-through">Narrowed only $2.1M despite $89.6M more revenue.</td></tr>
+                  <tr><td data-label="GAAP line">Net interest income / (expense)</td><td data-label="Q2 2026A">+$15.9M</td><td data-label="Q2 2025A">-$2.4M</td><td data-label="Read-through">Equity-funded cash generated interest income.</td></tr>
+                  <tr><td data-label="GAAP line">Net loss / diluted EPS</td><td data-label="Q2 2026A">-$49.3M / -$0.08</td><td data-label="Q2 2025A">-$66.4M / -$0.13</td><td data-label="Read-through">Loss improved; weighted shares rose 22%.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">Annual revenue</span><span class="big">$602M</span><p>FY2025, up <strong>38%</strong> from FY2024 revenue of $436.2M. Consensus FY2026 estimate: <strong>$962.3M</strong>, up 59.9%. <a class="src" href="https://stockanalysis.com/stocks/rklb/forecast/">consensus↗</a></p></div>
+              <div class="glass card"><span class="mini">Gross margin trend</span><span class="big">27.5% → 36.1%</span><p>Approx. FY2024 GAAP gross margin to Q2 2026. But Q3 guidance drops to <strong>29–31%</strong> GAAP due to program mix and SDA cost absorption. <a class="src" href="https://moneycheck.com/rocket-lab-rklb-shares-plunge-9-on-disappointing-q3-margin-forecast/">guide↗</a></p></div>
+              <div class="glass card"><span class="mini">Operating profile</span><span class="big">-$223.5M</span><p>TTM operating loss on $769.2M revenue, or roughly <strong>-29%</strong> operating margin. Q2 OpEx was $142M and operating loss $57.5M.</p></div>
+              <div class="glass card"><span class="mini">EPS path</span><span class="big">2028E</span><p>BofA models GAAP EPS at <strong>-$0.26</strong> in 2026, <strong>-$0.08</strong> in 2027, and <strong>+$0.16</strong> in 2028. Those are estimates, not guidance. <a class="src" href="https://www.tipranks.com/news/rocket-lab-stock-rklb-outlook-top-bofa-analyst-trims-target-but-says-long-term-upside-still-strong">BofA summary↗</a></p></div>
+            </div>
+            <div class="callout">
+              <h3>Is the path to profitability visible?</h3>
+              <p><strong>Visible, but externally dependent.</strong> Adjusted EBITDA loss narrowed to $8.8M in Q2 2026 from $27.6M a year earlier, then Q3 guidance widened it to $17–23M. Current operations are improving, but the modeled step-change depends on Iridium’s ~$495M annual operating EBITDA arriving after close and Neutron producing profitable $50M-class launches. <a class="src" href="https://files.quartr.com/reports/9002d-2026-02-12-12-17-01.pdf">Iridium FY25↗</a></p>
+            </div>
+          </div>
+          </section>
+
+          <section id="balance">
+            <div class="section">
+<p class="section-kicker">04 / 12</p>
+<h2>Balance sheet: liquid because shareholders funded it</h2>
+<p class="intro">The cash position is strong; its source matters.</p>
+            <div class="grid-3">
+              <div class="glass card"><span class="mini">Cash & equivalents</span><span class="big">$2.13B</span><p>At June 30, 2026; cash plus marketable securities about $2.39B. Roughly $1.3B of the six-month cash build came from ATM sales.</p></div>
+              <div class="glass card"><span class="mini">TTM free cash flow</span><span class="big">-$371M</span><p>Q2 operating cash flow was -$84.1M; TTM capex was about $149M.</p></div>
+              <div class="glass card"><span class="mini">Standalone funded debt</span><span class="big">$14.8M</span><p>Q2 carrying value: $13.1M converts plus $1.7M long-term borrowing; $14.5M of finance leases is separate.</p></div>
+            </div>
+            <div class="table-card" style="margin:18px 0 24px">
+              <table>
+                <thead><tr><th>Reported balance sheet</th><th>June 30, 2026A</th><th>Dec. 31, 2025A</th><th>What changed</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Balance-sheet line">Cash &amp; equivalents</td><td data-label="June 2026A">$2,129.5M</td><td data-label="Dec. 2025A">$828.7M</td><td data-label="Change">+$1.30B, primarily ATM-funded.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Marketable securities</td><td data-label="June 2026A">$258.1M</td><td data-label="Dec. 2025A">$270.2M</td><td data-label="Change">Current + non-current.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Receivables + contract assets</td><td data-label="June 2026A">$207.1M</td><td data-label="Dec. 2025A">$100.6M</td><td data-label="Change">Working capital grew with revenue.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Inventory</td><td data-label="June 2026A">$266.9M</td><td data-label="Dec. 2025A">$158.4M</td><td data-label="Change">+$108.5M; meaningful cash absorption.</td></tr>
+                  <tr><td data-label="Balance-sheet line">PP&amp;E</td><td data-label="June 2026A">$393.9M</td><td data-label="Dec. 2025A">$319.5M</td><td data-label="Change">Neutron and production build-out.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Intangibles + goodwill</td><td data-label="June 2026A">$619.5M</td><td data-label="Dec. 2025A">$430.5M</td><td data-label="Change">Acquisitions increased purchased assets.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Total assets</td><td data-label="June 2026A">$4,187.4M</td><td data-label="Dec. 2025A">$2,324.5M</td><td data-label="Change">Equity issuance drove most expansion.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Total liabilities</td><td data-label="June 2026A">$695.2M</td><td data-label="Dec. 2025A">$602.6M</td><td data-label="Change">Not the same as debt.</td></tr>
+                  <tr><td data-label="Balance-sheet line">Stockholders’ equity</td><td data-label="June 2026A">$3,492.2M</td><td data-label="Dec. 2025A">$1,721.9M</td><td data-label="Change">Paid-in capital expanded with issuance.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="chart-card">
+              <h3>Common-share expansion</h3>
+              <p class="chart-note">Approximate common shares outstanding, millions. Snapshot dates are irregular; bars encode level, not time spacing.</p>
+              <div id="shares-chart" class="chart" role="img" aria-label="Common shares rose from approximately 544 million at the end of 2025 to approximately 627 million by September 15 2026; about 41 million convertible participating preferred shares are additional to these figures"></div>
+              <p class="chart-source">Sources: company filings and ATM disclosure summarized by <a href="https://www.fool.com/investing/2026/09/22/rocket-lab-sold-usd1-9-billion-of-new-stock-to-pay-for-iridium-here-s-the-dilution-math/">The Motley Fool</a> and <a href="https://www.securities.io/rocket-lab-completes-1-944b-share-sale-secures-consent-on-1-775b-iridium-term-loan/">Securities.io</a>.</p>
+            </div>
+            <div class="callout good">
+              <h3>Debt conflict resolved: $695M was total liabilities,not debt</h3>
+              <p>The June 30 statement reports <strong>$695.2M of total liabilities</strong>, dominated by $351.2M of customer contract liabilities plus payables, leases, taxes, and other obligations. Funded borrowings were only <strong>$14.8M</strong> on a carrying-value basis, or <strong>$29.3M including non-current finance leases</strong>. The roughly $139M figure cited by one review does not match the June filing; the convert balance fell sharply as notes converted. <a class="src" href="https://files.quartr.com/reports/a8c693ff911344feee76b75f508473a6-2026-08-10-20-09-38.pdf?ref=TWFya2V0QmVhdCBNZWRpYSBMTEM=">Q2 statements↗</a></p>
+            </div>
+
+            <div class="table-card" style="margin:18px 0 24px">
+              <table>
+                <thead><tr><th>Debt / fixed obligation</th><th>June 30 amount</th><th>Due / maturity</th><th>Runway implication</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Debt">Current borrowings</td><td data-label="Amount">$0 reported</td><td data-label="Due">No current debt line</td><td data-label="Implication">No standalone principal wall in the next 12 months.</td></tr>
+                  <tr><td data-label="Debt">4.25% convertible notes</td><td data-label="Amount">$13.1M net carrying value</td><td data-label="Due">Feb. 1, 2029</td><td data-label="Implication">Small versus cash; conversion may settle in cash, stock, or both. Most of the original $355M has already converted or been settled. <a class="src" href="https://www.stocktitan.net/sec-filings/RKLB/10-k-rocket-lab-corp-files-annual-report-3c3674924b28.html">terms↗</a></td></tr>
+                  <tr><td data-label="Debt">Other long-term borrowing</td><td data-label="Amount">$1.7M net</td><td data-label="Due">No current installment separately reported</td><td data-label="Implication">Immaterial to liquidity; exact contractual maturity is not disclosed in the Q2 release.</td></tr>
+                  <tr><td data-label="Debt">Finance leases</td><td data-label="Amount">$14.5M non-current</td><td data-label="Due">Scheduled lease payments</td><td data-label="Implication">Operational obligation, not a refinancing wall.</td></tr>
+                  <tr><td data-label="Debt">Iridium term loan after close</td><td data-label="Amount">$1.775B principal</td><td data-label="Due">Sept. 2030; ~$18.3M annual scheduled principal, remainder at maturity</td><td data-label="Implication">The major future balloon and likely refinancing focus. Rocket Lab USA guarantees it after close. <a class="src" href="https://app.quotemedia.com/data/downloadFiling?webmasterId=101533&amp;ref=319772645&amp;type=PDF&amp;symbol=IRDM&amp;cdn=a8db3391421bc8d88299881eaab9f0e5&amp;companyName=Iridium+Communications+Inc&amp;formType=10-K&amp;dateFiled=2026-02-12">Iridium 10-K↗</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">Standalone cash-only runway</span><span class="big">~23 quarters</span><p>$2.129B cash divided by the ~$92.8M quarterly pace implied by -$371M TTM FCF. Including $258M of marketable securities gives <strong>~26 quarters</strong>. This is a static burn-rate calculation, not guidance.</p></div>
+              <div class="glass card"><span class="mini">Simplified post-deal cash cushion</span><span class="big">~13 quarters</span><p>$2.129B June cash + $1.944B September equity raise − ~$2.9B cash consideration = <strong>~$1.17B</strong> before fees, pre-close burn, debt repayments, and acquired cash. At today’s burn, that is ~12.6 quarters. Iridium’s cash flow improves the combined picture, but the deal consumes the standalone cushion.</p></div>
+            </div>
+
+            <div class="callout">
+              <h3>What changes at Iridium close</h3>
+              <p>The $3.6B 364-day bridge commitment was <strong>terminated</strong> after the equity raise. Instead, the existing <strong>$1.775B Iridium term loan remains outstanding</strong> and gains an unsecured Rocket Lab USA guarantee. That is cheaper and avoids an immediate bridge refinancing, but it changes Rocket Lab from a near-net-cash borrower into a company with roughly <strong>$1.79B of funded debt</strong> before leases and any closing-date adjustments. <a class="src" href="https://www.globenewswire.com/news-release/2026/09/15/3361819/0/en/rocket-lab-fully-funds-iridium-acquisition-including-completion-of-1-94-billion-atm.html">financing release↗</a></p>
+            </div>
+
+            <div class="callout danger">
+              <h3>Which maturity could force a raise?</h3>
+              <p><strong>Not the 2029 converts.</strong> The remaining carrying amount is too small to drive financing by itself. The real wall is <strong>September 2030</strong>: scheduled term-loan amortization is only about $18.3M a year, so most of $1.775B remains unless Iridium’s roughly $300M annual FCF is directed to extra repayment. The combined company will likely need to refinance, repay aggressively, or raise capital before that balloon. Before 2030, a raise would be driven by acquisition cash use, Neutron overruns, or higher burn,not by a scheduled standalone Rocket Lab maturity.</p>
+            </div>
+
+            <div class="callout danger">
+              <h3>Dilution is the real cost of capital</h3>
+              <p>Rocket Lab raised <strong>$1.53B</strong> in H1 2026, then sold <strong>29.3M shares for $1.944B</strong> from August to September. End-2025 common shares of roughly 544M rose to about 627M by Sept. 15,approximately <strong>15%</strong> dilution in nine months, and that is common shares only: ~41M Series A convertible participating preferred shares sit on top of it, for about <strong>668M economic shares</strong>. Q2 weighted-average basic shares were up 22% year over year. The September raise replaced a $3.6B bridge loan for Iridium, trading leverage risk for permanent ownership dilution.</p>
+            </div>
+          </div>
+          </section>
+
+          <section id="iridium">
+            <div class="section">
+<p class="section-kicker">05 / 12</p>
+<h2>Iridium: buying the recurring-revenue layer</h2>
+<p class="intro">The strategic fit is obvious. The price and integration challenge are equally obvious.</p>
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">Deal architecture</span><span class="big">~$8.0B EV</span><p>$54 per Iridium share: $27 cash plus $27 in RKLB stock, with a $67.50–$112.50 collar. Cash consideration is about <strong>$2.9B</strong>. Expected close: mid-2027, subject to FCC approval. <a class="src" href="https://www.stocktitan.net/sec-filings/RKLB/424b3-rocket-lab-corp-prospectus-filed-pursuant-to-rule-424-b-3-56e4614cfdd1.html">prospectus↗</a></p></div>
+              <div class="glass card"><span class="mini">Iridium FY2025</span><span class="big">$871.7M revenue</span><p><strong>$114.4M</strong> net income, <strong>$495.3M</strong> operational EBITDA at a 56.8% margin, about 2.54M billable subscribers, and capex of $100.3M. <a class="src" href="https://files.quartr.com/reports/9002d-2026-02-12-12-17-01.pdf">company release↗</a></p></div>
+            </div>
+            <div class="score">
+              <div><h3>What Rocket Lab buys</h3><ul><li>Recurring subscription and airtime revenue.</li><li>Globally coordinated L-band spectrum.</li><li>A 66-satellite LEO communications constellation.</li><li>A 20+ year U.S. government relationship.</li><li>A path from building spacecraft to operating networks.</li></ul></div>
+              <div><h3>What shareholders inherit</h3><ul><li>A full <strong>~9.2× sales / ~16.1× OEBITDA</strong> purchase price.</li><li>A subscriber-services business Rocket Lab has never operated.</li><li>Management distraction during Neutron’s highest-risk phase.</li><li>FCC license-transfer risk and a competitor objection.</li><li><strong>EMSS rollover risk:</strong> the seven-year, $738.5M airtime contract (HC101319C0006) expired around Sept. 14, 2026. No renewal, extension, or replacement has been publicly announced as of Oct. 19, 2026. Iridium expects a U.S. Space Force renewal by March 2027; DoD held a unilateral six-month extension option, but whether it was exercised is unknown. New terms, value, and duration are also unknown. <a class="src" href="https://investor.iridium.com/2026-07-22-Iridium-Announces-Second-Quarter-2026-Results">Q2 update↗</a> <a class="src" href="https://www.stocktitan.net/sec-filings/IRDM/10-q-iridium-communications-inc-quarterly-earnings-report-8ff7751e83a2.html">Q1 10-Q↗</a></li></ul></div>
+            </div>
+            <div class="callout good">
+              <h3>The best bull argument</h3>
+              <p>Iridium supplies exactly what Rocket Lab lacks: recurring, high-margin cash flow plus scarce spectrum. If the $495M of operational EBITDA is retained and the DoD franchise transfers intact, the combined company becomes EBITDA- and FCF-positive much faster than Rocket Lab could organically.</p>
+            </div>
+            <div class="callout danger">
+              <h3>The best bear argument</h3>
+              <p>Rocket Lab is paying a full multiple for a ~5%-growth business while simultaneously developing Neutron. The largest acquisition in company history closes into its largest engineering transition. The deal can be strategically right and still destroy value if integration, subscriber growth, or government renewal slips.</p>
+            </div>
+            <div class="callout">
+              <h3>The Starlink mirror, with the arrow reversed</h3>
+              <p><strong>Financially, the mirror is real.</strong> Iridium’s roughly $495M of operating EBITDA is the recurring cash engine that can fund Neutron development,the same role Starlink plays for SpaceX’s rocket programs.</p>
+              <p><strong>The sequencing is inverted.</strong> SpaceX built the network <em>from</em> the rocket: Starlink was designed around inexpensive Falcon 9 launches, became SpaceX’s largest internal customer, and drove cadence, reuse learning, and lower unit costs. Rocket Lab is buying a finished network to fund the rocket.</p>
+              <p><strong>The operational flywheel does not transfer.</strong> Iridium NEXT’s 66-plus satellites were already deployed from 2017 to 2019 and require only occasional replenishment launches. Iridium therefore supplies almost no recurring internal launch demand for Rocket Lab.</p>
+              <p><strong>What does rhyme is the end-to-end position:</strong> owning the network rather than only selling the trucks. Iridium also brings globally coordinated L-band spectrum,a scarce asset with direct-to-device optionality.</p>
+              <p><strong>The limiting caveat:</strong> Iridium is a mature, roughly 5%-growth business, not a Starlink-style growth engine. It can stabilize the P&amp;L and help fund Neutron; it does not reproduce Starlink’s compounding loop.</p>
+            </div>
+          </div>
+          </section>
+
+          <section id="neutron">
+            <div class="section">
+<p class="section-kicker">06 / 12</p>
+<h2>Neutron: the valuation’s hinge</h2>
+<p class="intro">Without it, Rocket Lab remains an excellent small-launch and systems supplier. With it, the company can contest medium lift and national-security launch.</p>
+            <ul class="fact-list">
+              <li><b>Target vehicle</b><span>~13,000 kg to LEO, reusable first stage, LOX/methane Archimedes engines, and a captive “Hungry Hippo” fairing.</span></li>
+              <li><b>Commercial target</b><span>$50–55M average selling price, or about $3,800/kg at $50M and 13 tonnes,before actual reuse economics are known.</span></li>
+              <li><b>Progress</b><span>Engine qualification complete; fairing qualified and delivered; LC-3 at Wallops operational; FAA permits filed.</span></li>
+              <li><b>Failure signal</b><span>A full-size Stage 1 tank ruptured in Jan. 2026 due to a manufacturing defect in a hand-laid composite joint. Tanks were redesigned for automated fiber placement.</span></li>
+              <li><b>Schedule</b><span>First flight delayed to 2027: Rocket Lab said on Oct. 14 that voids (air pockets) in the carbon-composite forward dome of the first-stage propellant tank required a manufacturing fix and rebuild, with testing running into Q1 2027. This is the third timeline slip (was 2024, then Q4 2026). CFO Adam Spice had tied a successful Neutron test flight to adjusted-EBITDA positivity the following quarter, that catalyst shifts out too. Shares fell ~8% on Oct. 14 and again on Oct. 15 (−6.6%) and Oct. 16 (−8.0%). <a class="src" href="https://aistockwire.com/blog/rocket-lab-rklb-neutron-first-launch-2027-delay-october-2026">delay↗</a> <a class="src" href="https://www.marketbeat.com/stocks/NASDAQ/RKLB/chart/">closes↗</a></span></li>
+            </ul>
+            <div class="grid-2">
+              <div class="glass card"><h3>Why it can win</h3><p>Dedicated schedule, precise orbits, U.S. government vendor diversity, and integrated spacecraft-plus-launch missions. Neutron does not need to beat Falcon 9 on cost if buyers pay for availability, mission control, and a second source.</p></div>
+              <div class="glass card"><h3>Why it can fail economically</h3><p>Falcon 9’s reusable cost base and 100+ annual flights allow SpaceX to undercut Neutron while remaining profitable. Starship, if routine, could reprice the entire market before Neutron reaches cadence.</p></div>
+            </div>
+            <div class="callout">
+              <h3>First flight is necessary,not sufficient</h3>
+              <p>A successful debut validates engineering. It does not prove turnaround cadence, refurbishment cost, launch frequency, or gross margin. SpaceX’s advantage is not one successful reusable flight; it is a 15-year learning curve and internal Starlink demand.</p>
+            </div>
+          </div>
+          </section>
+
+          <section id="dependencies">
+            <div class="section">
+<p class="section-kicker">07 / 12</p>
+<h2>Four dependencies, ranked</h2>
+<p class="intro">The investment does not need perfection forever. It does need the difficult events to sequence correctly.</p>
+            <div class="dependency"><div class="rank">1</div><div><h3>Neutron first flight</h3><p>Engineering milestones are tangible, but two tank-manufacturing setbacks, January’s Stage 1 tank rupture and October’s forward-dome voids, consumed the schedule margin and pushed first flight to 2027. Eventual success is plausible; a clean debut in H1 2027 is not high-confidence.</p></div><div class="confidence"><span class="pill gray">Low certainty</span></div></div>
+            <div class="dependency"><div class="rank">2</div><div><h3>Iridium close, integration, and EMSS continuity</h3><p>Shareholders approved the deal with 99.6% of votes cast; HSR cleared; financing is funded, while FCC transfer remains the last major closing gate. The core DoD airtime franchise is currently operating after contract HC101319C0006 expired around Sept. 14, 2026, with no publicly announced renewal, extension, or replacement as of Oct. 19, 2026. Iridium expects a U.S. Space Force renewal by March 2027,near the expected deal-close window,but the terms, value, duration, and status of DoD’s six-month extension option remain unknown. <a class="src" href="https://www.satelliteinsights.com/rocket-lab-iridium-acquisition-shareholder-vote/">vote detail↗</a> <a class="src" href="https://investor.iridium.com/2026-07-22-Iridium-Announces-Second-Quarter-2026-Results">EMSS update↗</a></p></div><div class="confidence"><span class="pill gray">Moderate</span></div></div>
+            <div class="dependency"><div class="rank">3</div><div><h3>Defense-program execution</h3><p>The $816M SDA program and the $397M SB-AMTI award concentrate execution risk: large government programs can compress margins if costs overrun. Note the SB-AMTI award was announced as a $397M OTA without disclosed pricing terms, so fixed-price cost transfer is not established for it. Q3’s 29–31% gross-margin guide is the first warning that program phase and mix can compress economics.</p></div><div class="confidence"><span class="pill gray">Moderate</span></div></div>
+            <div class="dependency"><div class="rank">4</div><div><h3>Profitability before dilution fatigue</h3><p>Iridium and Neutron need to generate cash before another large funding gap arrives. If either slips while the stock falls, each dollar raised becomes more dilutive.</p></div><div class="confidence"><span class="pill gray">Low–moderate</span></div></div>
+          </div>
+          </section>
+
+          <section id="competition">
+            <div class="section">
+<p class="section-kicker">08 / 12</p>
+<h2>Who can get in the way</h2>
+<p class="intro">The competitor changes by layer. SpaceX is the price ceiling; Blue Origin is the near-term government-share rival.</p>
+            <div class="table-card">
+              <table>
+                <thead><tr><th>Competitor</th><th>Pressure point</th><th>Threat level</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Competitor">SpaceX</td><td data-label="Pressure point">Falcon 9 and Transporter set the launch-price floor; Starship could strand Neutron’s economics. Starlink Direct-to-Cell also attacks Iridium’s future service growth.</td><td data-label="Threat level"><span class="pill red">Structural</span></td></tr>
+                  <tr><td data-label="Competitor">Blue Origin</td><td data-label="Pressure point">New Glenn competes for medium/heavy lift and the same SDA/NSSL dollars, backed by deeper private funding. A May 2026 hot-fire explosion provides temporary breathing room, not a permanent moat. <a class="src" href="https://www.theregister.com/science/2026/08/06/blue-origin-blames-new-glenn-fireball-on-engine-oxygen-valve/5283997">incident↗</a></td><td data-label="Threat level"><span class="pill amber">Near-term</span></td></tr>
+                  <tr><td data-label="Competitor">ULA</td><td data-label="Pressure point">Vulcan competes for national-security missions; at $82M+ for ~10.6t it is not the price leader, but certification and incumbency matter.</td><td data-label="Threat level"><span class="pill gray">Institutional</span></td></tr>
+                  <tr><td data-label="Competitor">MDA / L3Harris / Northrop / Airbus / Thales</td><td data-label="Pressure point">Spacecraft buses, payloads, constellations, and defense-prime relationships. Rocket Lab’s answer is faster integration and broader in-house capability.</td><td data-label="Threat level"><span class="pill amber">Program-by-program</span></td></tr>
+                  <tr><td data-label="Competitor">Viasat / Globalstar / AST SpaceMobile</td><td data-label="Pressure point">Post-Iridium mobile satellite, IoT, and direct-to-device services. Iridium’s defense entrenchment and L-band rights are the buffer.</td><td data-label="Threat level"><span class="pill gray">Long-term</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </section>
+
+          <section id="decade-test">
+            <div class="section">
+<p class="section-kicker">09 / 12</p>
+<h2>2030–2036: the decade test</h2>
+<p class="intro">The monopoly standard is not whether Rocket Lab becomes large. It is whether each success widens an advantage that rivals cannot cheaply copy.</p>
+
+            <div class="glass card">
+              <h3>The standard: from one of N to one of one</h3>
+              <p class="viz-sub">A strategic monopoly compounds because scale, cost, data, regulation, or customer lock-in makes the next unit harder to challenge,not merely because revenue rises.</p>
+              <div class="moat-ruler" role="img" aria-label="Rocket Lab currently sits between one of many and credible number two; a self-reinforcing strategic monopoly is not yet visible">
+                <div class="moat-stop"><strong>One of N</strong><span>Merchant hardware and launch entrants compete feature by feature.</span></div>
+                <div class="moat-stop current"><strong>RKLB today</strong><span>Execution leader among challengers; differentiated, but contestable.</span></div>
+                <div class="moat-stop"><strong>Credible #2</strong><span>Assured-access demand supports a durable alternative.</span></div>
+                <div class="moat-stop"><strong>Defensible niche</strong><span>Iridium spectrum and defense relationships resist replication.</span></div>
+                <div class="moat-stop"><strong>One of one</strong><span>Widening cost or network advantage pulls demand inward.</span></div>
+              </div>
+              <p class="viz-source">Analytical framework applied to the sourced competitive facts below; placement is an assessment, not a company metric.</p>
+            </div>
+
+            <div class="visual-grid" style="margin-top:18px">
+              <div class="glass card">
+                <h3>1. Starship can strand Neutron’s price,not yet its mission</h3>
+                <p class="viz-sub">The breakpoint is a dedicated Starship price below Neutron’s $50–55M target. Starship’s projected cost advantage still depends on reuse and cadence that have not been demonstrated.</p>
+                <div class="breakpoint" role="img" aria-label="Neutron target price is 50 to 55 million dollars. It loses price rationale when a dedicated Starship flight is sold below 50 million dollars, but Starship reuse economics are projections rather than demonstrated costs.">
+                  <div class="breakpoint-side"><span>Neutron target · 13t to LEO</span><strong>$50–55M</strong><span>~$3,850–4,230/kg; vehicle unflown as of Oct. 19, 2026, first flight delayed to 2027 (Oct. 14 announcement). <a class="src" href="https://www.ainvest.com/news/rocket-lab-neutron-50m-price-tag-proof-2608/">source↗</a></span></div>
+                  <div class="breakpoint-gate">Price case<br>breaks below<br>$50M</div>
+                  <div class="breakpoint-side"><span>Starship “proven reuse” projection</span><strong>~$267/kg</strong><span>Morningstar scenario; about $3.5M for 13t-equivalent capacity. This is a projection, not an observed cost or price. <a class="src" href="https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt8296d1d9f667f42e/6a2c051fab9a6619d8c46307/OneSmallStepForSpaceX_061126.pdf">source↗</a></span></div>
+                </div>
+                <div class="callout" style="margin-bottom:0">
+                  <p><strong>Demonstrated progress:</strong> Starship had flown 14 times by Sept. 28, 2026, and Flight 14 became its first orbital mission to deploy an operational payload. But no upper stage had been recovered or reflown, and rapid turnaround was not established. <a class="src" href="https://en.wikipedia.org/wiki/List_of_Starship_launches">flight list↗</a> <a class="src" href="https://www.wcbe.org/npr-news/2026-09-28/spacexs-starship-launches-on-first-orbital-mission-from-texas">orbital flight↗</a> <a class="src" href="https://gizmodo.com/starship-has-finally-gone-orbital-now-comes-the-hard-part-2000818803">reuse status↗</a></p>
+                  <p><strong>What preserves Neutron:</strong> dedicated schedule, orbit control, government diversification, and scarce launch slots. SpaceX had stopped taking new Falcon 9 rideshare sales beyond roughly 2028 while demand was outpacing supply into about 2030. That creates a real entry window; it does not create a permanent cost moat. <a class="src" href="https://www.barchart.com/story/news/4865453/rocket-lab-steps-in-where-spacex-just-walked-away">capacity report↗</a> <a class="src" href="https://newspaceeconomy.ca/2026/09/18/launch-shortage/">shortage analysis↗</a></p>
+                </div>
+              </div>
+
+              <div class="glass card">
+                <h3>2. Iridium brings a moat,and a capex clock</h3>
+                <p class="viz-sub">NEXT’s longevity defers the bill; it does not remove it. Replacement spending enters the same decade in which Neutron must scale and the 2030 term-loan maturity must be addressed.</p>
+                <div class="decade-timeline" role="img" aria-label="Iridium NEXT deployed 2017 to 2019, replacement work starts around 2031, cash flow dips negative in 2031, spending ramps in 2034 and 2035, and the network is expected to last at least to 2035">
+                  <div class="decade-event"><b>2017–19</b><strong>NEXT deployed</strong><span>80 satellites including spares; last-generation program cost roughly $2.9–3B. <a class="src" href="https://spacenews.com/iridium-adds-five-years-to-constellation-lifetime-estimate/">source↗</a></span></div>
+                  <div class="decade-event"><b>2031</b><strong>Replacement starts</strong><span>Iridium said modest spending could begin in 2031–32. <a class="src" href="https://www.fool.com/earnings/call-transcripts/2026/02/12/iridium-irdm-q4-2025-earnings-call-transcript/">call↗</a></span></div>
+                  <div class="decade-event"><b>2031</b><strong>FCF: -$21M</strong><span>Iridium’s own merger forecast shows the unlevered trough as replacement spending begins. <a class="src" href="https://r40.io/news/rklb-350m-napkin-has-to-beat-thales-not-spacex/">filing analysis↗</a></span></div>
+                  <div class="decade-event"><b>2034–35</b><strong>Spend ramps</strong><span>Management’s stated timing for the heavier build phase. <a class="src" href="https://www.fool.com/earnings/call-transcripts/2026/02/12/iridium-irdm-q4-2025-earnings-call-transcript/">call↗</a></span></div>
+                  <div class="decade-event"><b>≥2035</b><strong>Life extended</strong><span>Engineering review says the current network should operate at least this long. <a class="src" href="https://spacenews.com/iridium-adds-five-years-to-constellation-lifetime-estimate/">source↗</a></span></div>
+                </div>
+                <div class="callout danger" style="margin-bottom:0">
+                  <h3>No firm replacement-cost estimate exists</h3>
+                  <p>The grounded bookends are the prior generation’s roughly <strong>$2.9–3B</strong> all-in cost and Peter Beck’s informal <strong>~$350M “back-of-the-napkin”</strong> claim. The $350M figure appears in no SEC filing and should be treated as a claim, not a budget. The only hard forward signal in the merger materials is the <strong>-$21M 2031 unlevered FCF</strong> trough. <a class="src" href="https://r40.io/news/rklb-350m-napkin-has-to-beat-thales-not-spacex/">analysis↗</a></p>
+                </div>
+              </div>
+
+              <div class="glass card">
+                <h3>3. Direct-to-device contests the growth vector</h3>
+                <p class="viz-sub"><strong>Starlink Direct-to-Cell</strong> has been commercial with T-Mobile since July 2025; <strong>AST SpaceMobile</strong> targets commercial service in 2027 after delays. Both attack the consumer messaging/broadband and IoT adjacency where Iridium needs incremental growth. <a class="src" href="https://keeptrack.space/deep-dive/starlink-direct-to-cell">Starlink↗</a> <a class="src" href="https://www.ainvest.com/news/ast-spacemobile-pushes-commercial-launch-2027-delay-deeper-problem-disguise-2609/">AST↗</a></p>
+                <p><span class="pill amber">Contested</span> Consumer D2D, NTN Direct upside, and long-run pricing power.</p>
+                <p><span class="pill green">Defensible</span> Narrowband IoT, voice, PNT, globally coordinated L-band spectrum, installed terminals, and the defense base. The overlap is adjacent rather than total. <a class="src" href="https://www.sdxcentral.com/news/iridiums-project-stardust-satellite-strategy-supports-5g-iot-from-space/">Iridium strategy↗</a></p>
+              </div>
+
+              <div class="glass card">
+                <h3>4. Space Systems sits in the commoditizing layer</h3>
+                <p class="viz-sub"><strong>81% of Q2 revenue</strong> came from Space Systems, where buses and components are moving from custom builds toward standardized runs of thousands. <a class="src" href="https://www.cestriancapitalresearch.com/rocket-lab-nasdaq-rklb-stock-rating-accumulate-after-q2-fy12-26-earnings/">mix↗</a> <a class="src" href="https://www.satelliteevolution.com/post/from-custom-to-commodity-space-is-undergoing-its-own-industrial-evolution">standardization↗</a></p>
+                <p><strong>Neutral suppliers:</strong> Apex explicitly markets itself as a bus provider that does not compete with customers, while other scaled suppliers and captive constellation builders pressure merchant economics. <a class="src" href="https://www.satellitetoday.com/manufacturing/2025/05/28/apexs-new-comet-bus-is-geared-toward-constellations-and-national-security/">Apex↗</a></p>
+                <p><strong>Solar pressure:</strong> a 2026 University of Surrey review estimated silicon cells could reduce satellite power cost by up to 90% versus III-V triple-junction technology, directly challenging premium solar pricing. <a class="src" href="https://phys.org/news/2026-09-silicon-solar-cells-satellite-power.html">review↗</a></p>
+              </div>
+
+              <div class="glass card">
+                <h3>Where the moat holds,and where it narrows</h3>
+                <p class="viz-sub">A ten-year view separates scale from structural protection.</p>
+                <div class="moat-grid" role="table" aria-label="Rocket Lab moat assessment by business layer">
+                  <div class="moat-cell head"></div><div class="moat-cell head">2030 demand</div><div class="moat-cell head">Defensibility</div><div class="moat-cell head">Decade read</div>
+                  <div class="moat-cell label">Neutron launch</div><div class="moat-cell" data-label="2030 demand"><strong>Large</strong> government and commercial need.</div><div class="moat-cell" data-label="Defensibility">Assured-access policy, schedule, and a second source,not lowest-cost leadership.</div><div class="moat-cell" data-label="Decade read"><span class="pill green">Credible #2</span></div>
+                  <div class="moat-cell label">Iridium services</div><div class="moat-cell" data-label="2030 demand"><strong>Durable</strong> defense and narrowband base.</div><div class="moat-cell" data-label="Defensibility">Scarce spectrum and installed relationships; consumer D2D growth is contested.</div><div class="moat-cell" data-label="Decade read"><span class="pill green">Defensive niche</span></div>
+                  <div class="moat-cell label">Space Systems</div><div class="moat-cell" data-label="2030 demand"><strong>Growing</strong> satellite production volume.</div><div class="moat-cell" data-label="Defensibility">Scale and integration offset standardization, neutral suppliers, and component price pressure.</div><div class="moat-cell" data-label="Decade read"><span class="pill gray">One of N</span></div>
+                </div>
+                <p class="viz-source">Assessment synthesized from the launch, D2D, and Space Systems sources cited in this section.</p>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:18px">
+              <div class="glass card"><span class="mini">Honest counterweight 01</span><h3>Government sustains a second provider</h3><p>NSSL Lane 1’s ceiling was tripled to <strong>$17B</strong> amid more than <strong>$30B</strong> of Pentagon launch demand. Assured access, resiliency, and vendor diversity can structurally support a #2 even when it is not the cost leader. <a class="src" href="https://www.webpronews.com/space-force-triples-launch-contract-to-17-billion-as-pentagon-demand-for-rockets-soars-past-30-billion/">demand↗</a> <a class="src" href="https://breakingdefense.com/2026/07/space-force-adds-two-startups-to-small-medium-launch-pool/">Lane 1↗</a></p></div>
+              <div class="glass card"><span class="mini">Honest counterweight 02</span><h3>The shortage makes the window real</h3><p>Falcon 9 capacity was reported booked through 2028–29 and SpaceX had stopped new rideshare sales beyond roughly 2028. Neutron can win before Starship demonstrates cheap, routine dedicated service. The window is valuable; its duration is uncertain. <a class="src" href="https://www.barchart.com/story/news/4865453/rocket-lab-steps-in-where-spacex-just-walked-away">bookings↗</a> <a class="src" href="https://newspaceeconomy.ca/2026/09/18/launch-shortage/">capacity↗</a></p></div>
+            </div>
+
+            <div class="callout danger">
+              <h3>Decade verdict: a large business is visible; a widening monopoly is not</h3>
+              <p><strong>Rocket Lab can plausibly become a much larger and strategically important company by 2036.</strong> Government demand can sustain Neutron as a credible second source; Iridium can contribute a scarce, defensible communications niche; and vertical integration can win complex programs.</p>
+              <p><strong>But the current evidence does not show a self-reinforcing, one-of-one moat widening across the enterprise.</strong> In launch, Rocket Lab follows the cost curve SpaceX sets. In Space Systems, scale grows inside a standardizing merchant market. Iridium is the closest thing to a monopoly asset, but it is acquired, mature, exposed to a replacement-capex cycle, and its consumer growth adjacency is contested.</p>
+              <p>That distinction matters: <strong>size describes how much business a company does; quality describes how durably it can defend returns.</strong> On the 2030–2036 evidence available today, RKLB’s strongest path is to a large, capable #2 with one valuable defensive niche,not yet to a strategic monopoly whose lead automatically compounds.</p>
+            </div>
+          </div>
+          </section>
+
+          <section id="scenarios">
+            <div class="section">
+<p class="section-kicker">10 / 12</p>
+<h2>Scenario range</h2>
+<p class="intro">These are analyst-anchored outcomes, not probability-weighted intrinsic values.</p>
+            <div class="cases">
+              <div class="case bull"><h3>Bull</h3><div class="target">$130–$150</div><ul><li>Neutron succeeds in H1 2027.</li><li>Iridium closes and is accretive.</li><li>2028 revenue ~$2.5B+.</li><li>2028 EPS +$0.20+.</li><li>Premium multiple persists.</li></ul></div>
+              <div class="case base"><h3>Base</h3><div class="target">$105–$115</div><ul><li>Neutron slips deeper into 2027, then works.</li><li>Iridium closes mid-2027.</li><li>2028 revenue ~$2.2B.</li><li>2028 EPS +$0.10–$0.16.</li><li>Margins recover after SDA ramp.</li></ul></div>
+              <div class="case bear"><h3>Bear</h3><div class="target">$37–$65</div><ul><li>Neutron fails or delays materially.</li><li>Iridium integration or FCC friction.</li><li>2028 revenue below $1.5B.</li><li>EPS remains negative.</li><li>Sales multiple compresses.</li></ul></div>
+            </div>
+            <p class="muted" style="margin-top:14px;font-size:13px">Street consensus as of Oct. 6: 21 analysts, Buy; average target $109.15, median $110, range $64–$150. After the Oct. 14 Neutron delay: Citizens cut its target to $90 (from $130, Outperform, Oct. 16); Goldman Sachs and Clear Street also lowered targets; Stifel reiterated Buy at $132 (Oct. 18). Consensus FY2026 revenue is $962.3M. <a class="src" href="https://stockanalysis.com/stocks/rklb/forecast/">StockAnalysis↗</a> <a class="src" href="https://stocktwits.com/news-articles/markets/equity/rklb-stock-citizens-cuts-target-to-90-says-neutron-delay-s-most-significant-impact-is-on-fy-27-fy-28-launch-monetization/cZxKTcDRBsg">Citizens↗</a> <a class="src" href="https://www.advanced-television.com/2026/10/18/bank-rocket-lab-still-a-buy/">Stifel↗</a></p>
+          </div>
+          </section>
+
+          <section id="investor">
+            <div class="section">
+<p class="section-kicker">11 / 12</p>
+<h2>The investor lens</h2>
+<p class="intro">What RKLB means in the context of a SpaceX compounder thesis.</p>
+            <div class="score">
+              <div><h3>What has to go right</h3><ul><li>Neutron succeeds by H1 2027 and converts bookings into cadence.</li><li>Iridium closes; FCC, spectrum, and DoD relationships transfer intact.</li><li>SDA and SB-AMTI execute without major cost overruns.</li><li>Revenue compounds ~40–50% through 2028.</li><li>GAAP EPS turns positive around 2028.</li><li>The ATM stops being the funding model.</li></ul></div>
+              <div><h3>What breaks the thesis</h3><ul><li>Neutron slips into late 2027+ or suffers a first-flight failure.</li><li>Starship reaches cadence before Neutron establishes its niche.</li><li>Iridium integration leaks EBITDA or loses government revenue.</li><li>Space Systems margins settle near 30%, not 40%+.</li><li>A large equity raise lands after a multiple reset.</li><li>Government programs are delayed or canceled.</li></ul></div>
+            </div>
+
+            <div class="yield-panel" aria-label="Implied yield arithmetic on stated Rocket Lab estimates">
+              <div class="yield-header">
+                <div>
+                  <h3>Implied yield: what 15% annual compounding demands</h3>
+                  <p>Per-share arithmetic at the current valuation, before assigning a probability to the outcome.</p>
+                </div>
+                <div class="yield-badge">Stated-estimate arithmetic<br>not a forecast</div>
+              </div>
+              <div class="yield-steps">
+                <div class="yield-step">
+                  <span class="step-num">01 · STARTING PRICE</span>
+                  <span class="equation">$50.90 × 1.15⁵</span>
+                  <p>Equals roughly <strong>$102 per share</strong> in 2031 if the share count does not rise.</p>
+                </div>
+                <div class="yield-step">
+                  <span class="step-num">02 · STARTING VALUE</span>
+                  <span class="equation">$34.0B × 2.01</span>
+                  <p>Equals roughly a <strong>$68B equity value</strong>. Today’s ~$769M TTM revenue means the starting multiple is about <strong>44× trailing sales</strong>.</p>
+                </div>
+                <div class="yield-step">
+                  <span class="step-num">03 · SALES TEST</span>
+                  <span class="equation">$68B ÷ 22×</span>
+                  <p>Requires <strong>~$3.1B of revenue</strong> in 2031 while still retaining a 22× sales multiple.</p>
+                </div>
+                <div class="yield-step">
+                  <span class="step-num">04 · EARNINGS TEST</span>
+                  <span class="equation">$3–5 EPS × 30–40×</span>
+                  <p>Provides the alternative earnings route. BofA’s 2028 estimate is only <strong>+$0.16 EPS</strong>. <a class="src" href="https://www.tipranks.com/news/rocket-lab-stock-rklb-outlook-top-bofa-analyst-trims-target-but-says-long-term-upside-still-strong">BofA↗</a></p>
+                </div>
+              </div>
+              <div class="yield-bridge">
+                <div>
+                  <h4>The reported and estimated revenue path</h4>
+                  <div class="yield-path" aria-label="Revenue path from 602 million dollars in 2025 to 2.25 billion dollars estimated in 2028">
+                    <b>$602M</b><i>→</i><b>$962M</b><i>→</i><b>$1.54B</b><i>→</i><b>$2.25B</b>
+                  </div>
+                  <p>2025A → 2026 consensus → 2027E → 2028E (BofA). About <strong>$900M of the 2028 figure is acquired Iridium revenue</strong>, not organic compounding. <a class="src" href="https://stockanalysis.com/stocks/rklb/forecast/">consensus↗</a> <a class="src" href="https://www.tipranks.com/news/rocket-lab-stock-rklb-outlook-top-bofa-analyst-trims-target-but-says-long-term-upside-still-strong">BofA↗</a></p>
+                </div>
+                <div>
+                  <h4>What dilution does to the per-share result</h4>
+                  <div class="yield-path"><b>544M</b><i>→</i><b>627M</b><span class="pill gray">+15% common in 9 months</span></div>
+                  <p>That is common shares only. Add ~41M Series A convertible participating preferred shares and the economic count is already <strong>~668M</strong>. Convert holders added <strong>27.8M shares</strong> in H1 2026, and Iridium’s stock consideration adds roughly <strong>26–43M more</strong> at close, for <strong>694–711M</strong> economic shares. At $68B that is only about <strong>$96–98 per share</strong>, not $102. <a class="src" href="https://www.fool.com/investing/2026/09/22/rocket-lab-sold-usd1-9-billion-of-new-stock-to-pay-for-iridium-here-s-the-dilution-math/">dilution↗</a> <a class="src" href="https://www.stocktitan.net/sec-filings/RKLB/424b3-rocket-lab-corp-prospectus-filed-pursuant-to-rule-424-b-3-56e4614cfdd1.html">deal↗</a></p>
+                </div>
+              </div>
+              <div class="yield-warning"><strong>Per-share conclusion:</strong> revenue can multiply while owner value lags. The five-year return requires both exceptional operating growth and enough restraint on new shares for that growth to reach each existing share.</div>
+            </div>
+
+            <div class="rdcf">
+              <h3>Reverse DCF: what $50.90 actually requires</h3>
+              <p class="rdcf-sub">Instead of forecasting cash flows to derive a price, start from the price and solve for the trajectory it implies. <strong>Assumptions:</strong> $34.0B equity value (668M economic shares × $50.90, the Oct. 20 close); 2026E revenue $962M; 10-year horizon (2027–2036); 11% cost of equity; free-cash-flow margin ramping linearly from −25% in 2027, already a sharp improvement from today’s roughly −48%, to +22% in 2036; 3% terminal growth. Equity value is discounted directly at the cost of equity, sidestepping the pro-forma net-cash bridge around the Iridium close. Recomputed Oct. 21, 2026 after the price reset; prior version used the $51.36 Oct. 19 anchor.</p>
+              <div class="table-card">
+                <table>
+                  <thead><tr><th>Year</th><th>Implied revenue</th><th>Implied FCF margin</th><th>Implied FCF</th></tr></thead>
+                  <tbody>
+                    <tr><td data-label="Year">2027</td><td data-label="Revenue">$1.4B</td><td data-label="FCF margin">−25%</td><td data-label="FCF">−$0.34B</td></tr>
+                    <tr><td data-label="Year">2029</td><td data-label="Revenue">$2.7B</td><td data-label="FCF margin">−15%</td><td data-label="FCF">−$0.39B</td></tr>
+                    <tr><td data-label="Year">2031</td><td data-label="Revenue">$5.4B</td><td data-label="FCF margin">−4%</td><td data-label="FCF">−$0.22B</td></tr>
+                    <tr><td data-label="Year">2033</td><td data-label="Revenue">$10.8B</td><td data-label="FCF margin">+6%</td><td data-label="FCF">$0.68B</td></tr>
+                    <tr><td data-label="Year">2036</td><td data-label="Revenue">$30.3B</td><td data-label="FCF margin">+22%</td><td data-label="FCF">$6.7B</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p><strong>Answer: roughly 41% revenue CAGR sustained for ten years</strong>, ending at ~$30B of revenue and ~$6.7B of free cash flow in 2036. For scale, BofA’s 2026–2028 path ($962M → $2.25B) implies ~53% CAGR, but only for two years, and ~$900M of the 2028 figure is acquired Iridium revenue. The price requires nearly that pace for a decade, on mostly organic execution, while converting a deeply negative cash profile into a 22% FCF margin.</p>
+              <p><strong>Sensitivities move the answer, not the conclusion.</strong> If the terminal FCF margin only reaches 15%, the required CAGR rises to ~47% ($46B revenue by 2036). At a 13% discount rate, ~47% ($44B). The model is terminal-value dominated because early cash flows are negative, which is itself the point: most of today’s $34.0B is a claim on the distant future, not on anything the business earns now.</p>
+              <p><strong>Read against the multiple hurdle:</strong> the 22× sales test needed ~$3.1B of 2031 revenue; the DCF needs $5.4B by 2031, because discounted cash is stricter than a revenue multiple when the early years burn cash. In Michael’s terms, the implied yield is not visible in any reasonable operating scenario, this is an option price on Neutron working, Iridium integrating cleanly, and the combined entity earning durable high margins. A good company can clear the bar of existing; this price clears only the bar of transforming.</p>
+            </div>
+
+            <div class="callout good">
+              <h3>Where RKLB fits</h3>
+              <p><strong>It is the best public “space infrastructure” challenger, not a substitute for the SpaceX compounder.</strong> Rocket Lab gives public investors exposure to the growth of the non-SpaceX space economy, especially components, defense constellations, and launch vendor diversity. It also hedges a small piece of the thesis if SpaceX’s launch dominance erodes at the margin.</p>
+            </div>
+            <div class="callout danger">
+              <h3>Where it does not fit</h3>
+              <p>SpaceX compounds from a proven reusable fleet, internal Starlink demand, recurring service revenue, and lower launch cost. Rocket Lab is trying to create those layers simultaneously while issuing equity. At today’s multiple, investors are underwriting the destination before the bridge is finished.</p>
+            </div>
+            <p class="lead"><strong>Suitable investor:</strong> long horizon, high risk tolerance, willing to underwrite binary engineering and M&A outcomes, and able to survive 50–60% drawdowns. <strong>Unsuitable investor:</strong> anyone seeking current cash flow, valuation support, low dilution, or capital needed on a fixed timetable.</p>
+          </div>
+          </section>
+
+          <section id="monitor">
+            <div class="section">
+<p class="section-kicker">12 / 12</p>
+<h2>The monitoring dashboard</h2>
+<p class="intro">Five datapoints matter more than daily price movement.</p>
+            <ol class="monitor">
+              <li><div><strong>Neutron pad delivery and first-flight date</strong><span>A firm pad milestone matters; another open-ended “narrowing window” is a negative signal.</span></div></li>
+              <li><div><strong>Q3 GAAP gross margin</strong><span>Test the 29–31% guide and whether management still describes compression as temporary program mix.</span></div></li>
+              <li><div><strong>FCC action and Iridium EMSS renewal</strong><span>Track a signed successor to the expired $738.5M airtime contract,not only continued service,and compare its value, duration, and economics with the prior agreement. Iridium expects renewal by March 2027.</span></div></li>
+              <li><div><strong>Share count, not only cash balance</strong><span>Track basic shares, ATM capacity, and stock consideration at deal close. Revenue growth must be assessed per share.</span></div></li>
+              <li><div><strong>Defense-program margin and backlog conversion</strong><span>Bookings are only valuable if program delivery produces acceptable gross profit and cash.</span></div></li>
+            </ol>
+          </div>
+          </section>
+
+          <section id="sources">
+            <div class="section">
+<p class="section-kicker">Appendix</p>
+<h2>Sources & unresolved items</h2>
+<p class="intro">Reported facts, market snapshots, and forecasts are separated throughout.</p>
+            <div class="callout">
+              <h3>Known uncertainties</h3>
+              <p>The prior EMSS airtime contract expired around Sept. 14, 2026; no successor, extension, or replacement has been publicly announced as of Oct. 19, 2026. Iridium expects renewal by March 2027, but new terms, value, and duration,and whether DoD exercised its six-month extension option,remain unknown. SpaceX rideshare bookings beyond 2028 and Blue Origin’s end-2026 return-to-flight are company/outlet reports, not completed events. 2024 and early-2025 quarterly values are approximate where stated; annuals are confirmed.</p>
+            </div>
+            <ol class="sources">
+              <li><a href="https://files.quartr.com/reports/a8c693ff911344feee76b75f508473a6-2026-08-10-20-09-38.pdf">Rocket Lab Q2 2026 shareholder letter</a></li>
+              <li><a href="https://www.cestriancapitalresearch.com/rocket-lab-nasdaq-rklb-stock-rating-accumulate-after-q2-fy12-26-earnings/">Cestrian Capital Research Q2 analysis</a></li>
+              <li><a href="https://www.zacks.com/stock/news/2987132/rocket-lab-corporation-rklb-down-177-since-last-earnings-report-can-it-rebound">Zacks post-Q2 review</a></li>
+              <li><a href="https://www.ainvest.com/news/missing-cash-rocket-lab-record-quarter-2608/">AInvest cash-flow review</a></li>
+              <li><a href="https://www.fool.com/investing/2026/09/22/rocket-lab-sold-usd1-9-billion-of-new-stock-to-pay-for-iridium-here-s-the-dilution-math/">Motley Fool dilution analysis</a></li>
+              <li><a href="https://www.securities.io/rocket-lab-completes-1-944b-share-sale-secures-consent-on-1-775b-iridium-term-loan/">Securities.io financing report</a></li>
+              <li><a href="https://www.stocktitan.net/sec-filings/RKLB/424b3-rocket-lab-corp-prospectus-filed-pursuant-to-rule-424-b-3-56e4614cfdd1.html">RKLB S-4 / prospectus summary</a></li>
+              <li><a href="https://files.quartr.com/reports/9002d-2026-02-12-12-17-01.pdf">Iridium FY2025 results</a></li>
+              <li><a href="https://investor.iridium.com/2026-07-22-Iridium-Announces-Second-Quarter-2026-Results">Iridium Q2 2026 results and EMSS renewal outlook</a></li>
+              <li><a href="https://www.stocktitan.net/sec-filings/IRDM/10-q-iridium-communications-inc-quarterly-earnings-report-8ff7751e83a2.html">Iridium Q1 2026 Form 10-Q filing mirror</a></li>
+              <li><a href="https://www.satelliteinsights.com/rocket-lab-iridium-acquisition-shareholder-vote/">Satellite Insights on Iridium vote and FCC process</a></li>
+              <li><a href="https://stockanalysis.com/stocks/rklb/forecast/">StockAnalysis analyst consensus</a></li>
+              <li><a href="https://www.tipranks.com/news/rocket-lab-stock-rklb-outlook-top-bofa-analyst-trims-target-but-says-long-term-upside-still-strong">TipRanks summary of BofA estimates</a></li>
+              <li><a href="https://www.globenewswire.com/news-release/2026/08/04/3338977/0/en/rocket-lab-awarded-397-million-contract-to-build-and-launch-flatellites-for-u-s-space-force-s-space-based-airborne-moving-target-indicator-program.html">SB-AMTI award release</a></li>
+              <li><a href="https://www.advanced-television.com/2026/10/02/rocket-lab-wins-synspective-contract/">Synspective contract report</a></li>
+              <li><a href="https://www.nasaspaceflight.com/2026/05/rocket-lab-q1-2026/">NASASpaceFlight Q1 / launch review</a></li>
+              <li><a href="https://www.theregister.com/science/2026/08/06/blue-origin-blames-new-glenn-fireball-on-engine-oxygen-valve/5283997">The Register on New Glenn incident</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/List_of_Starship_launches">Starship launch list</a></li>
+              <li><a href="https://www.wcbe.org/npr-news/2026-09-28/spacexs-starship-launches-on-first-orbital-mission-from-texas">NPR/WCBE on Starship Flight 14 orbital payload deployment</a></li>
+              <li><a href="https://gizmodo.com/starship-has-finally-gone-orbital-now-comes-the-hard-part-2000818803">Gizmodo on Starship reuse status</a></li>
+              <li><a href="https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt8296d1d9f667f42e/6a2c051fab9a6619d8c46307/OneSmallStepForSpaceX_061126.pdf">Morningstar Starship reuse economics projection</a></li>
+              <li><a href="https://spacenews.com/iridium-adds-five-years-to-constellation-lifetime-estimate/">SpaceNews on Iridium NEXT life extension</a></li>
+              <li><a href="https://www.fool.com/earnings/call-transcripts/2026/02/12/iridium-irdm-q4-2025-earnings-call-transcript/">Iridium Q4 2025 earnings-call transcript</a></li>
+              <li><a href="https://r40.io/news/rklb-350m-napkin-has-to-beat-thales-not-spacex/">R40 analysis of Iridium replacement assumptions and merger forecast</a></li>
+              <li><a href="https://keeptrack.space/deep-dive/starlink-direct-to-cell">KeepTrack overview of Starlink Direct-to-Cell</a></li>
+              <li><a href="https://www.ainvest.com/news/ast-spacemobile-pushes-commercial-launch-2027-delay-deeper-problem-disguise-2609/">AInvest on AST SpaceMobile’s 2027 commercial-service target</a></li>
+              <li><a href="https://www.sdxcentral.com/news/iridiums-project-stardust-satellite-strategy-supports-5g-iot-from-space/">SDxCentral on Iridium’s NTN Direct strategy</a></li>
+              <li><a href="https://www.satelliteevolution.com/post/from-custom-to-commodity-space-is-undergoing-its-own-industrial-evolution">Satellite Evolution on component standardization</a></li>
+              <li><a href="https://www.satellitetoday.com/manufacturing/2025/05/28/apexs-new-comet-bus-is-geared-toward-constellations-and-national-security/">Via Satellite on Apex’s neutral bus model</a></li>
+              <li><a href="https://phys.org/news/2026-09-silicon-solar-cells-satellite-power.html">University of Surrey review of silicon satellite solar economics</a></li>
+              <li><a href="https://www.webpronews.com/space-force-triples-launch-contract-to-17-billion-as-pentagon-demand-for-rockets-soars-past-30-billion/">WebProNews on NSSL Lane 1 ceiling and Pentagon launch demand</a></li>
+              <li><a href="https://breakingdefense.com/2026/07/space-force-adds-two-startups-to-small-medium-launch-pool/">Breaking Defense on NSSL Lane 1 provider diversity</a></li>
+              <li><a href="https://www.barchart.com/story/news/4865453/rocket-lab-steps-in-where-spacex-just-walked-away">Barchart on Falcon 9 rideshare bookings and Neutron’s capacity window</a></li>
+              <li><a href="https://newspaceeconomy.ca/2026/09/18/launch-shortage/">New Space Economy on launch-capacity scarcity</a></li>
+              <li><a href="https://finnhub.io/?q=%22RKLB%22">Finnhub market snapshot</a></li>
+              <li><a href="https://aistockwire.com/blog/rocket-lab-rklb-neutron-first-launch-2027-delay-october-2026">AIStockWire on the Oct. 14 Neutron delay to 2027</a></li>
+              <li><a href="https://www.tradingview.com/news/tradingview:b017902fea794:0-key-facts-rocket-lab-rklb-delays-neutron-to-2027-to-acquire-iridium/">TradingView key facts: Neutron delay and Iridium close timeline</a></li>
+              <li><a href="https://www.marketbeat.com/stocks/NASDAQ/RKLB/chart/">MarketBeat RKLB price history (Oct. 20, 2026 close $50.90)</a></li>
+              <li><a href="https://stocktwits.com/news-articles/markets/equity/rklb-stock-citizens-cuts-target-to-90-says-neutron-delay-s-most-significant-impact-is-on-fy-27-fy-28-launch-monetization/cZxKTcDRBsg">The Fly via Stocktwits: Citizens cuts RKLB target to $90</a></li>
+              <li><a href="https://www.advanced-television.com/2026/10/18/bank-rocket-lab-still-a-buy/">Advanced Television: Stifel reiterates Buy at $132</a></li>
+            </ol>
+          </div>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p class="muted" style="font-size:13px;max-width:860px">Snapshot date: October 21, 2026. Market values anchored to the Oct. 20, 2026 close; operating data is fixed to the cited reporting periods. No position recommendation is implied.</p></div>
+  </footer>
+
+  <script>
+    (function () {
+      const NS = 'http://www.w3.org/2000/svg';
+      const styles = getComputedStyle(document.documentElement);
+      const ink = styles.getPropertyValue('--ink').trim();
+      const muted = styles.getPropertyValue('--muted').trim();
+      const faint = styles.getPropertyValue('--faint').trim();
+      const accent = styles.getPropertyValue('--accent').trim();
+
+      function svgEl(tag, attrs, text) {
+        const el = document.createElementNS(NS, tag);
+        Object.keys(attrs || {}).forEach(function (key) { el.setAttribute(key, attrs[key]); });
+        if (text !== undefined) el.textContent = text;
+        return el;
+      }
+
+      function barChart(containerId, data, options) {
+        const host = document.getElementById(containerId);
+        if (!host) return;
+        const W = 760, H = 330;
+        const m = { top: 24, right: 24, bottom: 62, left: 62 };
+        const pw = W - m.left - m.right, ph = H - m.top - m.bottom;
+        const maxData = Math.max.apply(null, data.map(function (d) { return d.value; }));
+        const tickStep = options.tickStep;
+        const yMax = Math.ceil(maxData / tickStep) * tickStep;
+        const gap = 24;
+        const bw = (pw - gap * (data.length - 1)) / data.length;
+        const svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true', focusable: 'false' });
+
+        for (let t = 0; t <= yMax; t += tickStep) {
+          const y = m.top + ph - (t / yMax) * ph;
+          svg.appendChild(svgEl('line', { x1: m.left, y1: y, x2: W - m.right, y2: y, stroke: faint, 'stroke-width': 1 }));
+          svg.appendChild(svgEl('text', { x: m.left - 12, y: y + 4, fill: muted, 'font-size': 11, 'font-family': 'IBM Plex Mono, monospace', 'text-anchor': 'end' }, options.tickPrefix + t));
+        }
+
+        data.forEach(function (d, i) {
+          const x = m.left + i * (bw + gap);
+          const bh = (d.value / yMax) * ph;
+          const y = m.top + ph - bh;
+          svg.appendChild(svgEl('rect', { x: x, y: y, width: bw, height: bh, fill: i === data.length - 1 ? accent : ink }));
+          svg.appendChild(svgEl('text', { x: x + bw / 2, y: y - 9, fill: ink, 'font-size': 13, 'font-weight': 700, 'font-family': 'Manrope, sans-serif', 'text-anchor': 'middle' }, options.valuePrefix + d.value.toFixed(options.decimals) + options.valueSuffix));
+          const label = svgEl('text', { x: x + bw / 2, y: H - 34, fill: muted, 'font-size': 11, 'font-family': 'IBM Plex Mono, monospace', 'text-anchor': 'middle' });
+          const parts = d.label.split('|');
+          parts.forEach(function (part, idx) {
+            label.appendChild(svgEl('tspan', { x: x + bw / 2, dy: idx === 0 ? 0 : 14 }, part));
+          });
+          svg.appendChild(label);
+        });
+        host.appendChild(svg);
+      }
+
+      const revenueData = [
+        { label: 'Q3|2025A', value: 155.1 },
+        { label: 'Q4|2025A', value: 179.7 },
+        { label: 'Q1|2026A', value: 200.3 },
+        { label: 'Q2|2026A', value: 234.1 }
+      ];
+      const shareData = [
+        { label: 'Dec|2025', value: 544 },
+        { label: 'May|2026', value: 578.9 },
+        { label: 'Aug 5|2026', value: 598 },
+        { label: 'Sep 15|2026', value: 627 }
+      ];
+
+      barChart('revenue-chart', revenueData, { tickStep: 50, tickPrefix: '$', valuePrefix: '$', valueSuffix: 'M', decimals: 1 });
+      barChart('shares-chart', shareData, { tickStep: 100, tickPrefix: '', valuePrefix: '', valueSuffix: 'M', decimals: 0 });
+
+      function comboChart() {
+        const host = document.getElementById('combo-chart'); if (!host) return;
+        const data = [
+          {l:'Q3 24',r:104.8,m:null},{l:'Q4 24',r:132.4,m:null},{l:'Q1 25',r:122.6,m:null},
+          {l:'Q2 25',r:144.5,m:32.1},{l:'Q3 25',r:155.1,m:37},{l:'Q4 25',r:179.7,m:38},
+          {l:'Q1 26',r:200.3,m:38.2},{l:'Q2 26',r:234.1,m:36.1},{l:'Q3 26G',r:257.5,m:30}
+        ];
+        const W=820,H=340,m={top:28,right:54,bottom:54,left:52},pw=W-m.left-m.right,ph=H-m.top-m.bottom,maxR=300,maxM=45,bw=pw/data.length*.58;
+        const svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,'aria-hidden':'true'});
+        [0,100,200,300].forEach(function(t){const y=m.top+ph-(t/maxR)*ph;svg.appendChild(svgEl('line',{x1:m.left,y1:y,x2:W-m.right,y2:y,stroke:faint}));svg.appendChild(svgEl('text',{x:m.left-8,y:y+4,fill:muted,'font-size':10,'text-anchor':'end'},'$'+t));});
+        data.forEach(function(d,i){const x=m.left+(i+.5)*pw/data.length;const bh=d.r/maxR*ph;svg.appendChild(svgEl('rect',{x:x-bw/2,y:m.top+ph-bh,width:bw,height:bh,fill:i===data.length-1?faint:ink,stroke:i===data.length-1?accent:'none','stroke-width':2}));svg.appendChild(svgEl('text',{x:x,y:H-28,fill:muted,'font-size':9,'text-anchor':'middle','font-family':'IBM Plex Mono, monospace'},d.l));});
+        let path=''; data.forEach(function(d,i){if(d.m===null)return;const x=m.left+(i+.5)*pw/data.length,y=m.top+ph-d.m/maxM*ph;path+=(path?' L ':'M ')+x+' '+y;});
+        svg.appendChild(svgEl('path',{d:path,fill:'none',stroke:accent,'stroke-width':3}));
+        data.forEach(function(d,i){if(d.m===null)return;const x=m.left+(i+.5)*pw/data.length,y=m.top+ph-d.m/maxM*ph;svg.appendChild(svgEl('circle',{cx:x,cy:y,r:4,fill:accent}));svg.appendChild(svgEl('text',{x:x,y:y-9,fill:accent,'font-size':10,'font-weight':700,'text-anchor':'middle'},d.m+'%'));});
+        svg.appendChild(svgEl('text',{x:W-8,y:m.top+5,fill:accent,'font-size':10,'text-anchor':'end'},'GAAP gross margin')); host.appendChild(svg);
+      }
+
+      function mixChart() {
+        const host=document.getElementById('mix-chart'); if(!host)return;
+        const data=[{l:'FY 2024',s:71.3,x:28.7},{l:'FY 2025',s:67.0,x:33.0},{l:'Q2 2026',s:81.0,x:19.0}];
+        const W=580,H=280,left=100,right=24,top=30,row=70,pw=W-left-right;
+        const svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,'aria-hidden':'true'});
+        data.forEach(function(d,i){const y=top+i*row;svg.appendChild(svgEl('text',{x:left-12,y:y+20,fill:ink,'font-size':12,'text-anchor':'end'},d.l));svg.appendChild(svgEl('rect',{x:left,y:y,width:pw*d.s/100,height:28,fill:accent}));svg.appendChild(svgEl('rect',{x:left+pw*d.s/100,y:y,width:pw*d.x/100,height:28,fill:ink}));svg.appendChild(svgEl('text',{x:left+8,y:y+19,fill:'#fff','font-size':11,'font-weight':700},Math.round(d.s)+'% Systems'));svg.appendChild(svgEl('text',{x:W-right-7,y:y+19,fill:'var(--paper)','font-size':10,'text-anchor':'end'},Math.round(d.x)+'% Launch'));});host.appendChild(svg);
+      }
+
+      function dilutionChart() {
+        const host=document.getElementById('dilution-chart'); if(!host)return;
+        const d=[{l:'Dec 25',v:544},{l:'May 26',v:578.9,a:'H1 ATM\n$1.53B'},{l:'Aug 5',v:598},{l:'Sep 15',v:627,a:'ATM\n$1.944B'}];
+        const W=580,H=280,m={top:50,right:28,bottom:48,left:42},pw=W-m.left-m.right,ph=H-m.top-m.bottom,min=500,max=650;
+        const svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,'aria-hidden':'true'}); let path='';
+        d.forEach(function(x,i){const px=m.left+i*pw/(d.length-1),py=m.top+ph-(x.v-min)/(max-min)*ph;path+=(i?' L ':'M ')+px+' '+py;});svg.appendChild(svgEl('path',{d:path,fill:'none',stroke:accent,'stroke-width':4}));
+        d.forEach(function(x,i){const px=m.left+i*pw/(d.length-1),py=m.top+ph-(x.v-min)/(max-min)*ph;svg.appendChild(svgEl('circle',{cx:px,cy:py,r:6,fill:accent}));svg.appendChild(svgEl('text',{x:px,y:py-12,fill:ink,'font-size':12,'font-weight':700,'text-anchor':'middle'},Math.round(x.v)+'M'));svg.appendChild(svgEl('text',{x:px,y:H-20,fill:muted,'font-size':10,'text-anchor':'middle'},x.l));if(x.a){const parts=x.a.split('\n');const tx=svgEl('text',{x:px,y:py-34,fill:accent,'font-size':9,'text-anchor':'middle','font-family':'IBM Plex Mono, monospace'});parts.forEach(function(p,j){tx.appendChild(svgEl('tspan',{x:px,dy:j?11:0},p));});svg.appendChild(tx);}});host.appendChild(svg);
+      }
+
+      comboChart(); mixChart(); dilutionChart();
+
+      const links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+      const sections = links.map(function (link) { return document.querySelector(link.getAttribute('href')); }).filter(Boolean);
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              links.forEach(function (link) { link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id); });
+            }
+          });
+        }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+        sections.forEach(function (section) { observer.observe(section); });
+      }
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('nav.toc a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        var target = document.getElementById(link.getAttribute('href').slice(1));
+        if (target) {
+          var root = document.documentElement;
+          var priorBehavior = root.style.scrollBehavior;
+          root.style.scrollBehavior = 'auto';
+          target.scrollIntoView({ block: 'start' });
+          window.setTimeout(function () { root.style.scrollBehavior = priorBehavior; }, 0);
+        }
+      });
+    });
+  </script>
+<footer style="margin-top:3rem;border-top:1px solid #e3e3e3;padding:1.5rem 1rem;font-size:.82rem;color:#555;line-height:1.65"><div style="max-width:860px;margin:0 auto"><strong>Disclaimer.</strong> This document is published by <strong>Michael S. Lau</strong> for educational and informational purposes only. It is not investment advice, financial advice, trading advice, or a recommendation to buy, sell, or hold any security. No advisory, fiduciary, or client relationship is created by your reading it: the author does not know your financial situation, investment objectives, or tolerance for risk, and nothing here is tailored to any individual. The analysis reflects the author&rsquo;s personal research and opinions, may contain errors or outdated information, and should be verified against primary sources before reliance. Forward-looking statements are inherently uncertain and subject to change. Past performance is not indicative of future results. The author may hold positions in securities discussed. Consult a licensed financial advisor before making investment decisions. The author bears no liability for any loss arising from reliance on these materials.</div></footer>
+<script src="../site.js?v=20261021g" defer></script>
+</body>
+</html>

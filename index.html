@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Living Investment Theses · Michael S. Lau</title>
+<script>try{var t=localStorage.getItem("thesis-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="liquid-glass.css?v=20261021j">
+<style>
+/* Landing page specifics (kept local; shared system lives in liquid-glass.css) */
+/* Landing-specific: thesis cards */
+.thesis-card { display: flex; flex-direction: column; gap: 10px; color: var(--ink); padding: 22px; }
+.thesis-card:hover { text-decoration: none; box-shadow: var(--shadow-lg); transform: translateY(-2px); transition: box-shadow .4s var(--ease-ios), transform .4s var(--ease-ios); }
+.thesis-card .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.thesis-card .ticker { font: 700 13px/1.4 var(--mono); letter-spacing: .05em; color: var(--blue); }
+.thesis-card h3 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.thesis-card p { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; flex: 1; }
+.thesis-card .go { font: 600 12px/1.4 var(--mono); color: var(--ink-3); }
+.doctrine-lede { font-size: 19px; line-height: 1.6; margin: 0 0 12px; }
+.legal-body { font-size: 14px; color: var(--ink-2); line-height: 1.7; max-width: 860px; }
+.legal-body p { margin-bottom: 14px; }
+@media (max-width: 640px) {
+  .hero { padding-top: 48px; }
+  .hero .dek { font-size: 16px; }
+  .thesis-card { padding: 18px; gap: 8px; }
+  .thesis-card h3 { font-size: 18px; }
+  .thesis-card p { font-size: 14px; }
+  .doctrine-lede { font-size: 17px; }
+  .legal-body { font-size: 13.5px; }
+}
+</style></head>
+<body>
+<main>
+<div class="wrap">
+
+  <div class="hero">
+    <p class="kicker">A personal research system</p>
+    <h1>Living Investment Theses</h1>
+    <p class="byline">by <strong>Michael S. Lau</strong></p>
+    <p class="dek">Each thesis is a living document, a structured model of a company that updates as the world changes. One page per name, every fact labeled, every change logged.</p>
+    <p class="meta">Updated 2026-10-21 · Maintained as a versioned research log</p>
+  </div>
+
+  <div class="section" style="padding-top:8px">
+    <p class="section-kicker">The theses</p>
+    <h2>One standard</h2>
+    <p class="intro">Every thesis follows the same structure: the case in one page, the business engine, the numbers, the moat, the risks, and what would change the verdict.</p>
+    <div class="grid-3">
+      <a class="glass thesis-card" href="spcx/">
+        <div class="row"><span class="ticker">SPCX · SPACEX</span><span class="pill green">LIVING</span></div>
+        <h3>SpaceX</h3>
+        <p>The toll road to orbit is becoming the power grid above it. Launch, Starlink, and orbital compute as one compounding system.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="tsla/">
+        <div class="row"><span class="ticker">TSLA · TESLA</span><span class="pill green">LIVING</span></div>
+        <h3>Tesla</h3>
+        <p>Robotaxi scale-up, Optimus, and energy. A standalone thesis and a merger hedge in a single position.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="usar/">
+        <div class="row"><span class="ticker">USAR · USA RARE EARTH</span><span class="pill green">LIVING</span></div>
+        <h3>USA Rare Earth</h3>
+        <p>The American magnet bet: Serra Verde yttrium, Pentagon demand, and a supply cliff the market has not priced.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="spacex-tesla-merger/">
+        <div class="row"><span class="ticker">EVENT · SPECIAL SITUATION</span><span class="pill blue">TRACKING</span></div>
+        <h3>SpaceX–Tesla Merger</h3>
+        <p>Two special committees, one high vote bar. Tracking the combination as it develops, terms unknown.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="terafab/">
+        <div class="row"><span class="ticker">PROJECT · ANALYSIS</span><span class="pill blue">TRACKING</span></div>
+        <h3>Terafab Endgame</h3>
+        <p>SpaceX's path to its own silicon: first test chip in 2027, volume production targeted for 2028.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="rocket-lab/">
+        <div class="row"><span class="ticker">RKLB · DEEP ANALYSIS</span><span class="pill blue">TRACKING</span></div>
+        <h3>Rocket Lab</h3>
+        <p>The small-launch contender under the microscope: Neutron, space systems, and the SpaceX shadow.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="rivian/">
+        <div class="row"><span class="ticker">RIVN · RIVIAN</span><span class="pill green">LIVING</span></div>
+        <h3>Rivian</h3>
+        <p>A defined-exit trade: hold for the profitability re-rating and index inclusion, then out.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+      <a class="glass thesis-card" href="asml/">
+        <div class="row"><span class="ticker">ASML · WATCH ONLY</span><span class="pill gray">NO POSITION</span></div>
+        <h3>ASML</h3>
+        <p>The one-of-one at the physical end of the AI stack. Charted and waiting for the price, not the story.</p>
+        <span class="go">Read the thesis →</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-kicker">The doctrine</p>
+    <h2>How these theses think</h2>
+    <div class="callout">
+      <p class="doctrine-lede"><strong>Bet on the winners, underwrite the threats, own the funding the threats summon.</strong></p>
+      <p>Only one-of-one strategic monopolies earn a position. Each thesis states its implied yield, names the milestones that move the odds, and carries a downside floor that gets re-run at every earnings print. Noise is a property of the route, never the destination.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-kicker">Please read</p>
+    <h2>Disclaimer</h2>
+    <div class="legal-body">
+      <p>The materials published here are provided for <strong>educational and informational purposes only</strong>. They are not investment advice, financial advice, trading advice, or a recommendation to buy, sell, or hold any security or other financial product, and they should not be construed as such.</p>
+      <p><strong>No advisory relationship.</strong> Your access to or use of these materials does not create an advisory, fiduciary, or client relationship between you and Michael S. Lau. The author does not know you, your financial situation, investment objectives, time horizon, or tolerance for risk, and nothing published here is tailored to any individual reader. Content that is educational in the abstract may be entirely unsuitable for your particular circumstances.</p>
+      <p><strong>Personal opinions, not professional advice.</strong> These documents reflect the author's personal research framework and opinions at the time of writing. The author is not a licensed investment advisor, broker-dealer, or financial planner.</p>
+      <p><strong>Accuracy and timeliness.</strong> The analyses may contain errors, omissions, or outdated information and are updated irregularly. Market data, company filings, and third-party reports are presented as understood by the author. Verify all material facts against primary sources before making any decision in reliance on these materials.</p>
+      <p><strong>Forward-looking statements.</strong> Projections, targets, scenarios, estimates, and expectations about future performance are inherently uncertain, are based on assumptions that may prove wrong, and are subject to change without notice.</p>
+      <p><strong>Past performance.</strong> Past performance is not indicative of future results.</p>
+      <p><strong>Conflicts of interest.</strong> The author may hold positions in securities discussed in these materials, and those positions may change without notice.</p>
+      <p><strong>No offer.</strong> Nothing here constitutes an offer to buy or sell any security.</p>
+      <p><strong>Your responsibility.</strong> You are solely responsible for your own investment decisions. Consult a qualified, licensed financial advisor before acting on anything you read here.</p>
+      <p><strong>Limitation of liability.</strong> By accessing this site, the reader agrees that the author shall not be liable for any loss or damage arising from reliance on these materials, whether direct or consequential, to the fullest extent permitted by law.</p>
+    </div>
+  </div>
+
+</div>
+</main>
+<footer class="site-footer"><div class="wrap"><div class="legal">Living Investment Theses is a personal research publication by Michael S. Lau. Everything here is educational and informational only, not investment advice. The author may hold positions in securities discussed.</div></div></footer>
+<script src="site.js?v=20261021g" defer></script>
+</body></html>

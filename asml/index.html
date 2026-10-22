@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>ASML Living Thesis</title>
+  <script>try{var t=localStorage.getItem("thesis-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="../liquid-glass.css?v=20261021j">
+<style>
+/* ASML page specifics (kept local; shared system lives in liquid-glass.css) */
+/* ASML page specifics */
+.layout { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 48px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+.hero-grid { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(300px,.65fr); gap: 40px; align-items: end; }
+@media (max-width: 760px) { .hero-grid { grid-template-columns: 1fr; } }
+.toc .legend { border-top: 1px solid var(--hair); margin-top: 18px; padding-top: 16px; font-size: 12px; color: var(--ink-3); }
+.dependency { display: grid; grid-template-columns: 48px minmax(0,1fr) auto; gap: 18px; align-items: start; margin-bottom: 14px; }
+.dependency .rank { font: 600 24px/1.2 var(--mono); color: var(--blue); }
+.dependency h3 { margin-bottom: 6px; font-size: 17px; font-weight: 600; }
+.dependency p { margin: 0; color: var(--ink-2); }
+.dependency .confidence { text-align: right; }
+@media (max-width: 640px) { .dependency { grid-template-columns: 36px minmax(0,1fr); } .dependency .confidence { grid-column: 2; text-align: left; margin-top: 8px; } }
+.case.bull { border-top: 4px solid var(--green); }
+.case.base { border-top: 4px solid var(--orange); }
+.case.bear { border-top: 4px solid var(--red); }
+.case .target { display: block; font-size: 30px; line-height: 1.1; font-weight: 700; letter-spacing: -.03em; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+.case ul { padding-left: 18px; margin: 0; color: var(--ink-2); font-size: 14px; }
+.monitor { counter-reset: monitor; list-style: none; padding: 0; margin: 0; }
+.monitor li { counter-increment: monitor; display: grid; grid-template-columns: 40px minmax(0,1fr); gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
+.monitor li::before { content: counter(monitor, decimal-leading-zero); font: 600 12px/1.7 var(--mono); color: var(--blue); }
+.monitor strong { display: block; margin-bottom: 2px; }
+.monitor span { display: block; color: var(--ink-2); }
+.sources { columns: 2; column-gap: 36px; margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 13.5px; }
+.sources li { break-inside: avoid; padding-bottom: 12px; }
+@media (max-width: 720px) { .sources { columns: 1; } .table-card { overflow-x: auto; } .table-card table { min-width: 620px; } }
+</style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <div class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">ASML · ASML Holding · Watch-only analysis</p>
+            <h1>Every advanced chip on earth passes through one company's machines.</h1>
+<p class="byline">by <strong>Michael S. Lau</strong></p>
+            <p class="dek">ASML sells the only extreme ultraviolet lithography systems in existence, roughly 90% of all lithography sold, and the service annuity on the largest installed base in the industry. The investment case is monopoly margin on lithography scarcity, judged on supply versus demand, pricing power in gross margin, and the compounding of the installed base, not on price targets or headline multiples.</p>
+          </div>
+          <aside class="glass verdict">
+            <div class="vlabel">One-sentence verdict</div>
+            <div>The purest structural monopoly in the AI buildout: sold out, with planned 2027 and 2028 supply that will not meet customer demand, priced like a premium business against a future that keeps arriving early.</div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="metrics" aria-label="ASML market and operating snapshot">
+        <div class="glass metric"><span class="label">Last price seen</span><span class="value">~$1,631</span><span class="note">Oct 20, 2026 regular-session close $1,630.84 · −0.99% on the day · market cap ~$630B</span></div>
+        <div class="glass metric"><span class="label">Q3 2026 net sales</span><span class="value">€11.7B</span><span class="note">Record quarter · gross margin 57.5% · net income €5.0B · 113 new systems</span></div>
+        <div class="glass metric"><span class="label">EUV share / all lithography</span><span class="value">100% / ~90%</span><span class="note">The only EUV vendor in existence; ~9 of every 10 lithography systems sold</span></div>
+        <div class="glass metric"><span class="label">2026 revenue guide</span><span class="value">€44-45B</span><span class="note">~36% YoY growth · gross margin ~56% · Q4 guide €14.2-15.2B</span></div>
+        <div class="glass metric"><span class="label">Capacity stance</span><span class="value">Sold out</span><span class="note">CEO: planned 2027 and 2028 supply "will not fully meet demand"</span></div>
+      </div>
+
+      <div class="layout">
+        <nav class="toc" aria-label="Analysis sections">
+          <p>Contents</p>
+          <a href="#thesis">Thesis in one page</a>
+          <a href="#machine">The machine, mechanically</a>
+          <a href="#moat">How it holds a true 1-of-1</a>
+          <a href="#why-not">Why others cannot do it</a>
+          <a href="#threats">Moat threats, ranked</a>
+          <a href="#alignment">Strategic alignment</a>
+          <a href="#census">Challenger census</a>
+          <a href="#growth">How the growth compounds</a>
+          <a href="#suppliers">Supplier bottleneck map</a>
+          <a href="#financials">Financials</a>
+          <a href="#valuation">Valuation</a>
+          <a href="#floor">Downside floor</a>
+          <a href="#milestones">Needle milestones</a>
+          <a href="#watch">Open questions</a>
+          <a href="#sources">Sources &amp; evidence labels</a>
+          <div class="legend">Evidence labels:<br><span class="pill green">VERIFIED</span> primary source<br><span class="pill amber">VENDOR CLAIM</span> company/analyst claim<br><span class="pill gray">INFERENCE</span> reasoned, not observed<br><span class="pill red">UNVERIFIED</span> single-source report</div>
+        </nav>
+
+        <article>
+          <section id="thesis">
+            <div class="section">
+<p class="section-kicker">01</p>
+<h2>The thesis in one page</h2>
+<p class="intro">The purest fat pitch in the AI buildout: a fortress whose moat is physics, whose customers cannot ship without it, and whose supply is sold out years ahead.</p>
+</div>
+            <p class="lede">ASML is the <strong>1-of-1</strong> in lithography, and lithography is the binding constraint on the AI buildout. Extreme ultraviolet lithography, the only way to print leading-edge chips at scale, is sold by exactly one vendor. The company is sold out, customers are asking about 2029 and 2030 orders, and management states plainly that planned 2027 and 2028 supply will not fully meet demand. <span class="pill green">VERIFIED</span></p>
+            <div class="grid-3">
+              <div class="glass card"><span class="mini">What is working</span><h3>Scarcity compounding</h3><p>Revenue up ~36% guided for 2026, gross margin at 57.5% in the latest quarter, and a service business growing ~50% a year. When demand exceeds supply, the seller of the scarce input prices it. The order book is measured in years, not quarters: contract liabilities, customer down payments, the best backlog proxy since ASML stopped disclosing orders, jumped to EUR 9.3B at end-Q3 2026 from EUR 3.4B at end-2025 (+160% in one quarter, into the non-current line, i.e. deliveries beyond a year out). Customers are pre-funding ASML's expansion with their own cash. <span class="pill green">VERIFIED</span> (Q3 2026 US GAAP financial statements)</p></div>
+              <div class="glass card"><span class="mini">What to underwrite</span><h3>The China revenue line</h3><p>China is guided at ~20% of 2026 net sales, and the one-year freeze on the US Affiliates Rule expires <strong>November 10, 2026</strong>, potentially halting legal shipments to Chinese JV fabs. This is the single largest near-term revenue risk and the gate for the next earnings prints. <span class="pill green">VERIFIED</span></p></div>
+              <div class="glass card"><span class="mini">What the price assumes</span><h3>Premium against delivered scarcity</h3><p>At ~$1,631 the market prices a premium business at a premium multiple. The downside-floor section states what underwrites that premium: net cash, a service annuity, and a €12B buyback running through 2028.</p></div>
+            </div>
+            <div class="callout">
+              <h3>How this document treats evidence</h3>
+              <p>This is a standalone company thesis. Financial figures come from ASML's own reported releases (labeled <span class="pill green">VERIFIED</span>), technical descriptions from the company's published materials (<span class="pill amber">VENDOR CLAIM</span>), reasoning from the facts (<span class="pill gray">INFERENCE</span>), and single-source reports (<span class="pill red">UNVERIFIED</span>) only where nothing else exists. No probabilities are defined: strength is measured against the criteria in this document, subject to the world around it. The stance is cautiously optimistic, strategic, and open-minded to everything possible.</p>
+            </div>
+          </section>
+          <section id="machine">
+            <div class="section">
+<p class="section-kicker">02</p>
+<h2>The machine, mechanically</h2>
+<p class="intro">Why EUV lithography is the hardest commercialized machine on earth, and why that difficulty is the moat.</p>
+</div>
+            <p class="lede">Printing features a few nanometers wide with light requires doing something absurd: generating light at a wavelength of <strong>13.5 nanometers</strong>, 14 times shorter than deep ultraviolet, and then steering it through a machine the size of a bus to hit a wafer with atomic precision. The physics fought ASML and its partners for two decades before it yielded, and every detail of the machine is a barrier. <span class="pill amber">VENDOR CLAIM</span> on mechanism, physics standard</p>
+            <div class="grid-2">
+              <div class="glass card">
+                <span class="mini">The light source</span>
+                <h3>Tin droplets and a laser cannon</h3>
+                <p>Molten tin droplets fall through the chamber at roughly <strong>50,000 per second</strong>, each vaporized twice by CO2 drive lasers from <strong>Trumpf</strong> (the sole supplier) into a plasma that emits 13.5nm light. The light source itself, built by <strong>Cymer</strong> of San Diego, which ASML acquired in 2013, is a product no other firm has ever replicated at production power. <span class="pill amber">VENDOR CLAIM</span></p>
+              </div>
+              <div class="glass card">
+                <span class="mini">The optics</span>
+                <h3>Mirrors smoother than anything else made</h3>
+                <p>At 13.5nm, glass lenses absorb the light, so EUV machines use mirrors coated with dozens of alternating atomic layers. Only about 1% of the source light survives the trip to the wafer, which is why the mirrors must be polished to atomic smoothness. They come from one place: <strong>Carl Zeiss SMT</strong> of Oberkochen, Germany, sole supplier and exclusive to ASML. ASML owns <strong>24.9%</strong> of Zeiss SMT, roughly <strong>20%</strong> of ASML's COGS flows to Zeiss, and purchases reached <strong>€4.41B in 2025</strong>. ASML's own 2025 annual report says that if Zeiss could not sustain production, ASML "would effectively cease to be able to conduct our business." <span class="pill green">VERIFIED</span> in ASML 2025 annual report via supply-chain research</p>
+              </div>
+            </div>
+            <div class="callout">
+              <h3>Scale of the artifact</h3>
+              <p>ASML has said each EUV system contains <strong>over 100,000 parts from roughly 5,000 suppliers</strong> <span class="pill amber">VENDOR CLAIM</span>. Industry reporting places a low-NA NXE system in the <strong>~€200M</strong> range and High-NA EXE systems above <strong>€350M</strong> <span class="pill gray">INFERENCE</span> from widely reported estimates; ASML does not publish list prices. Shipment is a multi-month operation: 20-plus freight containers, and installation at a customer fab takes months of on-site work by ASML engineers. This is not a product a rival can clone; it is an industrial ecosystem with one integrator.</p>
+            </div>
+            <ul class="facts">
+              <li><b>Low-NA EUV (NXE)</b><span>Numerical aperture 0.33; the workhorse of leading-edge logic and advanced memory. ASML expects ~65 low-NA EUV systems output in 2026 versus 44 in 2025. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>High-NA EUV (EXE)</b><span>Numerical aperture 0.55; prints smaller features in a single exposure, avoiding costly multi-patterning. First commercial shipments began in 2024; revenue was recognized on two EXE systems in Q4 2025 and one sold in Q3 2026. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>DUV immersion (NXT/TWINSCAN)</b><span>Deep ultraviolet systems still print most layers of most chips; demand remains part of the 2027-2028 shortfall. Customers cannot skip the DUV base to buy EUV only. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Metrology (YieldStar)</b><span>Inspection systems that close the loop with the lithography fleet and deepen the installed-base relationship. <span class="pill amber">VENDOR CLAIM</span></span></li>
+            </ul>
+          </section>
+
+          <section id="moat">
+            <div class="section">
+<p class="section-kicker">03</p>
+<h2>How it holds a true 1-of-1</h2>
+<p class="intro">Six moat layers, each independently hard, stacked so that breaching any one of them still leaves five standing.</p>
+</div>
+            <div class="glass dependency">
+              <div class="rank">1</div>
+              <div><h3>EUV monopoly: 100% share of a layer nobody can skip</h3><p>No fab in the world makes leading-edge logic or advanced DRAM without an ASML EUV system. Every 3nm and below device, every HBM-adjacent advanced memory ramp, routes through the NXE or EXE fleet. Share figures are the research consensus; the mechanism is physical, not contractual. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Absolute</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">2</div>
+              <div><h3>Full lithography stack: ~90% of all lithography sold</h3><p>ASML does not only own EUV; it leads DUV immersion, the dry and KrF layers, and metrology. A fab standardizes its lithography line on one vendor's control software and service organization. Winning EUV plus owning the stack makes the customer relationship near-impossible to dislodge layer by layer. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Structural</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">3</div>
+              <div><h3>The sole-supplier web that doubles as a challenger blockade</h3><p>Zeiss SMT optics (exclusive to ASML, with a 24.9% ownership stake), Trumpf CO2 lasers, Cymer light sources (captive since 2013), and Lasertec mask-blank inspection one step further down. A would-be rival must reassemble this supplier network from zero while ASML holds contractual exclusivity and two decades of joint engineering with each node. The moat is not just ASML's machine; it is everyone else's inability to source its parts. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Exclusive</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">4</div>
+              <div><h3>Installed-base flywheel: service as compounding annuity</h3><p>113 new systems sold in Q3 2026 alone join thousands already in fabs. Installed Base Management sales reached €3.289B in the quarter and are guided to ~50% YoY growth in 2026. Upgrades, productivity packages, parts, and service are high-margin, recurring, and inelastic: a fab cannot idle a $200M tool to save a maintenance contract. Each new shipment enlarges the annuity. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Compounding</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">5</div>
+              <div><h3>Self-funded R&amp;D at a scale no challenger can match</h3><p>R&amp;D is guided at ~€1.2B per quarter in 2026, roughly €4.8B annualized, funded out of monopoly profits. High-NA development took more than a decade and billions in spend before the first commercial system shipped. Any challenger would have to fund an equivalent decade of R&amp;D with zero revenue, against an incumbent spending ~€5B a year to widen the gap. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Widening</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">6</div>
+              <div><h3>Customer co-development as lock-in</h3><p>TSMC, Samsung, and Intel co-invested in ASML's EUV program (the customer co-investment program of 2012) and co-develop each generation in their fabs. The tool and the customer's process are engineered together over years. Replacing ASML would mean re-qualifying a new tool across hundreds of process steps in a live fab: no production manager will take that risk when the known tool is available. <span class="pill amber">VENDOR CLAIM</span></p></div>
+              <div class="confidence"><span class="pill green">Sticky</span></div>
+            </div>
+            <div class="callout good">
+              <h3>The flywheel, stated plainly</h3>
+              <p>Monopoly revenue funds monopoly R&amp;D, which extends the technology lead, which deepens the sole-supplier exclusivity, which makes each new system more indispensable, which grows the service annuity, which funds the next round. The cycle has run for two decades without a serious challenger reaching production. The 2027-2028 supply shortfall is this flywheel operating at full speed: demand from AI infrastructure arriving faster than the physical supply chain can respond.</p>
+            </div>
+          </section>
+          <section id="why-not">
+            <div class="section">
+<p class="section-kicker">04</p>
+<h2>Why others cannot do what ASML does</h2>
+<p class="intro">The barriers are not secrets to be copied. They are decades of accumulated industrial capability that no balance sheet can buy quickly.</p>
+</div>
+            <div class="grid-2">
+              <div class="glass card">
+                <span class="mini">The fallen champion</span>
+                <h3>Nikon had the lead and lost it</h3>
+                <p>Nikon, a public Japanese company, once led lithography. It lost the deep-ultraviolet race to ASML through slower immersion technology and engineering execution, then never shipped a commercial EUV tool. It retreated to mature nodes and i-line systems. The lesson: in lithography, losing a single generation is terminal, because the winner converts the lead into the supplier network and the R&amp;D budget that make the next generation un-winnable. <span class="pill gray">INFERENCE</span> on industry-reported history</p>
+              </div>
+              <div class="glass card">
+                <span class="mini">The only alternative architecture</span>
+                <h3>Canon and nanoimprint: a bypass, not a replacement</h3>
+                <p>Canon, a public Japanese company, is pursuing nanoimprint lithography (NIL): stamping patterns mechanically instead of projecting them with light. It is the only credible architecture that sidesteps EUV. Its current limits are exactly the parameters leading-edge fabs cannot compromise: defectivity on stamped layers, overlay precision across multi-patterning steps, and throughput at logic volumes. No leading-edge logic fab has qualified NIL for volume production. The threat is real enough to watch (it is a needle milestone) and distant enough that it has not changed a single buying decision. <span class="pill gray">INFERENCE</span> on industry-reported status</p>
+              </div>
+            </div>
+            <div class="callout">
+              <h3>The structural replication argument</h3>
+              <p>A challenger would need, simultaneously: the physics of a production-power 13.5nm light source (two decades of ASML and Cymer work); an optics supplier equal to Zeiss SMT (exclusive to ASML by contract); thousands of precision suppliers (already committed to ASML's volumes); multi-billion annual R&amp;D funded from zero revenue; and a leading customer willing to risk a live fab on an unproven tool. The first three have never been reproduced by anyone. Money buys the fifth; it cannot buy the first four on any relevant timescale. <span class="pill gray">INFERENCE</span></p>
+            </div>
+          </section>
+
+          <section id="threats">
+            <div class="section">
+<p class="section-kicker">05</p>
+<h2>Moat threats, ranked honestly</h2>
+<p class="intro">A monopoly is not invulnerable. These are the forces that can actually narrow it, ordered by severity.</p>
+</div>
+            <div class="glass dependency">
+              <div class="rank">1</div>
+              <div><h3>China export controls and the China revenue line</h3><p>China is guided at ~20% of 2026 net sales and has been the largest 300mm equipment spender for years. The one-year freeze on the US Affiliates Rule expires November 10, 2026, potentially halting legal shipments to Chinese JV fabs, and the MATCH Act sits in committee. The threat is not to the EUV monopoly itself (China was never an EUV customer) but to the DUV revenue line and to growth optics. This is the watch item with a date on it. <span class="pill green">VERIFIED</span> The deeper mechanism sits in the challenger census: a state-sponsored rival can be mandated into captive Chinese fabs regardless of economics, so this revenue line can be amputated rather than lost in fair competition. <span class="pill amber">ANALYST VIEW</span></p></div>
+              <div class="confidence"><span class="pill red">Severe</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">2</div>
+              <div><h3>High-NA adoption slower than hoped</h3><p>EXE systems cost several hundred million euros each, and customers can extend low-NA with multi-patterning instead. If fabs defer High-NA, ASML loses its next pricing tier and the revenue mix stays in the cheaper tools. The counterweight: only two EXE systems had revenue recognized in all of 2025, and Q3 2026 already sold one more, so expectations are not yet loaded. Watch the 2027 shipment cadence. <span class="pill green">VERIFIED</span> on shipments; <span class="pill gray">INFERENCE</span> on adoption risk</p></div>
+              <div class="confidence"><span class="pill amber">Moderate</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">3</div>
+              <div><h3>Customer concentration and capex cyclicality</h3><p>Three customers, TSMC, Samsung, and Intel, drive most EUV demand, and memory is the cyclical swing buyer: 2024 was the "transition year" with sales essentially flat versus 2023. A digestion cycle can pause bookings for a year without touching the monopoly. The fortress survives downturns; the P&amp;L does not ignore them. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill amber">Cyclical</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">4</div>
+              <div><h3>Canon nanoimprint as an architecture bypass</h3><p>Covered in detail above. The moat this threatens is EUV's status as the only path, and only if defectivity and overlay reach logic-grade levels. No leading-edge fab has qualified it for volume production. Long-dated, but it is the only credible alternative path, so it earns a permanent slot on the watch list. <span class="pill gray">INFERENCE</span></p></div>
+              <div class="confidence"><span class="pill amber">Long-dated</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">5</div>
+              <div><h3>Taiwan concentration of the customer base</h3><p>The monopoly's largest customer fabs sit on an island under sovereign risk. This is a customer-base threat, not a company threat: ASML is Dutch, its factories are in the Netherlands and the US. But a Taiwan disruption would idle the EUV fleet's heaviest users and crater demand. Unlikely to be hedgeable by the company; priced as a tail risk. <span class="pill gray">INFERENCE</span></p></div>
+              <div class="confidence"><span class="pill amber">Tail risk</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">6</div>
+              <div><h3>No US security backstop: bound by Washington, not protected by it</h3><p>ASML lives under American power without living under American protection. US export controls dictate what it may sell and to whom, including the China restrictions imposed on a Dutch company. In return it holds no US security commitment: its heaviest customers and much of its installed fleet sit in Taiwan and Korea, and in a regional conflict nothing guarantees ASML's demand center or its systems already in the theater. Protection there would require US military intervention, a war scenario rather than a policy backstop. The contrast with TSMC is instructive: Washington at least contemplates intervention for TSMC because it deems the asset strategic to the United States. For ASML, the American interest runs toward restriction, not defense. A structural asymmetry that compounds the Taiwan concentration above. <span class="pill gray">INFERENCE</span></p></div>
+              <div class="confidence"><span class="pill amber">Tail risk</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">7</div>
+              <div><h3>Zeiss as the moat's own single point of failure</h3><p>ASML's 2025 annual report states Zeiss capacity limits ASML's own system output. The exclusivity that blocks challengers also means one supplier's factory delays constrain the monopoly. This is execution risk, not structural risk: it slows the compounding, it does not open the door to a rival. <span class="pill green">VERIFIED</span> The same exclusivity hardens the China blockade: because no challenger can route around the optics layer through Zeiss, the Chinese program must replicate the mirrors domestically, as noted in the challenger census. <span class="pill amber">ANALYST VIEW</span></p></div>
+              <div class="confidence"><span class="pill amber">Execution</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">8</div>
+              <div><h3>Valuation</h3><p>Not a moat threat at all, but it caps the swing decision: a forward P/E in the low 40s on the external-model card (and ~29x on a single sell-side source, approximate) prices near-perfection. The moat can be intact and the stock can still be a bad entry. Valuation is the fat-pitch gate, not the fortress wall. <span class="pill gray">INFERENCE</span></p></div>
+              <div class="confidence"><span class="pill gray">Pricing</span></div>
+            </div>
+          </section>
+          <section id="alignment">
+            <div class="section">
+<p class="section-kicker">06</p>
+<h2>Strategic alignment: Tier 2, embraced not backed</h2>
+<p class="intro">The mirror image of the backstop threat: Washington's strategy strengthens this moat commercially, while offering the company nothing in return.</p>
+</div>
+            <p class="lede">Strategic alignment measures how directly the US government is committed to a company's success: through its spending, its equity, its contracts, its regulatory grants, or its structural dependence on what the company provides. Tier 1 is the strongest grade. Tier 2 covers companies that policy embraces, and whose position the strategy strengthens, without any US capital or protection commitment flowing to them. ASML is the portfolio's Tier 2 case, and the special one: strategically embraced, not backed.</p>
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">How the strategy helps the moat</span><h3>Denial is a commercial asset</h3><p>The US-led export-control architecture is a commercial asset to ASML even as it constrains ASML. Denial keeps China's domestic lithography program years behind, which preserves the scarcity this thesis rests on, and it channels allied demand to the one qualified supplier. Allied onshoring policy, the fab buildouts in the United States, Japan, and Europe, is a direct demand subsidy paid by foreign treasuries: every subsidized allied fab is a building full of ASML purchase orders. <span class="pill green">VERIFIED</span> on the denial regime and buildouts; <span class="pill gray">INFERENCE</span> on the commercial reading</p></div>
+              <div class="glass card"><span class="mini">What the state does not do</span><h3>No equity, no offtake, no backstop</h3><p>No US equity, no US offtake guarantee, and no security commitment stand behind ASML. The obligations run one way: Washington's rules bind what ASML may sell and to whom, including the China restrictions imposed on a Dutch company, while ASML's heaviest customers and much of its installed fleet sit in Taiwan and Korea. This is the ranked threat "No US security backstop" in the moat threats section, cross-referenced rather than repeated: the same strategy that exposes the China revenue line deepens the moat everywhere else. <span class="pill green">VERIFIED</span></p></div>
+            </div>
+            <p class="muted" style="margin-top:18px">Tier 2 alignment of this kind turbo-charges the demand environment without adding a backstop. It strengthens the case for the fortress and belongs in the valuation argument; it adds nothing to the downside floor, and it must never be counted as protection. Where this document scores the protection asymmetry, it does so in the threats section, which is the binding record on the risk. <span class="pill gray">INFERENCE</span></p>
+          </section>
+          <section id="census">
+            <div class="section">
+<p class="section-kicker">07</p>
+<h2>The challenger census</h2>
+<p class="intro">Everyone is coming for the throne. As of October 2026, almost no one is close. Every named challenger, graded by evidence.</p>
+</div>
+            <p class="lede">The only EUV-scanner builder in high-volume production remains ASML. The challengers fall into three tiers: niche or adjacent tools, aspirational startups, and one state program. <span class="pill green">VERIFIED</span></p>
+
+            <h3>China's state program, the most credible challenger</h3>
+            <p>Reuters confirmed in December 2025 that an operational EUV prototype exists in a secret Shenzhen lab, part of a six-year state program involving Huawei and the SiCarrier ecosystem, built with former ASML engineers. It generates EUV light; it has not produced a working chip. The government's target is chips by 2028; project insiders told Reuters 2030 is more realistic. <span class="pill green">VERIFIED</span> reporting; the timeline gap is <span class="pill gray">INFERENCE</span> from insiders. On the light source, Langdao Silex claims 15 W from a 1,000 W drive laser, roughly ASML's early-2010s level and an order of magnitude below high-volume manufacturing requirements, with debris mitigation and collector lifetime not yet in the picture. <span class="pill amber">VENDOR CLAIM</span>. SMEE's 2023 claim of a 28 nm DUV tool was retracted; its "10 nm coverage" remarks at SEMICON China 2026 are unverified. <span class="pill red">UNVERIFIED</span>. SMIC does make 7 nm class chips, but on ASML DUV tools with multi-patterning at an estimated 20 to 40% yield and roughly 50% above TSMC cost, economics no open market would sustain. <span class="pill amber">ANALYST VIEW</span>. Credible analyst timelines: pre-commercial Chinese EUV tools no earlier than about 2030 (SemiAnalysis); low-NA EUV parity possibly 20 to 30 years out, or never (Hutcheson); ASML CEO Fouquet, October 2026: China competition risk "pretty low". <span class="pill amber">ANALYST VIEW</span></p>
+
+            <p>On optics specifically, China has no access to Carl Zeiss SMT. Three locks keep it that way. First, the structure: Zeiss SMT's EUV optics business exists to serve ASML exclusively, and ASML's 24.9% ownership stake makes the exclusivity structural rather than merely contractual, so China cannot outbid or buy its way in. Second, the law: Zeiss is German, and EUV-grade optics sit inside Western export controls, so supplying a Chinese EUV program is not a commercial decision available to Zeiss. Third, the capability: the mirror polishing and multilayer coating stack is a decades-deep know-how base. The Chinese program must therefore grow its own optics, chiefly through CIOMP in Changchun, which is among its widest capability gaps. That is a core reason the Shenzhen prototype generates light but prints no working chips: a lithography system needs source, optics, stages, resists, and metrology at production grade simultaneously, and the optics layer is the one China is furthest from and has no shortcut through. <span class="pill amber">ANALYST VIEW</span></p>
+
+            <h3>The sponsored-competitor mechanism: demand amputation, not displacement</h3>
+            <p>The primary China risk to ASML is not technological displacement. A sponsored rival does not need to beat ASML on cost per good die. Beijing can mandate domestic tools into captive fabs (SMIC, YMTC, CXMT, Huawei's fab network) regardless of yield or economics and fund the losses indefinitely, so ASML cannot contest that market on commercial terms even with superior machines. The risk is therefore demand amputation: ASML permanently loses the China revenue line, about 20% of guided 2026 sales, without losing a commercial competition. <span class="pill amber">ANALYST VIEW</span> The sponsored ecosystem also gets what commercial challengers cannot buy: production volume to learn on. Captive production generates field data that closes yield gaps over time, so export controls buy time while the sponsored market converts that time into a learning curve. In Nikon-precedent terms, the state supplies the champion-customer condition artificially. <span class="pill amber">ANALYST VIEW</span> On a longer horizon, a good-enough subsidized tool can contest non-aligned third markets, the pattern of solar panels, shipbuilding, batteries, and Huawei telecom equipment, where Western leaders kept their technology leads but lost markets to sponsored rivals. <span class="pill amber">ANALYST VIEW</span> The bounds matter. Leading-edge allied demand buys on economics, and a tool with far worse cost per good die has no path at TSMC, Samsung, or Intel without a mandate; ASML's R&D stays funded by the world's richest customers. The crown is not at risk inside a decade. Growth, mix, and the world's largest equipment market are. <span class="pill amber">ANALYST VIEW</span></p>
+
+            <h3>Canon nanoimprint, niche</h3>
+            <p>Canon's FPA-1200NZ2C has exactly one commercial shipment: the Texas Institute for Electronics, announced October 2024, for R&D use, not fab production. <span class="pill green">VERIFIED</span>. imec's assessment puts nanoimprint defectivity at "quite high"; no leading-edge logic fab has qualified it. <span class="pill green">VERIFIED</span>. DNP's 10 nm template and one-tenth energy claims are company claims. <span class="pill amber">VENDOR CLAIM</span>. Canon itself notes NIL tools are export-restricted from China. <span class="pill green">VERIFIED</span></p>
+
+            <h3>Nikon, price attack only</h3>
+            <p>Nikon competes on price in mature ArF immersion DUV, with a new platform due in FY2028; it has no EUV ambition. Its FY2025/26 result was a record net loss of ¥86B (about $540M), and it recorded zero ArF sales for nine months of 2024-25. <span class="pill green">VERIFIED</span></p>
+
+            <h3>Substrate (US startup, private), aspirational</h3>
+            <p>Raised $100M at a $1B valuation (WSJ, October 2025) for compact X-ray lithography; its lab claims are unverified by third parties. <span class="pill green">VERIFIED</span> on the funding; <span class="pill red">UNVERIFIED</span> on the physics. Analyst Dan Hutcheson: capital alone is insufficient, since "building and scaling advanced semiconductor manufacturing requires tens of billions of dollars." <span class="pill amber">ANALYST VIEW</span></p>
+
+            <h3>xLight (US startup, private), a complement rather than a rival</h3>
+            <p>Free-electron laser EUV source; a $150M CHIPS award finalized June 2026 with the US government taking equity, and a demo targeted for 2028. <span class="pill green">VERIFIED</span>. xLight positions itself as a future supplier to ASML's scanner ecosystem, not a competitor, and ASML's CEO has acknowledged collaboration. If it succeeds, the moat widens. <span class="pill green">VERIFIED</span></p>
+
+            <h3>E-beam direct write, adjacent not competitive</h3>
+            <p>IMS Nanofabrication's multibeam tools write EUV masks, which complements ASML. Multibeam and SecureFoundry build wafer-writing e-beam tools for prototyping and advanced packaging; throughput fundamentally trails projection lithography. <span class="pill green">VERIFIED</span></p>
+
+            <p>Rumor audit: the only challenger story with strong journalistic sourcing is the Reuters Shenzhen prototype account; "China EUV by 2028" traces to a government target, not analyst consensus. <span class="pill green">VERIFIED</span></p>
+
+            <h3>The Nikon precedent: what it took to lose the lead last time</h3>
+            <p>ASML overcame Nikon's lead through three conditions acting together. First, a technology discontinuity to leapfrog on: at a 2002 SEMATECH workshop TSMC's Burn-Jeng Lin proposed immersion lithography against the industry's "dry" 157 nm path; ASML shipped the XT:1250i in 2003 while Nikon abandoned its 157 nm program in 2005. Second, a champion customer willing to co-develop and co-invest: TSMC championed immersion, Intel brokered ASML's 2001 SVG acquisition for EUV access, and in 2012 Intel, TSMC and Samsung invested €3.85B for 23% equity plus €1.38B in committed R&D, with the Cymer light-source acquisition (€1.95B) and the Zeiss optics stake (24.9%) locking the chain. Third, an incumbent making the wrong technology bet. By 2006 ASML held 72% of the immersion market. And even so, ASML's own EUV journey ran from first prototype in 2006 to high-volume manufacturing in 2019, a decade for the winner. <span class="pill green">VERIFIED</span></p>
+            <p>Today's status of the three conditions. (a) The discontinuity does not exist at production grade: NIL defectivity is the known blocker, Substrate's X-ray claims are unverified, and xLight's source would feed ASML rather than replace it. (b) The champion-customer element exists only in China: the open market's champions (TSMC, Samsung, Intel, SK Hynix) are all buying ASML High-NA, so the Chinese effort is driven by geopolitics rather than economics. (c) The incumbent is not standing still: the High-NA fleet is scaling toward a 90% availability target, a 1,000 W source roadmap runs to 2030, and TSMC's High-NA pushback reads as price negotiation rather than defection. <span class="pill gray">INFERENCE</span> Verdict, qualitative: displacement risk within five years is very low; within ten years low to moderate, concentrated in the Chinese state program rather than any commercial startup. <span class="pill amber">ANALYST VIEW</span></p>
+          </section>
+          <section id="growth">
+            <div class="section">
+<p class="section-kicker">08</p>
+<h2>How the growth compounds</h2>
+<p class="intro">Four engines that grow ASML's revenue even when chip unit volumes flatten, plus the honest answer to when the world stops needing more machines.</p>
+</div>
+            <p class="lede">Lithography demand is not chip demand. It is wafer starts, times the number of lithography exposures per wafer, times the price per system. ASML grows when any of those three multipliers grows, and for a decade all three have grown at once. That is how the company sold fewer systems in 2024 (380) than in 2023 (421) and still grew revenue. <span class="pill green">VERIFIED</span></p>
+            <div class="glass dependency">
+              <div class="rank">1</div>
+              <div><h3>Wafer capacity keeps growing: more silicon per unit of compute</h3><p>Lithography demand is derived from wafer starts, and AI is wafer-area hungry. Each new AI accelerator generation is a larger die than the last, HBM memory stacks add wafer area per unit of bandwidth, and the foundries guiding expansion are adding leading-edge capacity, not merely replacing old fabs. The 2026 guidance texture says it directly: memory system sales growing ~75% against logic at ~10%, because the AI data center is a memory-wafer story as much as a logic story. Capacity additions continue even when end-market unit volumes flatten, because the product being built is bigger. <span class="pill green">VERIFIED</span> on the guidance figures; <span class="pill gray">INFERENCE</span> on the mechanism</p></div>
+              <div class="confidence"><span class="pill green">Structural</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">2</div>
+              <div><h3>Rising litho intensity: more exposures per wafer, every node</h3><p>Each new process node carries more lithography layers per wafer than the last. DUV multi-patterning multiplied the pass count at 7nm; EUV single exposure consolidated some of those passes, and each shrink since has pushed EUV layer counts up again. ASML therefore sells more exposure capacity per wafer start even when wafer starts grow slowly. Intensity, not unit counts, is the quiet compounder: revenue can grow on flat tool shipments because each wafer processed carries more lithography inside it. <span class="pill gray">INFERENCE</span> from industry node economics</p></div>
+              <div class="confidence"><span class="pill green">Compounding</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">3</div>
+              <div><h3>Mix shift to dearer systems: flat units, richer revenue</h3><p>The product mix climbs a price ladder: dry DUV, immersion DUV, low-NA EUV in the ~€200M class, High-NA EXE in the ~€350M+ class (a widely reported estimate; ASML publishes no list prices). Every step up the ladder raises average revenue per tool, so revenue grows on flat or even falling unit counts. The upgrade business does the same work underneath: productivity packages and field upgrades move older tools up the value ladder without a new system sale. <span class="pill amber">ANALYST VIEW</span></p></div>
+              <div class="confidence"><span class="pill green">Structural</span></div>
+            </div>
+            <div class="glass dependency">
+              <div class="rank">4</div>
+              <div><h3>The fleet annuity: every sale becomes decades of revenue</h3><p>Each new system joins a fleet that generates service, parts, and upgrade revenue for decades. Installed Base Management is guided to grow ~50% in 2026 and did €3.289B in Q3 alone. Fabs rarely scrap lithography tools: an older immersion system cascades to less critical layers or mature-node production and keeps consuming service and upgrades there. The annuity grows with every shipment, pays out whether the quarter's bookings were strong or not, and dampens cyclicality over time. <span class="pill green">VERIFIED</span></p></div>
+              <div class="confidence"><span class="pill green">Compounding</span></div>
+            </div>
+            <div class="callout">
+              <h3>When does machine supply reach max need? The saturation question, answered in layers</h3>
+              <p>Supply reaches "max need" only when wafer capacity additions slow to replacement plus litho-intensity growth, and that requires semiconductor end demand, led by AI compute, to saturate. Expect that as a cyclical event first: in FY2024, ASML's revenue grew only ~2.6% in a digestion year, while the business still printed record profitability. Structural saturation is a beyond-this-decade question, not a cycle question. <span class="pill amber">ANALYST VIEW</span></p>
+              <p>Three counterweights live inside the model. High-NA single exposure can reduce the number of patterning passes per wafer, partially cannibalizing litho intensity, offset by a far higher price per tool. Chiplets and advanced packaging modestly reduce wafer area per unit of function, trimming the capacity-growth engine at the margin. And ASML rations its own capacity growth, which keeps scarcity and pricing intact instead of flooding its own market. The company's stated position stands: planned 2027 and 2028 supply will not fully meet demand. <span class="pill amber">ANALYST VIEW</span></p>
+            </div>
+          </section>
+
+          <section id="suppliers">
+            <div class="section">
+<p class="section-kicker">09</p>
+<h2>The supplier bottleneck map</h2>
+<p class="intro">Who constrains ASML's output today, and which up-and-coming companies could unlock the bottleneck. The chain is a series of single-source monopolies; the consequential unlocks are mostly incumbent expansions that ASML is financing itself.</p>
+</div>
+            <p class="lede">ASML's own 2025 annual report names the constraint: the number of lithography systems it can produce "is limited by the production capacity of one of our key suppliers, Carl Zeiss SMT, our sole supplier of lenses, mirrors, illuminators, collectors and other critical optical components." Every critical layer of the chain has the same shape: one supplier, gated by physics or by years of qualification. <span class="pill green">VERIFIED</span></p>
+
+            <h3>Zeiss SMT optics, the named binding constraint</h3>
+            <p>Zeiss SMT (private GmbH; Carl Zeiss AG majority, ASML 24.9% owner since 2017) is the sole supplier of the optical column: lenses, mirrors, illuminators, collectors. EUV mirrors need months of figuring, coating, and metrology, and during a ramp, metrology and qualification capacity is as binding as fabrication. High-NA makes it tighter: EXE mirrors run roughly 2x the size and 10x the weight of low-NA mirrors and are verified in a purpose-built chamber of more than 100,000 parts and over 150 tons. <span class="pill green">VERIFIED</span> on the sole-supplier status and the 24.9% stake; <span class="pill amber">ANALYST VIEW</span> on the ramp mechanics.</p>
+            <p>Zeiss is expanding: about 25,000 m2 of new space at Oberkochen (first building opened July 2026), a multifunction factory at Wetzlar, cleanroom additions at Rossdorf. The catch: Zeiss has not quantified the resulting increase in qualified EUV optical output, and calibration lead times are long. ASML finances the fix: about EUR 1.91B in loans and EUR 1.19B in advance payments to Zeiss SMT carried at end-2025, plus the restated May 2025 framework agreement making capex loans interest-free. The expansion facts come from trade reporting; the loan figures come via a filing aggregator, consistent across sources, not re-verified line by line against the 20-F, so treat them as reported rather than confirmed. <span class="pill red">UNVERIFIED</span></p>
+            <p>The caveat: on the Q3 2026 call management reportedly said Zeiss is "not currently a bottleneck" and the chain is validated for more than 30% growth in 2028 (analyst summary, not a verified transcript). The honest read: Zeiss is the structural constraint ASML has spent years financing its way around, currently managed, still the pacing item beyond plan. <span class="pill amber">ANALYST VIEW</span></p>
+
+            <h3>Light source and drive lasers: Cymer and Trumpf</h3>
+            <p>The light source is in-house: Cymer, ASML's San Diego subsidiary, runs the laser-produced-plasma tin-droplet source. Production scanners run about 600 W; in February 2026 ASML demonstrated 1,000 W under customer-like conditions by doubling the droplet rate to 100,000 per second with two-pulse laser shaping, projecting about 330 wafers per hour against 220 today, with a stated path to 1,500 W. <span class="pill green">VERIFIED</span> (trade reporting, February 2026). Above about 1 kW, ASML's own analysis says the limiter moves to wafer-stage dynamics and photoresist sensitivity, so source power alone stops being the constraint. <span class="pill amber">ANALYST VIEW</span> of ASML's statements.</p>
+            <p>The drive lasers behind the source are sole-sourced from Trumpf (private, Leibinger family owned), a roughly 450,000-part CO2 laser chain with no credible second source. <span class="pill green">VERIFIED</span></p>
+
+            <h3>Mask ecosystem: blanks, inspection, writers</h3>
+            <p>Production EUV mask blanks come from a duopoly, Hoya and AGC, who with Shin-Etsu hold about 90% of the mask-blank market; a blank is 40 to 50 Mo/Si layers on ultra-low-expansion glass, and a single buried nanometer-scale defect can kill every die printed from the mask, so the practical target is zero killer defects. Hoya is building a new EUV-blank building at its Singapore plant (about Y42B, mass production scheduled FY28); AGC added EUV blank capacity in 2024. Lasertec (public, TSE 6920) is the near-monopoly supplier of actinic (13.5 nm) EUV mask inspection, and its lead times have shortened from more than two years to about 1.5 years with new capacity. Multi-beam mask writing is effectively an IMS Nanofabrication monopoly (private: Intel about 70%, Bain about 20%, TSMC about 10%). <span class="pill amber">ANALYST VIEW</span> on the market structures; <span class="pill green">VERIFIED</span> on Hoya's Singapore project (company earnings materials), Lasertec lead times (IR materials), and the IMS ownership (Intel newsroom, September 2023).</p>
+
+            <h3>Pellicles: the power ceiling, and the unlock</h3>
+            <p>Mitsui Chemicals (public) is the incumbent EUV pellicle maker; its current membranes are rated about 400 W while production scanners run about 600 W and the roadmap goes to 1 kW. The pellicle gates how hard fabs can drive source power. <span class="pill green">VERIFIED</span> No High-NA pellicle has shipped commercially. <span class="pill amber">ANALYST VIEW</span></p>
+            <p>The most consequential newcomer unlock in the chain is the carbon-nanotube pellicle: 94% or better transmittance, rated beyond 1 kW. It is coming from two routes. Mitsui with imec (partnership December 2023) targets high-power EUV introduction in the 2025-2026 window. And Canatu (public, Nasdaq First North Finland) sells CNT100 SEMI reactors to pellicle makers: the first reactor shipped in September 2024, customer approval in July 2025, a commercial production license to FST in October 2025, and a further reactor order over EUR 5M in August 2026 for 2027 delivery. <span class="pill green">VERIFIED</span> on the Canatu chain from company releases. The remaining open step is qualification at a leading-edge fab. <span class="pill gray">INFERENCE</span></p>
+
+            <h3>Resists: the co-limiter past 1 kW</h3>
+            <p>EUV resists are supplied by JSR, TOK, Shin-Etsu, and Fujifilm. JSR is private (taken private by the state-backed Japan Investment Corporation, delisted 2024). The constraint is stochastic: at EUV photon energies, shot noise creates random defects, and raising dose cuts defects while cutting throughput in lockstep. Above 1 kW source power, resist sensitivity becomes a co-limiting factor for throughput, per ASML's own framing, which makes resists the next bottleneck after the source. <span class="pill green">VERIFIED</span> on ownership; <span class="pill amber">ANALYST VIEW</span> on the physics reading. The strongest startup signal in resists is Irresistible Materials (private, UK): TOK made a strategic investment with joint development in February 2026, with testing via imec, but there is no disclosed HVM adoption yet. Lam Research's dry-resist program (with ASML and imec, cross-licensed with JSR/Inpria) is the most credible platform challenger from inside the incumbent set. <span class="pill amber">ANALYST VIEW</span></p>
+
+            <h3>xLight: the long-dated source option</h3>
+            <p>xLight (private, US) is building a free-electron-laser EUV source, claimed to feed 20 or more scanners from one accelerator at better wall-plug efficiency. It has raised about $200M and finalized up to $150M in CHIPS incentives with the US government taking equity in June 2026, and it is building its first system at the Albany NanoTech complex with a wafer-printing target of 2028. <span class="pill green">VERIFIED</span> on funding; <span class="pill amber">VENDOR CLAIM</span> on the performance figures. ASML's engagement is limited collaboration on demonstrations, not a partnership; reports differ on the exact relationship and no ASML primary statement was found, so treat the partnership question as unresolved. <span class="pill amber">ANALYST VIEW</span> On current evidence xLight cannot affect ASML's output before about 2030: it would first have to qualify into ASML's scanners. <span class="pill amber">ANALYST VIEW</span></p>
+
+            <div class="callout">
+              <h3>The verdict: which unlock actually matters, and when</h3>
+              <p>Ranked by how binding each bottleneck is on ASML's growth through 2028: Zeiss qualified-optics capacity first (high), then mask-ecosystem throughput (high for fab ramps, indirect for ASML shipments), pellicle power rating (medium-high), mechatronics capacity (medium), resist stochastics (medium, rising into 2028 and beyond), source power (low-medium, because the incumbent roadmap is ahead of need), and vacuum, gases, and reticle handling (low, no evidence of binding). <span class="pill amber">ANALYST VIEW</span></p>
+              <p>The single most consequential unlock is the Zeiss SMT qualified-optics expansion at Oberkochen and Wetzlar, financed by ASML itself. It is the only unlock that directly raises the number of systems ASML can ship in 2027 and 2028. The most consequential newcomer unlock is the CNT pellicle, but note who delivers it: the incumbent (Mitsui with imec) and a licensed scale-up (Canatu to FST), not a displacer. The genuine long-dated option is xLight's FEL source, which attacks source cost and power for the whole installed base but is pre-qualification and post-2030 on any realistic timeline. <span class="pill amber">ANALYST VIEW</span></p>
+              <p>The indicators that an unlock is actually arriving: ASML's Capital Markets Day on June 10, 2027, for a 2028 capacity commitment; Zeiss disclosure of qualified optical output (not just floor space); first CNT pellicle qualification at a leading-edge fab; Hoya's Singapore ramp into FY28 mass production; Lasertec lead times below about 1.5 years; xLight first light at Albany, and any ASML or TSMC participation in its financing round as the marker of real engagement. <span class="pill gray">INFERENCE</span></p>
+            </div>
+          </section>
+          <section id="financials">
+            <div class="section">
+<p class="section-kicker">10</p>
+<h2>Financials</h2>
+<p class="intro">Four years of a monopoly printing money, then a record quarter. Every figure below is from ASML's own reported releases unless labeled otherwise.</p>
+</div>
+            <h3>Income statement, annual</h3>
+            <div class="table-card">
+              <table>
+                <thead><tr><th>Metric (€ millions)</th><th>FY 2023</th><th>FY 2024</th><th>FY 2025</th><th>TTM Sep 2026</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Metric">Total net sales</td><td data-label="FY 2023">27,559</td><td data-label="FY 2024">28,263</td><td data-label="FY 2025">32,667</td><td data-label="TTM">39,474</td></tr>
+                  <tr><td data-label="Metric">Gross profit</td><td data-label="FY 2023">14,136</td><td data-label="FY 2024">14,492</td><td data-label="FY 2025">17,258</td><td data-label="TTM">21,449</td></tr>
+                  <tr><td data-label="Metric">Gross margin</td><td data-label="FY 2023">51.3%</td><td data-label="FY 2024">51.3%</td><td data-label="FY 2025">52.8%</td><td data-label="TTM">54.3%</td></tr>
+                  <tr><td data-label="Metric">Operating income</td><td data-label="FY 2023">9,042</td><td data-label="FY 2024">9,023</td><td data-label="FY 2025">11,301</td><td data-label="TTM">15,218</td></tr>
+                  <tr><td data-label="Metric">Net income</td><td data-label="FY 2023">7,839</td><td data-label="FY 2024">7,572</td><td data-label="FY 2025">9,609</td><td data-label="TTM">13,474</td></tr>
+                  <tr><td data-label="Metric">EPS (basic; FY2025 diluted)</td><td data-label="FY 2023">€19.91</td><td data-label="FY 2024">€19.25</td><td data-label="FY 2025">€24.71</td><td data-label="TTM">€34.97</td></tr>
+                  <tr><td data-label="Metric">Installed Base Mgmt sales</td><td data-label="FY 2023">5,620</td><td data-label="FY 2024">6,494</td><td data-label="FY 2025">8,193</td><td data-label="TTM">n/a</td></tr>
+                  <tr><td data-label="Metric">New systems sold (units)</td><td data-label="FY 2023">421</td><td data-label="FY 2024">380</td><td data-label="FY 2025">,</td><td data-label="TTM">,</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="muted">Sources: FY2023, FY2024, FY2025 figures from ASML's own press releases via Euronext/Nasdaq reprints (<span class="pill green">VERIFIED</span>); operating income and TTM figures from stockanalysis.com aggregator (secondary). The 2024 "transition year" still printed record profitability; 2025 broke through with +15.6% revenue growth. <span class="pill green">VERIFIED</span></p>
+            <div class="callout good">
+              <h3>Q3 2026: the record quarter, in detail</h3>
+              <p>Net sales <strong>€11.662B</strong>; gross profit <strong>€6.700B</strong>; gross margin <strong>57.5%</strong>; net income <strong>€4.960B</strong>, including ~€0.5B from a Mistral AI investment revaluation; basic EPS <strong>€12.95</strong>; <strong>113 new plus 8 used</strong> lithography systems sold; Installed Base Management sales <strong>€3.289B</strong>; R&amp;D ~€1.2B; SG&amp;A ~€0.4B; effective tax rate 16.1%. Cash, cash equivalents and short-term investments <strong>€12.7B</strong> at quarter end; free cash flow <strong>€11.4B</strong> in the quarter; <strong>~€4.1B</strong> of shares repurchased in Q3 under the 2026-2028 program. <span class="pill green">VERIFIED</span> in the ASML Q3 2026 press release</p>
+            </div>
+            <h3>Balance sheet (Dec 31, 2025, press-release balance sheet)</h3>
+            <ul class="facts">
+              <li><b>Cash and equivalents</b><span>€12,916.0M, plus €405.9M short-term investments. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Long-term debt</b><span>€2,709.0M against €19,612.2M of shareholders' equity. A net-cash balance sheet with no leverage pressure. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Total liabilities</b><span>€30,954.4M. The largest current-liability driver is customer contract liabilities (prepayments), the financial signature of a sold-out order book. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Goodwill</b><span>€4,588.6M, principally the Cymer acquisition legacy. <span class="pill green">VERIFIED</span></span></li>
+            </ul>
+            <h3>Cash flow and capital returns</h3>
+            <ul class="facts">
+              <li><b>Operating cash flow</b><span>~$13.7B in FY2025; capex ~$1.7B; free cash flow ~$12.0B (USD figures via aggregator). Q3 2026 alone: FCF €11.4B. <span class="pill amber">VENDOR CLAIM</span> on press release; aggregator on FY figures</span></li>
+              <li><b>Buyback</b><span>Up to €12B through Dec 31, 2028, announced January 2026; ~€4.1B executed in Q3 2026. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Dividend</b><span>Total 2025 dividend €7.50 per share (+17% YoY); 2026 first interim €1.88 paid in Q3, second interim €1.88 payable November 4, 2026. <span class="pill green">VERIFIED</span></span></li>
+            </ul>
+            <h3>Backlog and guidance</h3>
+            <ul class="facts">
+              <li><b>Backlog</b><span>€38.8B at end-2025; Q4 2025 net bookings €13.2B (of which €7.4B EUV). <span class="pill green">VERIFIED</span></span></li>
+              <li><b>Q4 2026 guidance</b><span>Net sales €14.2-15.2B, gross margin ~57%, Installed Base Management ~€3.7B, R&amp;D ~€1.2B, SG&amp;A ~€0.4B. <span class="pill green">VERIFIED</span></span></li>
+              <li><b>FY 2026 guidance</b><span>Net sales €44-45B (~36% YoY growth), gross margin ~56%; EUV system sales growth over 45%, non-EUV ~20%, service ~50%; logic system sales ~10% growth, memory ~75%; China ~20% of net sales. <span class="pill green">VERIFIED</span></span></li>
+            </ul>
+          </section>
+          <section id="valuation">
+            <div class="section">
+<p class="section-kicker">11</p>
+<h2>Valuation</h2>
+<p class="intro">A premium business at a premium multiple. The multiple is the fat-pitch gate.</p>
+</div>
+            <div class="grid-3">
+              <div class="glass card"><span class="mini">Market price (Oct 20, 2026)</span><span class="big">~$1,631</span><p>Oct 20 regular-session close $1,630.84 (−0.99% on the day); market cap ~$630B; ~18% below the 52-week high. <span class="pill green">VERIFIED</span> (Finnhub/MarketBeat prints)</p></div>
+              <div class="glass card"><span class="mini">Market multiples</span><span class="big">40-57x</span><p>Trailing P/E range from research data (Oct 16-19, 2026); forward P/E ~29x from a single source, approximate. <span class="pill red">UNVERIFIED</span> on forward consensus</p></div>
+              <div class="glass card"><span class="mini">Growth against the multiple</span><span class="big">~36%</span><p>Guided 2026 revenue growth against gross margins near 56%. The question is whether a sold-out monopoly compounding in the mid-30s deserves a low-40s forward multiple. <span class="pill gray">INFERENCE</span></p></div>
+            </div>
+            <div class="callout">
+              <h3>External valuation-model card, Oct 19, 2026: a checklist input, not a valuation</h3>
+              <p>The model's card reads: Fair Value <strong>$2,499.17</strong> vs price $1,659.93 (<strong>+50.3%</strong>), badge "Good Value," PEG 2.08, forward P/E 41.3x, Overall Value 60/100. No written analyst commentary accompanied the page; the card is model arithmetic. Under the standing rule for third-party models, this is a checklist entry: it agrees with the direction of the thesis and its numbers do not go into the thesis. Our valuation lens is monopoly margin on lithography scarcity, not a fair-value target. <span class="pill gray">INFERENCE</span></p>
+            </div>
+            <div class="grid-3">
+              <div class="glass card case bull"><h3>Bull</h3><div class="target">Scarcity extends</div><ul><li>2027-2028 shortfall confirmed and extended; 2029-2030 inquiries convert to bookings</li><li>High-NA adopts on schedule; memory keeps ~75% growth cadence</li><li>China revenue line survives Nov 10 with offsetting EUV strength</li></ul></div>
+              <div class="glass card case base"><h3>Base</h3><div class="target">Sold out, premium priced</div><ul><li>€44-45B delivered in 2026; growth continues into 2027 on EUV and service</li><li>Multiple compresses gradually as the base grows; returns track earnings</li><li>China share steps down but order book absorbs it</li></ul></div>
+              <div class="glass card case bear"><h3>Bear</h3><div class="target">Cycle plus regulation</div><ul><li>Memory digestion pauses bookings; Affiliates Rule expiry guts the China line</li><li>High-NA defers; gross margin drifts toward the low 50s</li><li>Premium multiple meets flat growth; the moat intact, the entry wrong</li></ul></div>
+            </div>
+            <div class="callout">
+              <h3>Strike zone: pre-committed entry levels</h3>
+              <p>The business quality here is the most predictable in the industry, so the decision is price, not the thesis. These levels are written down before the pitch arrives. Touching a level is a prompt for a fresh downside-floor check, never an automatic buy: a band touch with the thesis broken (a fired risk needle, a cracked pillar) is not a fat pitch, and it is never a promise to swing.</p>
+              <p><strong>Reference point, Oct 19, 2026:</strong> ~$1,650 per share, ~$640B market cap, ~41x forward on the external-model card <span class="pill red">APPROXIMATE, model arithmetic</span>, implying roughly $40 of forward earnings underneath the price. Bands are multiple-based, not fixed prices: as forward earnings grow, the dollar bands rise. They are recomputed at each earnings release alongside the downside floor, and each recomputation is recorded in the changelog.</p>
+              <p><strong>Band 1, cyclical de-rate: ~$1,200</strong> <span class="pill red">APPROXIMATE</span>, about 30x the current forward estimate. Trigger character: a bookings miss, AI capex digestion, a sector-wide de-rate, with the monopoly intact. This is the likely entry: equipment cycles regularly hand a 30x price on this quality of business to a patient buyer.</p>
+              <p><strong>Band 2, trough de-rate: ~$1,000</strong> <span class="pill red">APPROXIMATE</span>, about 25x the current forward estimate. Trigger character: genuine semiconductor trough pricing. Below this the business itself would have to be breaking, not pausing; a touch of Band 2 on an intact thesis is the fat-pitch event of this doctrine.</p>
+              <p><strong>What could deliver the price:</strong> cyclical digestion of AI capex or a pause in the memory supercycle (the 2024 transition year grew 2.6% and was still record-profitable); multiple compression from the low 40s toward trough multiples in the low-to-mid 20s (the October 2026 equipment selloff, KLA and Lam down more than 20% in ten days, was a small preview of that beta); China export-control tightening or sponsored-competitor demand amputation on the ~20% of 2026 sales exposed there; High-NA adoption hesitation at TSMC stalling the price-per-system engine; a customer accident at Samsung or Intel showing up in bookings within a quarter or two.</p>
+            </div>
+          </section>
+
+          <section id="floor">
+            <div class="section">
+<p class="section-kicker">12</p>
+<h2>Downside floor</h2>
+<p class="intro">What floors the downside independent of the growth story, per the standing doctrine: re-run at earnings, milestone hits, and big drawdowns.</p>
+</div>
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">Balance sheet</span><h3>Net cash</h3><p>€12.7B of cash and short-term investments at end-Q3 2026 against €2.7B of long-term debt. The company is a net lender to itself; no maturity wall, no covenant risk, no refinancing cycle. <span class="pill green">VERIFIED</span></p></div>
+              <div class="glass card"><span class="mini">Revenue base</span><h3>The service annuity</h3><p>Installed Base Management sales of €3.289B in one quarter, guided to ~50% YoY growth. Thousands of installed systems need service, upgrades, and parts whether or not a single new system ships. This is the floor under revenue in a downturn. <span class="pill green">VERIFIED</span></p></div>
+            </div>
+            <div class="grid-2">
+              <div class="glass card"><span class="mini">Mechanical bid</span><h3>The €12B buyback</h3><p>A €12B repurchase program running through end-2028, with €4.1B executed in Q3 2026 alone, is a standing bid in drawdowns. The 2024 transition year proved the pattern: flat sales, still record-profitable, still returning cash. <span class="pill green">VERIFIED</span></p></div>
+              <div class="glass card"><span class="mini">The limit of the floor</span><h3>What it does not cover</h3><p>The floor is a business floor, not a price floor. In a 2024-style digestion the stock can still draw down hard against a premium multiple; the floor only guarantees the company keeps printing cash through it. <span class="pill gray">INFERENCE</span></p></div>
+            </div>
+          </section>
+
+          <section id="milestones">
+            <div class="section">
+<p class="section-kicker">13</p>
+<h2>Needle milestones</h2>
+<p class="intro">The small set of events that move measured strength the most. When one hits, the thesis updates the same turn.</p>
+</div>
+            <div class="table-card">
+              <table>
+                <thead><tr><th>Milestone</th><th>Dimension</th><th>Needle up</th><th>Needle down</th><th>Window</th></tr></thead>
+                <tbody>
+                  <tr><td data-label="Milestone">2027-2028 shortfall confirmed on Q4 2026 call</td><td data-label="Dimension">Success</td><td data-label="Needle up">Company reiterates planned 2027-2028 output will not meet demand</td><td data-label="Needle down">Company walks the language back</td><td data-label="Window">Jan 2027</td></tr>
+                  <tr><td data-label="Milestone">Q4 2026 guidance hit (€14.2-15.2B, ~57% GM)</td><td data-label="Dimension">Growth</td><td data-label="Needle up">Delivered in range; record €44-45B year</td><td data-label="Needle down">Miss on sales or GM below ~55%</td><td data-label="Window">Jan 2027</td></tr>
+                  <tr><td data-label="Milestone">China revenue after Nov 10, 2026 rule expiry</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">China share of 2027 sales holds above ~15% under clear rules</td><td data-label="Needle down">The ~20% line collapses with no EUV offset</td><td data-label="Window">H1 2027</td></tr>
+                  <tr><td data-label="Milestone">EUV lead times and the 2029-2030 inquiry book</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">Inquiries convert to firm bookings; lead times stay extended</td><td data-label="Needle down">Lead times normalize; the book evaporates</td><td data-label="Window">2027 calls</td></tr>
+                  <tr><td data-label="Milestone">Bookings trajectory</td><td data-label="Dimension">Growth</td><td data-label="Needle up">Quarterly bookings at or above ~€10B, EUV majority</td><td data-label="Needle down">Two quarters below ~€6B with no rebound signal</td><td data-label="Window">Each print</td></tr>
+                  <tr><td data-label="Milestone">High-NA EXE adoption pace</td><td data-label="Dimension">Growth</td><td data-label="Needle up">Shipments move past one-offs toward an annual run rate</td><td data-label="Needle down">Customers defer to extended multi-patterning low-NA</td><td data-label="Window">2027-2028</td></tr>
+                  <tr><td data-label="Milestone">Canon nanoimprint qualification</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">No leading-edge fab qualifies NIL for volume logic</td><td data-label="Needle down">A leading fab qualifies it for a volume logic layer</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">Non-ASML tool qualified for a production layer at a leading-edge fab</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">A year passes with no such qualification</td><td data-label="Needle down">A rival tool patterns a named production layer in volume at TSMC, Samsung, Intel, or SK Hynix</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">Chinese-built scanner verified in volume at a named node</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">Program stays at prototype claims and government targets</td><td data-label="Needle down">Teardown or shipment data confirms a domestic scanner patterning at or below 7 nm in volume at a named fab</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">High-NA defection or material delay toward an alternative path</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">TSMC, Samsung, and Intel reaffirm High-NA roadmaps</td><td data-label="Needle down">A leading fab formally adopts alternative patterning for a leading node over High-NA EUV</td><td data-label="Window">Each node decision</td></tr>
+                  <tr><td data-label="Milestone">Domestic Chinese EUV source at HVM power</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">Power claims stay at company slides and lab figures</td><td data-label="Needle down">A domestic source demonstrated at 250 W or more at intermediate focus with collector lifetime data</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">Sponsored-competitor demand amputation</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">Chinese fabs keep tendering foreign tools on economics; domestic tools stay in R&D lines</td><td data-label="Needle down">Domestic lithography tools mandated or adopted across a majority of new Chinese fab capacity (visible in SMEE/domestic tool share of Chinese fab tenders), or Chinese lithography tools winning tenders in non-aligned third markets</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">Zeiss qualified-optics output or 2028 capacity commitment at the June 2027 CMD</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">ASML commits 2028 capacity above +30% with Zeiss qualified-output disclosure</td><td data-label="Needle down">No disclosure; capacity plans pushed out or cut</td><td data-label="Window">Jun 2027 CMD</td></tr>
+                  <tr><td data-label="Milestone">CNT pellicle qualification at a leading-edge fab</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">First CNT pellicle qualified for production use at TSMC, Samsung, Intel, or SK Hynix</td><td data-label="Needle down">Qualifications stall; 400 W membranes remain the ceiling</td><td data-label="Window">Annual check</td></tr>
+                  <tr><td data-label="Milestone">xLight first light and ASML/TSMC engagement</td><td data-label="Dimension">Risk-mitigation</td><td data-label="Needle up">Albany FEL first light achieved; ASML or TSMC participates in its financing</td><td data-label="Needle down">Milestones slip past 2028 with no scanner-integration path</td><td data-label="Window">2027-2028</td></tr>
+                  <tr><td data-label="Milestone">Gross margin floor</td><td data-label="Dimension">Success</td><td data-label="Needle up">Holds at or above 51% every quarter</td><td data-label="Needle down">Sustained below 51%: pricing power erosion</td><td data-label="Window">Each print</td></tr>
+                  <tr><td data-label="Milestone">Price enters a strike-zone band with the business intact</td><td data-label="Dimension">Growth</td><td data-label="Needle up">Price touches ~$1,200 (Band 1, cyclical de-rate ~30x) or ~$1,000 (Band 2, trough de-rate ~25x) with no thesis-breaking needle fired: the fat-pitch event; run a fresh downside-floor check</td><td data-label="Needle down">A band touch arrives alongside a fired risk needle or a cracked pillar: not a fat pitch</td><td data-label="Window">Ongoing; bands re-based each print</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section id="watch">
+            <div class="section">
+<p class="section-kicker">14</p>
+<h2>Open questions</h2>
+<p class="intro">What this thesis does not yet know, stated plainly so future research can close each one.</p>
+</div>
+            <ol class="monitor">
+              <li><strong>Installed-base service attach per system</strong><span>ASML reports service revenue but not a per-system attach rate; the annuity per installed system is an inference, not a disclosed figure.</span></li>
+              <li><strong>High-NA EXE average selling price</strong><span>ASML does not publish list prices; industry reporting places them above €350M per system (widely reported estimate, not company-disclosed).</span></li>
+              <li><strong>Carl Zeiss SMT capacity expansion timeline</strong><span>The 2025 annual report states Zeiss capacity limits ASML system output; the expansion schedule is not quantified in the materials reviewed.</span></li>
+              <li><strong>Long-term China demand scenario</strong><span>~20% of 2026 net sales is the guided China share; the post-November-10-2026 regulatory regime is undefined as of this thesis date.</span></li>
+              <li><strong>EUV low-NA annual output ceiling</strong><span>~65 systems expected in 2026 (up from 44 in 2025); the 2027-2028 capacity path is company-claimed, not yet delivered.</span></li>
+            </ol>
+          </section>
+
+          <section id="sources">
+            <div class="section">
+<p class="section-kicker">15</p>
+<h2>Sources &amp; evidence labels</h2>
+<p class="intro">Every material claim in this document traces to one of these. Figures without a primary source are labeled, not estimated.</p>
+</div>
+            <ul class="sources">
+              <li>ASML Q3 2026 press release (Oct 14, 2026), reprinted via Euronext/GlobeNewswire, biztechweekly, convergedigest, anysilicon, and europesays/GuruFocus call highlights: record €11.662B net sales, 57.5% gross margin, €4.960B net income, 113 new systems, Q4 and FY2026 guidance, 2027-2028 supply shortfall statement by CEO Christophe Fouquet.</li>
+              <li>ASML FY2025 press release (Jan 28, 2026), reprinted via Euronext/Nasdaq/GlobeNewswire: €32.667B sales, 52.8% gross margin, €9.609B net income, €38.8B year-end backlog, €12B buyback program, €7.50 dividend, Dec 31 2025 balance sheet.</li>
+              <li>ASML FY2024 press release (Jan 29, 2025), reprinted via centralcharts/finanznachrichten: €28.263B sales, 51.3% gross margin, €7.572B net income, "transition year" framing.</li>
+              <li>ASML FY2023 press release (Jan 24, 2024), reprinted via Nasdaq/Euronext: €27.559B sales, 51.3% gross margin, €7.839B net income, €20.040B bookings.</li>
+              <li>stockanalysis.com ASML financials page: operating income history and TTM figures (secondary aggregator, labeled as such).</li>
+              <li>Semiconductor supply-chain research report, Oct 19, 2026 (workspace research notes): EUV ~100% / all-lithography ~90% shares, Zeiss SMT dependency (€4.41B purchases, 24.9% stake, exclusivity, annual-report quote), Trumpf and Cymer positions, Affiliates Rule Nov 10 2026 expiry, equipment selloff context, ASML price/multiple ranges.</li>
+              <li>External valuation-model ASML card, checked Oct 19, 2026: Fair Value $2,499.17, +50.3%, model verdict Good Value, PEG 2.08, forward P/E 41.3x, Overall 60/100. Model output treated as checklist input.</li>
+              <li>Nikon and Canon status: both public Japanese companies (verified per standing rule). Lithography history and nanoimprint status drawn from industry reporting; labeled inference where not directly re-verified.</li>
+            </ul>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer style="margin-top:3rem;border-top:1px solid #e3e3e3;padding:1.5rem 1rem;font-size:.82rem;color:#555;line-height:1.65"><div style="max-width:860px;margin:0 auto"><strong>Disclaimer.</strong> This document is published by <strong>Michael S. Lau</strong> for educational and informational purposes only. It is not investment advice, financial advice, trading advice, or a recommendation to buy, sell, or hold any security. No advisory, fiduciary, or client relationship is created by your reading it: the author does not know your financial situation, investment objectives, or tolerance for risk, and nothing here is tailored to any individual. The analysis reflects the author&rsquo;s personal research and opinions, may contain errors or outdated information, and should be verified against primary sources before reliance. Forward-looking statements are inherently uncertain and subject to change. Past performance is not indicative of future results. The author may hold positions in securities discussed. Consult a licensed financial advisor before making investment decisions. The author bears no liability for any loss arising from reliance on these materials.</div></footer>
+
+<script src="../site.js?v=20261021g" defer></script>
+</body>
+</html>
