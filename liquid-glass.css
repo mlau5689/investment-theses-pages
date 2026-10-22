@@ -301,3 +301,10 @@ body { transition: background-color .5s var(--ease-ios); }
   .upd-detail-in > div { padding: 2px 16px 14px 58px; }
   .to-top { right: 12px; width: 44px; height: 44px; }
 }
+
+/* thesis filter chips (landing living log): iOS-style scrollable chip strip */
+.upd-chips { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 2px 20px 6px; }
+.upd-chips::-webkit-scrollbar { display: none; }
+.upd-chips button { flex: 0 0 auto; padding: 7px 13px; border-radius: 999px; border: 0; background: var(--fill-tertiary); color: var(--label-secondary); font: 600 13px/1.3 var(--font); cursor: pointer; transition: background .18s var(--ease-ios), color .18s var(--ease-ios), transform .12s var(--ease-ios); }
+.upd-chips button:active { transform: scale(.96); }
+.upd-chips button.on { background: var(--blue); color: #fff; }

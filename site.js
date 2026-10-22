@@ -168,7 +168,7 @@
 
     var list = sec.querySelector("[data-upd-list]");
     var sentinel = sec.querySelector("[data-upd-sentinel]");
-    var sort = "new", filt = "all", shown = 0;
+    var sort = "new", filt = "all", tickFilt = "", shown = 0;
 
     /* section collapse */
     var head = sec.querySelector("[data-upd-toggle]");
@@ -216,7 +216,9 @@
     }
 
     function visible() {
-      var v = DATA.filter(function (u) { return filt === "all" || u.sentiment === filt; });
+      var v = DATA.filter(function (u) {
+        return (filt === "all" || u.sentiment === filt) && (!tickFilt || u.ticker === tickFilt);
+      });
       return sort === "new" ? v : v.slice().reverse();
     }
     function renderMore() {
@@ -272,6 +274,21 @@
     }
     segWire(sec.querySelector("[data-upd-sort]"), function (v) { sort = v; reset(); });
     segWire(sec.querySelector("[data-upd-filter]"), function (v) { filt = v; reset(); });
+
+    /* thesis chips (landing only) */
+    (function () {
+      var bar = sec.querySelector("[data-upd-theses]");
+      if (!bar) return;
+      var btns = bar.querySelectorAll("button");
+      for (var i = 0; i < btns.length; i++) (function (b) {
+        b.addEventListener("click", function () {
+          for (var j = 0; j < btns.length; j++) btns[j].classList.remove("on");
+          b.classList.add("on");
+          tickFilt = b.getAttribute("data-t");
+          reset();
+        });
+      })(btns[i]);
+    })();
 
     reset();
     watch();
