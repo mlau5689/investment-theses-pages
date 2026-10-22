@@ -177,21 +177,15 @@
       head.setAttribute("aria-expanded", closed ? "false" : "true");
     });
 
-    var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     function esc(t) {
       return String(t == null ? "" : t).replace(/&/g,"&amp;").replace(/</g,"&lt;")
         .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
-    function fmtDate(d) {
-      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || "");
-      return m ? MON[+m[2] - 1] + " " + (+m[3]) + ", " + m[1] : (d || "");
-    }
-    function cap(t) { t = String(t || "").trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : "Update"; }
 
     var SVG_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
     var SVG_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
     var SVG_DASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>';
-    var SVG_CHEV = '<svg class="upd-chev-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    var SVG_DISC = '<svg class="upd-disc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 
     var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", RIVN: "rivian",
       ASML: "asml", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
@@ -200,24 +194,19 @@
       var bc = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
       var bi = u.sentiment === "positive" ? SVG_UP : u.sentiment === "negative" ? SVG_DN : SVG_DASH;
       var tick = u.ticker ? '<span class="upd-tick">' + esc(u.ticker) + '</span>' : "";
-      var inner = '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
-        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' +
-        '<span class="upd-meta"><span class="upd-d">' + esc(fmtDate(u.date)) + ' \u00b7 ' + esc(cap(u.source)) + '</span></span></span>';
-      var open = '<div class="upd" id="' + esc(u.id) + '" data-sent="' + esc(u.sentiment) + '">';
+      var href;
       if (u.ticker) {
         var slug = SLUGS[u.ticker] || "";
-        var target = u.section ? u.section : u.id;
-        return open + '<a class="upd-row" href="' + slug + '/#' + esc(target) + '">' + inner + '</a></div>';
+        href = u.section ? slug + "/#" + u.section : slug + "/";
+      } else {
+        href = u.section ? "#" + u.section : "#";
       }
-      var body = "";
-      if (u.summary) body += "<p>" + esc(u.summary) + "</p>";
-      if (u.detail && !(u.summary && u.detail.indexOf(u.summary) === 0)) body += "<p>" + esc(u.detail) + "</p>";
-      if (u.section) {
-        var sl = u.section_title ? "Read the full section: " + esc(u.section_title) : "Read the full section";
-        body += '<a class="upd-goto" href="#' + esc(u.section) + '">' + sl + ' \u2192</a>';
-      }
-      return open + '<button class="upd-row" data-upd-row aria-expanded="false">' + inner + SVG_CHEV + '</button>' +
-        '<div class="upd-detail"><div class="upd-detail-in"><div>' + body + '</div></div></div></div>';
+      var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
+      return '<div class="upd" id="' + esc(u.id) + '">' +
+        '<a class="upd-row" href="' + href + '">' +
+        '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
+        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + '</span>' +
+        SVG_DISC + '</a></div>';
     }
 
     function visible() {
@@ -243,15 +232,6 @@
       shown = 0;
       renderMore();
     }
-
-    /* row expand (event delegation; landing rows are links and navigate) */
-    list.addEventListener("click", function (ev) {
-      var btn = ev.target.closest ? ev.target.closest("[data-upd-row]") : null;
-      if (!btn) return;
-      var r = btn.parentNode;
-      var open = r.classList.toggle("open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-    });
 
     /* page in older entries as the user scrolls, like iOS Messages */
     var io = null;
@@ -304,9 +284,6 @@
       while (shown <= at) { if (!renderMore()) break; }
       var el = document.getElementById(id);
       if (!el) return;
-      el.classList.add("open");
-      var rb = el.querySelector("[data-upd-row]");
-      if (rb) rb.setAttribute("aria-expanded", "true");
       setTimeout(function () {
         el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
       }, 80);
