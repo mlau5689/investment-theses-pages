@@ -215,12 +215,10 @@
         href = u.section ? "#" + u.section : "#";
       }
       var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
-      var ts = when(u);
-      var tst = ts ? '<span class="upd-when">' + esc(ts) + '</span>' : "";
       return '<div class="upd" id="' + esc(u.id) + '">' +
         '<a class="upd-row" href="' + href + '">' +
         '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
-        '<span class="upd-main"><span class="upd-trow"><span class="upd-t">' + tick + esc(u.title) + '</span>' + tst + '</span>' + sub + '</span>' +
+        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + '</span>' +
         SVG_DISC + '</a></div>';
     }
 
@@ -230,23 +228,58 @@
       });
       return sort === "new" ? v : v.slice().reverse();
     }
+    /* batch groups: one (date, time, thesis) cluster per group, collapsed by default */
+    var SVG_GCHEV = '<svg class="upd-gchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+    function batchGroups(v) {
+      var gs = [], map = {};
+      v.forEach(function (u) {
+        var key = (u.date || "") + "|" + (u.time || "") + "|" + (u.ticker || "");
+        var g = map[key];
+        if (!g) {
+          g = { date: u.date, time: u.time, ticker: u.ticker, items: [] };
+          map[key] = g; gs.push(g);
+        }
+        g.items.push(u);
+      });
+      return gs;
+    }
+    function groupHTML(g) {
+      var tick = g.ticker ? '<span class="upd-tick">' + esc(g.ticker) + '</span>' : "";
+      var label = tick + esc(when(g));
+      var n = g.items.length;
+      var rows = g.items.map(rowHTML).join("");
+      return '<div class="upd-g">' +
+        '<button class="upd-ghead" data-gtoggle aria-expanded="false">' +
+        '<span class="upd-gtitle">' + label + '</span>' +
+        '<span class="upd-gcount">' + n + '</span>' + SVG_GCHEV + '</button>' +
+        '<div class="upd-gbody"><div class="upd-gbody-in">' + rows + '</div></div></div>';
+    }
+    var GPAGE = 8;
     function renderMore() {
-      var v = visible();
-      var next = v.slice(shown, shown + PAGE);
+      var gs = batchGroups(visible());
+      var next = gs.slice(shown, shown + GPAGE);
       if (!next.length) return false;
       var tmp = document.createElement("div");
       var frag = document.createDocumentFragment();
-      next.forEach(function (u) { tmp.innerHTML = rowHTML(u); frag.appendChild(tmp.firstChild); });
+      next.forEach(function (g) { tmp.innerHTML = groupHTML(g); frag.appendChild(tmp.firstChild); });
       list.insertBefore(frag, sentinel);
       shown += next.length;
-      return shown < v.length;
+      return shown < gs.length;
     }
     function reset() {
-      var olds = list.querySelectorAll(".upd");
+      var olds = list.querySelectorAll(".upd-g");
       for (var i = 0; i < olds.length; i++) olds[i].parentNode.removeChild(olds[i]);
       shown = 0;
       renderMore();
     }
+
+    /* group expand/collapse */
+    list.addEventListener("click", function (ev) {
+      var btn = ev.target.closest ? ev.target.closest("[data-gtoggle]") : null;
+      if (!btn) return;
+      var open = btn.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
 
     /* page in older entries as the user scrolls, like iOS Messages */
     var io = null;
@@ -299,6 +332,14 @@
       while (shown <= at) { if (!renderMore()) break; }
       var el = document.getElementById(id);
       if (!el) return;
+      var gh = el.closest ? el.closest(".upd-g") : null;
+      if (gh) {
+        var gb = gh.querySelector("[data-gtoggle]");
+        if (gb && !gb.classList.contains("open")) {
+          gb.classList.add("open");
+          gb.setAttribute("aria-expanded", "true");
+        }
+      }
       setTimeout(function () {
         el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
       }, 80);
