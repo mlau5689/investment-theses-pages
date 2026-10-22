@@ -340,24 +340,23 @@ body { transition: background-color .5s var(--ease-ios); }
 /* Deep-link flash: pulse-highlight the entire addendum navigated to from Recent updates */
 .addendum { border-radius: 8px; }
 @keyframes addendumFlash {
-  0%   { background: rgba(255,214,64,.9);  box-shadow: 0 0 0 5px rgba(255,214,64,.45); }
-  22%  { background: rgba(255,214,64,.45); box-shadow: 0 0 0 8px rgba(255,214,64,.2); }
-  45%  { background: rgba(255,214,64,.9);  box-shadow: 0 0 0 5px rgba(255,214,64,.45); }
-  70%  { background: rgba(255,214,64,.3);  box-shadow: 0 0 0 3px rgba(255,214,64,.12); }
+  0%   { background: rgba(0,122,255,.28); box-shadow: 0 0 0 5px rgba(0,122,255,.35); }
+  22%  { background: rgba(0,122,255,.14); box-shadow: 0 0 0 8px rgba(0,122,255,.18); }
+  45%  { background: rgba(0,122,255,.28); box-shadow: 0 0 0 5px rgba(0,122,255,.35); }
+  70%  { background: rgba(0,122,255,.1);  box-shadow: 0 0 0 3px rgba(0,122,255,.12); }
   100% { background: transparent; box-shadow: none; }
 }
 .loc-flash {
   animation: addendumFlash 3.4s ease-out;
 }
 
-/* Section fallback flash: visible highlight when navigating to a section (no specific addendum anchor) */
+/* Section fallback flash: gentler blue glow when navigating to a section (no specific addendum anchor) */
 @keyframes secFlash {
-  0%   { box-shadow: inset 0 0 0 4px rgba(0,122,255,.7); background: rgba(0,122,255,.08); border-radius: 12px; }
-  30%  { box-shadow: inset 0 0 0 4px rgba(0,122,255,.5); background: rgba(0,122,255,.05); border-radius: 12px; }
-  60%  { box-shadow: inset 0 0 0 4px rgba(0,122,255,.7); background: rgba(0,122,255,.08); border-radius: 12px; }
+  0%   { box-shadow: inset 0 0 0 3px rgba(0,122,255,.4); background: rgba(0,122,255,.06); border-radius: 12px; }
+  50%  { box-shadow: inset 0 0 0 3px rgba(0,122,255,.25); background: rgba(0,122,255,.03); border-radius: 12px; }
   100% { box-shadow: none; background: transparent; }
 }
 .sec-flash {
-  animation: secFlash 3s ease-out;
+  animation: secFlash 2.6s ease-out;
   scroll-margin-top: 90px;
 }
