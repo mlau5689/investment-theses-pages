@@ -153,11 +153,22 @@
     buildNav();
   }
 
-  /* ---------- recent updates (living log) ---------- */
+  /* ---------- recent updates (living log): iMessage-style paged scroll ---------- */
   (function initUpdates() {
     var sec = document.getElementById("updates");
     if (!sec) return;
     var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var PAGE = 20;
+
+    var DATA = [];
+    try {
+      var dataEl = sec.querySelector("script.upd-data");
+      DATA = JSON.parse(dataEl.textContent);
+    } catch (e) { DATA = []; }
+
+    var list = sec.querySelector("[data-upd-list]");
+    var sentinel = sec.querySelector("[data-upd-sentinel]");
+    var sort = "new", filt = "all", shown = 0;
 
     /* section collapse */
     var head = sec.querySelector("[data-upd-toggle]");
@@ -166,21 +177,88 @@
       head.setAttribute("aria-expanded", closed ? "false" : "true");
     });
 
-    /* row expand */
-    var rows = Array.prototype.slice.call(sec.querySelectorAll(".upd"));
-    rows.forEach(function (r) {
-      var btn = r.querySelector("[data-upd-row]");
+    var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    function esc(t) {
+      return String(t == null ? "" : t).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+    function fmtDate(d) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || "");
+      return m ? MON[+m[2] - 1] + " " + (+m[3]) + ", " + m[1] : (d || "");
+    }
+    function cap(t) { t = String(t || "").trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : "Update"; }
+
+    var SVG_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    var SVG_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
+    var SVG_DASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>';
+    var SVG_CHEV = '<svg class="upd-chev-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+    var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", PLTR: "pltr", RIVN: "rivian",
+      ASML: "asml", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
+
+    function rowHTML(u) {
+      var bc = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
+      var bi = u.sentiment === "positive" ? SVG_UP : u.sentiment === "negative" ? SVG_DN : SVG_DASH;
+      var tick = u.ticker ? '<span class="upd-tick">' + esc(u.ticker) + '</span>' : "";
+      var inner = '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
+        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' +
+        '<span class="upd-meta"><span class="upd-d">' + esc(fmtDate(u.date)) + ' \u00b7 ' + esc(cap(u.source)) + '</span></span></span>';
+      var open = '<div class="upd" id="' + esc(u.id) + '" data-sent="' + esc(u.sentiment) + '">';
+      if (u.ticker) {
+        var slug = SLUGS[u.ticker] || "";
+        return open + '<a class="upd-row" href="' + slug + '/#' + esc(u.id) + '">' + inner + '</a></div>';
+      }
+      var body = "";
+      if (u.summary) body += "<p>" + esc(u.summary) + "</p>";
+      if (u.detail && !(u.summary && u.detail.indexOf(u.summary) === 0)) body += "<p>" + esc(u.detail) + "</p>";
+      return open + '<button class="upd-row" data-upd-row aria-expanded="false">' + inner + SVG_CHEV + '</button>' +
+        '<div class="upd-detail"><div class="upd-detail-in"><div>' + body + '</div></div></div></div>';
+    }
+
+    function visible() {
+      var v = DATA.filter(function (u) { return filt === "all" || u.sentiment === filt; });
+      return sort === "new" ? v : v.slice().reverse();
+    }
+    function renderMore() {
+      var v = visible();
+      var next = v.slice(shown, shown + PAGE);
+      if (!next.length) return false;
+      var tmp = document.createElement("div");
+      var frag = document.createDocumentFragment();
+      next.forEach(function (u) { tmp.innerHTML = rowHTML(u); frag.appendChild(tmp.firstChild); });
+      list.insertBefore(frag, sentinel);
+      shown += next.length;
+      return shown < v.length;
+    }
+    function reset() {
+      var olds = list.querySelectorAll(".upd");
+      for (var i = 0; i < olds.length; i++) olds[i].parentNode.removeChild(olds[i]);
+      shown = 0;
+      renderMore();
+    }
+
+    /* row expand (event delegation; landing rows are links and navigate) */
+    list.addEventListener("click", function (ev) {
+      var btn = ev.target.closest ? ev.target.closest("[data-upd-row]") : null;
       if (!btn) return;
-      btn.addEventListener("click", function () {
-        var open = r.classList.toggle("open");
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
+      var r = btn.parentNode;
+      var open = r.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
-    /* sort + filter + show-all state */
-    var list = sec.querySelector("[data-upd-list]");
-    var moreBtn = sec.querySelector("[data-upd-more]");
-    var sort = "new", filt = "all", showAll = false, N = 5;
+    /* page in older entries as the user scrolls, like iOS Messages */
+    var io = null;
+    function watch() {
+      if (!("IntersectionObserver" in window)) return;
+      if (io) io.disconnect();
+      io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) { renderMore(); }
+        }
+      }, { root: list, rootMargin: "240px" });
+      io.observe(sentinel);
+    }
+
     function segWire(el, fn) {
       if (!el) return;
       var btns = el.querySelectorAll("button");
@@ -192,39 +270,23 @@
         });
       })(btns[i]);
     }
-    function apply() {
-      var vis = [];
-      rows.forEach(function (r) {
-        var ok = filt === "all" || r.getAttribute("data-sent") === filt;
-        r.style.display = ok ? "" : "none";
-        if (ok) vis.push(r);
-      });
-      var ordered = sort === "new" ? vis : vis.slice().reverse();
-      ordered.forEach(function (r) { list.appendChild(r); });
-      ordered.forEach(function (r, i) { r.classList.toggle("beyond", !showAll && i >= N); });
-      list.classList.toggle("tall", showAll && ordered.length > N);
-      if (moreBtn) {
-        moreBtn.style.display = ordered.length > N ? "" : "none";
-        moreBtn.textContent = showAll ? "Show fewer" : "Show all " + ordered.length + " updates";
-      }
-    }
-    segWire(sec.querySelector("[data-upd-sort]"), function (v) { sort = v; apply(); });
-    segWire(sec.querySelector("[data-upd-filter]"), function (v) { filt = v; apply(); });
-    if (moreBtn) moreBtn.addEventListener("click", function () { showAll = !showAll; apply(); });
-    apply();
+    segWire(sec.querySelector("[data-upd-sort]"), function (v) { sort = v; reset(); });
+    segWire(sec.querySelector("[data-upd-filter]"), function (v) { filt = v; reset(); });
 
-    /* deep link: slug/#upd-id expands that entry */
+    reset();
+    watch();
+
+    /* deep link: slug/#upd-id renders enough pages, expands the entry */
     (function deepLink() {
       var h = location.hash || "";
       if (h.indexOf("#upd-") !== 0) return;
-      var el = document.getElementById(h.slice(1));
-      if (!el || !el.classList.contains("upd")) return;
-      filt = "all"; sort = "new"; showAll = true;
-      var fb = sec.querySelector('[data-upd-filter] button[data-v="all"]');
-      var sb = sec.querySelector('[data-upd-sort] button[data-v="new"]');
-      if (fb) { var fbtns = sec.querySelectorAll("[data-upd-filter] button"); for (var i = 0; i < fbtns.length; i++) fbtns[i].classList.remove("on"); fb.classList.add("on"); }
-      if (sb) { var sbtns = sec.querySelectorAll("[data-upd-sort] button"); for (var i = 0; i < sbtns.length; i++) sbtns[i].classList.remove("on"); sb.classList.add("on"); }
-      apply();
+      var id = h.slice(1);
+      var v = visible(), at = -1;
+      for (var i = 0; i < v.length; i++) if (v[i].id === id) { at = i; break; }
+      if (at < 0) return;
+      while (shown <= at) { if (!renderMore()) break; }
+      var el = document.getElementById(id);
+      if (!el) return;
       el.classList.add("open");
       var rb = el.querySelector("[data-upd-row]");
       if (rb) rb.setAttribute("aria-expanded", "true");
@@ -234,7 +296,7 @@
     })();
   })();
 
-  /* ---------- scroll to top ---------- */
+/* ---------- scroll to top ---------- */
   (function initToTop() {
     var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var b = document.createElement("button");
