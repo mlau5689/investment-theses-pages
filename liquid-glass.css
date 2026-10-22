@@ -350,12 +350,14 @@ body { transition: background-color .5s var(--ease-ios); }
   animation: addendumFlash 3.4s ease-out;
 }
 
-/* Section fallback flash: gentler highlight when navigating to a section (no specific addendum anchor) */
+/* Section fallback flash: visible highlight when navigating to a section (no specific addendum anchor) */
 @keyframes secFlash {
-  0%   { box-shadow: inset 0 0 0 3px rgba(0,122,255,.45); border-radius: 12px; }
-  60%  { box-shadow: inset 0 0 0 3px rgba(0,122,255,.22); border-radius: 12px; }
-  100% { box-shadow: none; }
+  0%   { box-shadow: inset 0 0 0 4px rgba(0,122,255,.7); background: rgba(0,122,255,.08); border-radius: 12px; }
+  30%  { box-shadow: inset 0 0 0 4px rgba(0,122,255,.5); background: rgba(0,122,255,.05); border-radius: 12px; }
+  60%  { box-shadow: inset 0 0 0 4px rgba(0,122,255,.7); background: rgba(0,122,255,.08); border-radius: 12px; }
+  100% { box-shadow: none; background: transparent; }
 }
 .sec-flash {
-  animation: secFlash 2.6s ease-out;
+  animation: secFlash 3s ease-out;
+  scroll-margin-top: 90px;
 }

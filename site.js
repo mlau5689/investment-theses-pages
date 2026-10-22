@@ -425,7 +425,7 @@
         el.classList.add('sec-flash');
         setTimeout(function() { el.classList.remove('sec-flash'); }, 2600);
       }
-    }, 350);
+    }, 600);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', flashTarget);
