@@ -208,11 +208,12 @@
       var bi = u.sentiment === "positive" ? SVG_UP : u.sentiment === "negative" ? SVG_DN : SVG_DASH;
       var tick = "";
       var href;
+      var anchor = u.loc || u.section;
       if (u.ticker) {
         var slug = SLUGS[u.ticker] || "";
-        href = u.section ? slug + "/#" + u.section : slug + "/";
+        href = anchor ? slug + "/#" + anchor : slug + "/";
       } else {
-        href = u.section ? "#" + u.section : "#";
+        href = anchor ? "#" + anchor : "#";
       }
       var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
       var secchip = u.section_title ? '<span class="upd-secin">in ' + esc(u.section_title) + '</span>' : "";
@@ -406,4 +407,26 @@
     onScroll();
   })();
 
+})();
+
+// Deep-link flash: when landing on a specific addendum from Recent updates, momentarily highlight it
+(function() {
+  function flashLoc() {
+    var h = location.hash.slice(1);
+    if (h && h.indexOf('loc-') === 0) {
+      var el = document.getElementById(h);
+      if (el) {
+        setTimeout(function() {
+          el.classList.add('loc-flash');
+          setTimeout(function() { el.classList.remove('loc-flash'); }, 3000);
+        }, 350);
+      }
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', flashLoc);
+  } else {
+    flashLoc();
+  }
+  window.addEventListener('hashchange', flashLoc);
 })();
