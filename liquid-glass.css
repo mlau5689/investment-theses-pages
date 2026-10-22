@@ -337,12 +337,15 @@ body { transition: background-color .5s var(--ease-ios); }
 /* impacted-section chip: what thesis area this update hit */
 .upd-secin { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--ink-3); background: rgba(120,120,128,.12); padding: 3px 9px; border-radius: 999px; }
 
-/* Deep-link flash: momentarily highlight the specific addendum navigated to from Recent updates */
-@keyframes locFlash {
-  0% { background: rgba(0,122,255,.32); border-radius: 6px; }
-  70% { background: rgba(0,122,255,.18); border-radius: 6px; }
-  100% { background: transparent; }
+/* Deep-link flash: pulse-highlight the entire addendum navigated to from Recent updates */
+.addendum { border-radius: 8px; }
+@keyframes addendumFlash {
+  0%   { background: rgba(255,214,64,.9);  box-shadow: 0 0 0 5px rgba(255,214,64,.45); }
+  22%  { background: rgba(255,214,64,.45); box-shadow: 0 0 0 8px rgba(255,214,64,.2); }
+  45%  { background: rgba(255,214,64,.9);  box-shadow: 0 0 0 5px rgba(255,214,64,.45); }
+  70%  { background: rgba(255,214,64,.3);  box-shadow: 0 0 0 3px rgba(255,214,64,.12); }
+  100% { background: transparent; box-shadow: none; }
 }
 .loc-flash {
-  animation: locFlash 2.8s ease-out;
+  animation: addendumFlash 3.4s ease-out;
 }
