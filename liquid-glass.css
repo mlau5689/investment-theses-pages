@@ -337,26 +337,60 @@ body { transition: background-color .5s var(--ease-ios); }
 /* impacted-section chip: what thesis area this update hit */
 .upd-secin { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--ink-3); background: rgba(120,120,128,.12); padding: 3px 9px; border-radius: 999px; }
 
-/* Deep-link flash: pulse-highlight the entire addendum navigated to from Recent updates */
-.addendum { border-radius: 8px; }
+/* Deep-link flash: block highlight + 3D lift for the navigated addendum */
+.addendum {
+  display: block;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
 @keyframes addendumFlash {
-  0%   { background: rgba(0,122,255,.28); box-shadow: 0 0 0 5px rgba(0,122,255,.35); }
-  22%  { background: rgba(0,122,255,.14); box-shadow: 0 0 0 8px rgba(0,122,255,.18); }
-  45%  { background: rgba(0,122,255,.28); box-shadow: 0 0 0 5px rgba(0,122,255,.35); }
-  70%  { background: rgba(0,122,255,.1);  box-shadow: 0 0 0 3px rgba(0,122,255,.12); }
-  100% { background: transparent; box-shadow: none; }
+  0% {
+    background: rgba(0,122,255,.16);
+    box-shadow: 0 12px 32px rgba(0,122,255,.28), 0 2px 8px rgba(0,0,0,.08);
+    transform: translateY(-4px) scale(1.015);
+  }
+  35% {
+    background: rgba(0,122,255,.1);
+    box-shadow: 0 6px 16px rgba(0,122,255,.18), 0 1px 4px rgba(0,0,0,.05);
+    transform: translateY(-2px) scale(1.008);
+  }
+  70% {
+    background: rgba(0,122,255,.05);
+    box-shadow: 0 2px 8px rgba(0,122,255,.1);
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+  }
 }
 .loc-flash {
-  animation: addendumFlash 3.4s ease-out;
+  animation: addendumFlash 3.2s ease-out;
 }
 
-/* Section fallback flash: gentler blue glow when navigating to a section (no specific addendum anchor) */
+/* Section fallback flash: 3D lift when navigating to a section (no specific addendum anchor) */
 @keyframes secFlash {
-  0%   { box-shadow: inset 0 0 0 3px rgba(0,122,255,.4); background: rgba(0,122,255,.06); border-radius: 12px; }
-  50%  { box-shadow: inset 0 0 0 3px rgba(0,122,255,.25); background: rgba(0,122,255,.03); border-radius: 12px; }
-  100% { box-shadow: none; background: transparent; }
+  0% {
+    box-shadow: 0 16px 40px rgba(0,122,255,.22), 0 4px 12px rgba(0,0,0,.1);
+    background: rgba(0,122,255,.06);
+    transform: translateY(-5px);
+    border-radius: 16px;
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(0,122,255,.14), 0 2px 6px rgba(0,0,0,.06);
+    background: rgba(0,122,255,.03);
+    transform: translateY(-2px);
+    border-radius: 16px;
+  }
+  100% {
+    box-shadow: none;
+    background: transparent;
+    transform: translateY(0);
+  }
 }
 .sec-flash {
-  animation: secFlash 2.6s ease-out;
+  animation: secFlash 2.8s ease-out;
   scroll-margin-top: 90px;
 }
