@@ -275,19 +275,14 @@
     segWire(sec.querySelector("[data-upd-sort]"), function (v) { sort = v; reset(); });
     segWire(sec.querySelector("[data-upd-filter]"), function (v) { filt = v; reset(); });
 
-    /* thesis chips (landing only) */
+    /* thesis dropdown (landing only) */
     (function () {
-      var bar = sec.querySelector("[data-upd-theses]");
-      if (!bar) return;
-      var btns = bar.querySelectorAll("button");
-      for (var i = 0; i < btns.length; i++) (function (b) {
-        b.addEventListener("click", function () {
-          for (var j = 0; j < btns.length; j++) btns[j].classList.remove("on");
-          b.classList.add("on");
-          tickFilt = b.getAttribute("data-t");
-          reset();
-        });
-      })(btns[i]);
+      var sel = sec.querySelector("[data-upd-theses]");
+      if (!sel) return;
+      sel.addEventListener("change", function () {
+        tickFilt = sel.value;
+        reset();
+      });
     })();
 
     reset();
