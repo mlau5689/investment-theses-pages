@@ -349,3 +349,13 @@ body { transition: background-color .5s var(--ease-ios); }
 .loc-flash {
   animation: addendumFlash 3.4s ease-out;
 }
+
+/* Section fallback flash: gentler highlight when navigating to a section (no specific addendum anchor) */
+@keyframes secFlash {
+  0%   { box-shadow: inset 0 0 0 3px rgba(0,122,255,.45); border-radius: 12px; }
+  60%  { box-shadow: inset 0 0 0 3px rgba(0,122,255,.22); border-radius: 12px; }
+  100% { box-shadow: none; }
+}
+.sec-flash {
+  animation: secFlash 2.6s ease-out;
+}

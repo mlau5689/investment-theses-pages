@@ -409,24 +409,28 @@
 
 })();
 
-// Deep-link flash: when landing on a specific addendum from Recent updates, momentarily highlight it
+// Deep-link flash: when landing from Recent updates, highlight the specific addendum;
+// fall back to a gentler section highlight for entries without a dedicated anchor.
 (function() {
-  function flashLoc() {
+  function flashTarget() {
     var h = location.hash.slice(1);
-    if (h && h.indexOf('loc-') === 0) {
-      var el = document.getElementById(h);
-      if (el) {
-        setTimeout(function() {
-          el.classList.add('loc-flash');
-          setTimeout(function() { el.classList.remove('loc-flash'); }, 3000);
-        }, 350);
+    if (!h) return;
+    var el = document.getElementById(h);
+    if (!el) return;
+    setTimeout(function() {
+      if (h.indexOf('loc-') === 0) {
+        el.classList.add('loc-flash');
+        setTimeout(function() { el.classList.remove('loc-flash'); }, 3600);
+      } else {
+        el.classList.add('sec-flash');
+        setTimeout(function() { el.classList.remove('sec-flash'); }, 2600);
       }
-    }
+    }, 350);
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', flashLoc);
+    document.addEventListener('DOMContentLoaded', flashTarget);
   } else {
-    flashLoc();
+    flashTarget();
   }
-  window.addEventListener('hashchange', flashLoc);
+  window.addEventListener('hashchange', flashTarget);
 })();
