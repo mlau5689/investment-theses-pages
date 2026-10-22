@@ -341,8 +341,8 @@ body { transition: background-color .5s var(--ease-ios); }
 .addendum {
   display: block;
   border-radius: 12px;
-  padding: 10px 14px;
-  margin: 10px 0;
+  padding: 16px 20px;
+  margin: 14px 0;
 }
 @keyframes addendumFlash {
   0% {
