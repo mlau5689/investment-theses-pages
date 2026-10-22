@@ -181,6 +181,19 @@
       return String(t == null ? "" : t).replace(/&/g,"&amp;").replace(/</g,"&lt;")
         .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
+    var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    function when(u) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(u.date || "");
+      if (!m) return "";
+      var s = MON[+m[2] - 1] + " " + (+m[3]);
+      var tm = /^(\d{2}):(\d{2})$/.exec(u.time || "");
+      if (tm) {
+        var h = +tm[1], ap = h >= 12 ? "PM" : "AM";
+        h = h % 12; if (h === 0) h = 12;
+        s += ", " + h + ":" + tm[2] + " " + ap;
+      }
+      return s;
+    }
 
     var SVG_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
     var SVG_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
@@ -202,10 +215,12 @@
         href = u.section ? "#" + u.section : "#";
       }
       var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
+      var ts = when(u);
+      var tst = ts ? '<span class="upd-when">' + esc(ts) + '</span>' : "";
       return '<div class="upd" id="' + esc(u.id) + '">' +
         '<a class="upd-row" href="' + href + '">' +
         '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
-        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + '</span>' +
+        '<span class="upd-main"><span class="upd-trow"><span class="upd-t">' + tick + esc(u.title) + '</span>' + tst + '</span>' + sub + '</span>' +
         SVG_DISC + '</a></div>';
     }
 
