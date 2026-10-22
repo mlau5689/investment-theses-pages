@@ -152,4 +152,109 @@
   } else {
     buildNav();
   }
+
+  /* ---------- recent updates (living log) ---------- */
+  (function initUpdates() {
+    var sec = document.getElementById("updates");
+    if (!sec) return;
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* section collapse */
+    var head = sec.querySelector("[data-upd-toggle]");
+    if (head) head.addEventListener("click", function () {
+      var closed = sec.classList.toggle("closed");
+      head.setAttribute("aria-expanded", closed ? "false" : "true");
+    });
+
+    /* row expand */
+    var rows = Array.prototype.slice.call(sec.querySelectorAll(".upd"));
+    rows.forEach(function (r) {
+      var btn = r.querySelector("[data-upd-row]");
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        var open = r.classList.toggle("open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    });
+
+    /* sort + filter + show-all state */
+    var list = sec.querySelector("[data-upd-list]");
+    var moreBtn = sec.querySelector("[data-upd-more]");
+    var sort = "new", filt = "all", showAll = false, N = 5;
+    function segWire(el, fn) {
+      if (!el) return;
+      var btns = el.querySelectorAll("button");
+      for (var i = 0; i < btns.length; i++) (function (b) {
+        b.addEventListener("click", function () {
+          for (var j = 0; j < btns.length; j++) btns[j].classList.remove("on");
+          b.classList.add("on");
+          fn(b.getAttribute("data-v"));
+        });
+      })(btns[i]);
+    }
+    function apply() {
+      var vis = [];
+      rows.forEach(function (r) {
+        var ok = filt === "all" || r.getAttribute("data-sent") === filt;
+        r.style.display = ok ? "" : "none";
+        if (ok) vis.push(r);
+      });
+      var ordered = sort === "new" ? vis : vis.slice().reverse();
+      ordered.forEach(function (r) { list.appendChild(r); });
+      ordered.forEach(function (r, i) { r.classList.toggle("beyond", !showAll && i >= N); });
+      list.classList.toggle("tall", showAll && ordered.length > N);
+      if (moreBtn) {
+        moreBtn.style.display = ordered.length > N ? "" : "none";
+        moreBtn.textContent = showAll ? "Show fewer" : "Show all " + ordered.length + " updates";
+      }
+    }
+    segWire(sec.querySelector("[data-upd-sort]"), function (v) { sort = v; apply(); });
+    segWire(sec.querySelector("[data-upd-filter]"), function (v) { filt = v; apply(); });
+    if (moreBtn) moreBtn.addEventListener("click", function () { showAll = !showAll; apply(); });
+    apply();
+
+    /* deep link: slug/#upd-id expands that entry */
+    (function deepLink() {
+      var h = location.hash || "";
+      if (h.indexOf("#upd-") !== 0) return;
+      var el = document.getElementById(h.slice(1));
+      if (!el || !el.classList.contains("upd")) return;
+      filt = "all"; sort = "new"; showAll = true;
+      var fb = sec.querySelector('[data-upd-filter] button[data-v="all"]');
+      var sb = sec.querySelector('[data-upd-sort] button[data-v="new"]');
+      if (fb) { var fbtns = sec.querySelectorAll("[data-upd-filter] button"); for (var i = 0; i < fbtns.length; i++) fbtns[i].classList.remove("on"); fb.classList.add("on"); }
+      if (sb) { var sbtns = sec.querySelectorAll("[data-upd-sort] button"); for (var i = 0; i < sbtns.length; i++) sbtns[i].classList.remove("on"); sb.classList.add("on"); }
+      apply();
+      el.classList.add("open");
+      var rb = el.querySelector("[data-upd-row]");
+      if (rb) rb.setAttribute("aria-expanded", "true");
+      setTimeout(function () {
+        el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      }, 80);
+    })();
+  })();
+
+  /* ---------- scroll to top ---------- */
+  (function initToTop() {
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var b = document.createElement("button");
+    b.className = "to-top";
+    b.setAttribute("aria-label", "Scroll to top");
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    b.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    });
+    document.body.appendChild(b);
+    var tick = false;
+    function onScroll() {
+      if (tick) return; tick = true;
+      (window.requestAnimationFrame || function (f) { f(); })(function () {
+        tick = false;
+        b.classList.toggle("show", window.scrollY > 600);
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  })();
+
 })();
