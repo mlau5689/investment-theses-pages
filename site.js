@@ -206,11 +206,16 @@
       var open = '<div class="upd" id="' + esc(u.id) + '" data-sent="' + esc(u.sentiment) + '">';
       if (u.ticker) {
         var slug = SLUGS[u.ticker] || "";
-        return open + '<a class="upd-row" href="' + slug + '/#' + esc(u.id) + '">' + inner + '</a></div>';
+        var target = u.section ? u.section : u.id;
+        return open + '<a class="upd-row" href="' + slug + '/#' + esc(target) + '">' + inner + '</a></div>';
       }
       var body = "";
       if (u.summary) body += "<p>" + esc(u.summary) + "</p>";
       if (u.detail && !(u.summary && u.detail.indexOf(u.summary) === 0)) body += "<p>" + esc(u.detail) + "</p>";
+      if (u.section) {
+        var sl = u.section_title ? "Read the full section: " + esc(u.section_title) : "Read the full section";
+        body += '<a class="upd-goto" href="#' + esc(u.section) + '">' + sl + ' \u2192</a>';
+      }
       return open + '<button class="upd-row" data-upd-row aria-expanded="false">' + inner + SVG_CHEV + '</button>' +
         '<div class="upd-detail"><div class="upd-detail-in"><div>' + body + '</div></div></div></div>';
     }
