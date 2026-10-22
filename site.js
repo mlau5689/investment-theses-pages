@@ -308,11 +308,6 @@
       for (var i = 0; i < olds.length; i++) olds[i].parentNode.removeChild(olds[i]);
       shown = 0;
       renderMore();
-      var first = list.querySelector(".upd-g [data-gtoggle]");
-      if (first && !first.classList.contains("open")) {
-        first.classList.add("open");
-        first.setAttribute("aria-expanded", "true");
-      }
     }
 
     /* group expand/collapse */
