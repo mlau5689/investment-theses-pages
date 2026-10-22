@@ -206,7 +206,7 @@
     function rowHTML(u) {
       var bc = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
       var bi = u.sentiment === "positive" ? SVG_UP : u.sentiment === "negative" ? SVG_DN : SVG_DASH;
-      var tick = u.ticker ? '<span class="upd-tick">' + esc(u.ticker) + '</span>' : "";
+      var tick = "";
       var href;
       if (u.ticker) {
         var slug = SLUGS[u.ticker] || "";
@@ -227,17 +227,26 @@
       var v = DATA.filter(function (u) {
         return (filt === "all" || u.sentiment === filt) && (!tickFilt || u.ticker === tickFilt);
       });
-      return sort === "new" ? v : v.slice().reverse();
+      v.sort(function (a, b) {
+        var dir = sort === "new" ? 1 : -1;
+        if (a.date !== b.date) return (a.date < b.date ? 1 : -1) * dir;
+        var at = a.time || "", bt = b.time || "";
+        if (at && !bt) return -1 * dir;
+        if (!at && bt) return 1 * dir;
+        if (at !== bt) return (at < bt ? 1 : -1) * dir;
+        return 0;
+      });
+      return v;
     }
     /* batch groups: one (date, time, thesis) cluster per group, collapsed by default */
     var SVG_GCHEV = '<svg class="upd-gchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
     function batchGroups(v) {
       var gs = [], map = {};
       v.forEach(function (u) {
-        var key = (u.date || "") + "|" + (u.time || "") + "|" + (u.ticker || "");
+        var key = (u.date || "") + "|" + (u.time || "");
         var g = map[key];
         if (!g) {
-          g = { date: u.date, time: u.time, ticker: u.ticker, items: [] };
+          g = { date: u.date, time: u.time, items: [] };
           map[key] = g; gs.push(g);
         }
         g.items.push(u);
@@ -245,29 +254,42 @@
       return gs;
     }
     function groupHTML(g) {
-      var tick = g.ticker ? '<span class="upd-tick">' + esc(g.ticker) + '</span>' : "";
       var n = g.items.length;
       var dots = g.items.map(function (u) {
         var c = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
         return '<span class="upd-dot ' + c + '"></span>';
       }).join("");
-      var pos = 0, neg = 0;
+      var pos = 0, neg = 0, tickers = [];
       g.items.forEach(function (u) {
         if (u.sentiment === "positive") pos++;
         else if (u.sentiment === "negative") neg++;
+        if (u.ticker && tickers.indexOf(u.ticker) === -1) tickers.push(u.ticker);
       });
       var dc = neg > 0 ? "neg" : pos > 0 ? "pos" : "";
+      var pills = tickers.map(function (t) {
+        return '<span class="upd-tick">' + esc(t) + '</span>';
+      }).join("");
       var prev = g.items[0] && g.items[0].title
         ? '<span class="upd-gprev"><span class="upd-dots">' + dots + '</span><span class="upd-gprevt">' +
           esc(g.items[0].title) + (n > 1 ? "  + " + (n - 1) + " more" : "") + '</span></span>' : "";
-      var rows = g.items.map(rowHTML).join("");
+      var body = "", seenTick = {};
+      g.items.forEach(function (u) {
+        var t = u.ticker || "";
+        if (t && !seenTick[t]) {
+          seenTick[t] = true;
+          var cnt = g.items.filter(function (x) { return x.ticker === t; }).length;
+          body += '<div class="upd-tsub"><span class="upd-tick">' + esc(t) + '</span>' +
+            '<span class="upd-tsubn">' + cnt + (cnt === 1 ? " update" : " updates") + '</span></div>';
+        }
+        body += rowHTML(u);
+      });
       return '<div class="upd-g">' +
         '<button class="upd-ghead" data-gtoggle aria-expanded="false">' +
         '<span class="upd-gmain">' +
-        '<span class="upd-gtop"><span class="upd-gdate">' + esc(when(g)) + '</span>' + tick + '</span>' +
+        '<span class="upd-gtop"><span class="upd-gdate">' + esc(when(g)) + '</span>' + pills + '</span>' +
         prev + '</span>' +
         '<span class="upd-gcount ' + dc + '">' + n + '</span>' + SVG_GCHEV + '</button>' +
-        '<div class="upd-gbody"><div class="upd-gbody-in">' + rows + '</div></div></div>';
+        '<div class="upd-gbody"><div class="upd-gbody-in">' + body + '</div></div></div>';
     }
     var GPAGE = 8;
     function renderMore() {

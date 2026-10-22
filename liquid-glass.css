@@ -331,5 +331,8 @@ body { transition: background-color .5s var(--ease-ios); }
 .upd-gbody-in { overflow: hidden; min-height: 0; }
 .upd-gbody-in .upd { border-top: 1px solid var(--hair); }
 .upd-gbody-in .upd-row { padding-left: 26px; }
+/* thesis sub-group inside a timed event */
+.upd-tsub { display: flex; align-items: center; gap: 8px; padding: 12px 20px 2px 26px; }
+.upd-tsubn { font: 600 12px/1.4 var(--font); color: var(--ink-3); }
 /* impacted-section chip: what thesis area this update hit */
 .upd-secin { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--ink-3); background: rgba(120,120,128,.12); padding: 3px 9px; border-radius: 999px; }
