@@ -78,7 +78,7 @@
     { slug: "spcx/",   label: "SPCX" },
     { slug: "tsla/",   label: "TSLA" },
     { slug: "usar/",   label: "USAR" },
-    { slug: "rivian/", label: "RIVN" },
+        { slug: "rivian/", label: "RIVN" },
     { slug: "asml/",   label: "ASML" },
     { slug: "spacex-tesla-merger/", label: "Merger" },
     { slug: "terafab/", label: "Terafab" },
@@ -200,7 +200,7 @@
     var SVG_DASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>';
     var SVG_DISC = '<svg class="upd-disc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 
-    var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", PLTR: "pltr", RIVN: "rivian",
+    var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", RIVN: "rivian",
       ASML: "asml", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
 
     function rowHTML(u) {
@@ -244,13 +244,20 @@
     function batchGroups(v) {
       var gs = [], map = {};
       v.forEach(function (u) {
-        var key = (u.date || "") + "|" + (u.time || "");
+        var key = u.date || "";
         var g = map[key];
         if (!g) {
-          g = { date: u.date, time: u.time, items: [] };
+          g = { date: u.date, time: "", items: [] };
           map[key] = g; gs.push(g);
         }
         g.items.push(u);
+      });
+      // sort items within each date group by time (timeless entries last)
+      gs.forEach(function (g) {
+        g.items.sort(function (a, b) {
+          var ta = a.time || "99:99", tb = b.time || "99:99";
+          return ta < tb ? -1 : ta > tb ? 1 : 0;
+        });
       });
       return gs;
     }
