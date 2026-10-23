@@ -244,20 +244,13 @@
     function batchGroups(v) {
       var gs = [], map = {};
       v.forEach(function (u) {
-        var key = u.date || "";
+        var key = (u.date || "") + "|" + (u.time || "");
         var g = map[key];
         if (!g) {
-          g = { date: u.date, time: "", items: [] };
+          g = { date: u.date, time: u.time, items: [] };
           map[key] = g; gs.push(g);
         }
         g.items.push(u);
-      });
-      // sort items within each date group by time (timeless entries last)
-      gs.forEach(function (g) {
-        g.items.sort(function (a, b) {
-          var ta = a.time || "99:99", tb = b.time || "99:99";
-          return ta < tb ? -1 : ta > tb ? 1 : 0;
-        });
       });
       return gs;
     }
