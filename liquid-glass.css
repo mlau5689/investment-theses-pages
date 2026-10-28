@@ -345,10 +345,26 @@ body { transition: background-color .5s var(--ease-ios); }
   margin: 14px 0;
 }
 @keyframes addendumFlash {
-  0% { background: rgba(0,122,255,.16); }
-  35% { background: rgba(0,122,255,.1); }
-  70% { background: rgba(0,122,255,.05); }
-  100% { background: transparent; }
+  0% {
+    background: rgba(0,122,255,.16);
+    box-shadow: 0 12px 32px rgba(0,122,255,.28), 0 2px 8px rgba(0,0,0,.08);
+    transform: translateY(-4px) scale(1.015);
+  }
+  35% {
+    background: rgba(0,122,255,.1);
+    box-shadow: 0 6px 16px rgba(0,122,255,.18), 0 1px 4px rgba(0,0,0,.05);
+    transform: translateY(-2px) scale(1.008);
+  }
+  70% {
+    background: rgba(0,122,255,.05);
+    box-shadow: 0 2px 8px rgba(0,122,255,.1);
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+  }
 }
 .loc-flash {
   animation: addendumFlash 3.2s ease-out;
@@ -356,9 +372,23 @@ body { transition: background-color .5s var(--ease-ios); }
 
 /* Section fallback flash: 3D lift when navigating to a section (no specific addendum anchor) */
 @keyframes secFlash {
-  0% { background: rgba(0,122,255,.06); border-radius: 16px; }
-  50% { background: rgba(0,122,255,.03); border-radius: 16px; }
-  100% { background: transparent; }
+  0% {
+    box-shadow: 0 16px 40px rgba(0,122,255,.22), 0 4px 12px rgba(0,0,0,.1);
+    background: rgba(0,122,255,.06);
+    transform: translateY(-5px);
+    border-radius: 16px;
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(0,122,255,.14), 0 2px 6px rgba(0,0,0,.06);
+    background: rgba(0,122,255,.03);
+    transform: translateY(-2px);
+    border-radius: 16px;
+  }
+  100% {
+    box-shadow: none;
+    background: transparent;
+    transform: translateY(0);
+  }
 }
 .sec-flash {
   animation: secFlash 2.8s ease-out;
@@ -369,15 +399,45 @@ body { transition: background-color .5s var(--ease-ios); }
    so dark mode gets its own keyframes with the brighter dark blue (#0A84FF)
    at roughly 2x the opacity, same lift-and-settle motion. */
 @keyframes addendumFlashDark {
-  0% { background: rgba(10,132,255,.34); }
-  35% { background: rgba(10,132,255,.22); }
-  70% { background: rgba(10,132,255,.1); }
-  100% { background: transparent; }
+  0% {
+    background: rgba(10,132,255,.34);
+    box-shadow: 0 12px 32px rgba(10,132,255,.5), 0 2px 8px rgba(0,0,0,.4);
+    transform: translateY(-4px) scale(1.015);
+  }
+  35% {
+    background: rgba(10,132,255,.22);
+    box-shadow: 0 6px 16px rgba(10,132,255,.34), 0 1px 4px rgba(0,0,0,.25);
+    transform: translateY(-2px) scale(1.008);
+  }
+  70% {
+    background: rgba(10,132,255,.1);
+    box-shadow: 0 2px 8px rgba(10,132,255,.18);
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+  }
 }
 @keyframes secFlashDark {
-  0% { background: rgba(10,132,255,.14); border-radius: 16px; }
-  50% { background: rgba(10,132,255,.07); border-radius: 16px; }
-  100% { background: transparent; }
+  0% {
+    box-shadow: 0 16px 40px rgba(10,132,255,.42), 0 4px 12px rgba(0,0,0,.3);
+    background: rgba(10,132,255,.14);
+    transform: translateY(-5px);
+    border-radius: 16px;
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(10,132,255,.28), 0 2px 6px rgba(0,0,0,.2);
+    background: rgba(10,132,255,.07);
+    transform: translateY(-2px);
+    border-radius: 16px;
+  }
+  100% {
+    box-shadow: none;
+    background: transparent;
+    transform: translateY(0);
+  }
 }
 /* System-dark (no explicit light override) and explicit dark both use the dark keyframes */
 @media (prefers-color-scheme: dark) {
