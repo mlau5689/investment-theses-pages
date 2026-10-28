@@ -416,20 +416,34 @@
 
 // Deep-link flash: when landing from Recent updates, highlight the specific addendum;
 // fall back to a gentler section highlight for entries without a dedicated anchor.
+//
+// Single active highlight only. The old code let a highlight run its full
+// 3.6s even after the user had clicked on to the next update, so rapid
+// clicking stacked up to ~6 animated blocks at once inside blurred cards —
+// the peak compositing load that preceded the iOS tab crashes. Cancelling
+// the previous highlight when a new one starts keeps a single click looking
+// exactly as before (same 600ms delay, same animation, same removal time)
+// while the concurrent animated load never exceeds one.
 (function() {
+  var curEl = null, curCls = "", curDelay = null, curRemove = null;
+  function clearFlash() {
+    if (curDelay) { clearTimeout(curDelay); curDelay = null; }
+    if (curRemove) { clearTimeout(curRemove); curRemove = null; }
+    if (curEl && curCls) curEl.classList.remove(curCls);
+    curEl = null; curCls = "";
+  }
   function flashTarget() {
     var h = location.hash.slice(1);
     if (!h) return;
     var el = document.getElementById(h);
     if (!el) return;
-    setTimeout(function() {
-      if (h.indexOf('loc-') === 0) {
-        el.classList.add('loc-flash');
-        setTimeout(function() { el.classList.remove('loc-flash'); }, 3600);
-      } else {
-        el.classList.add('sec-flash');
-        setTimeout(function() { el.classList.remove('sec-flash'); }, 2600);
-      }
+    clearFlash();
+    curDelay = setTimeout(function() {
+      curDelay = null;
+      curEl = el;
+      curCls = h.indexOf('loc-') === 0 ? 'loc-flash' : 'sec-flash';
+      el.classList.add(curCls);
+      curRemove = setTimeout(function() { clearFlash(); }, curCls === 'loc-flash' ? 3600 : 2600);
     }, 600);
   }
   if (document.readyState === 'loading') {
