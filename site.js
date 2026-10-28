@@ -211,7 +211,12 @@
       var anchor = u.loc || u.section;
       if (u.ticker) {
         var slug = SLUGS[u.ticker] || "";
-        href = anchor ? slug + "/#" + anchor : slug + "/";
+        // MUST be siteRoot-anchored (same as the nav links above), not a bare
+        // relative slug: from a thesis page at /<slug>/, a bare "spcx/#loc-..."
+        // resolves to /<slug>/spcx/#loc-..., which 404s on GitHub Pages.
+        // From the landing page both forms work, which is why landing-only
+        // tests missed this (see test_thesis_update_links.py).
+        href = anchor ? siteRoot + slug + "/#" + anchor : siteRoot + slug + "/";
       } else {
         href = anchor ? "#" + anchor : "#";
       }
