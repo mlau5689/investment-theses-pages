@@ -324,28 +324,6 @@
       btn.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
-    /* Single clean load per click (Oct 28, 2026): a same-page update row
-       would otherwise be a bare hash jump, leaving the page's accumulated
-       rendering state in place while iOS then reloads it again on top.
-       If the row points at the page already open, force one full load of
-       that path+hash instead, so each click starts fresh and can never
-       stack a second load. The ?r=1 marker is stripped from the address
-       bar once the page loads, so the URL stays canonical. Rows pointing
-       at a different thesis page already load fresh, so they are untouched. */
-    list.addEventListener("click", function (ev) {
-      var a = ev.target.closest ? ev.target.closest(".upd-row") : null;
-      if (!a) return;
-      var href = a.getAttribute("href") || "";
-      if (!href) return;
-      var u;
-      try { u = new URL(href, location.href); } catch (e) { return; }
-      var same = u.pathname.replace(/\/+$/, "") === location.pathname.replace(/\/+$/, "");
-      if (!same) return;
-      ev.preventDefault();
-      u.searchParams.set("r", "1");
-      location.href = u.toString();
-    });
-
     /* page in older entries as the user scrolls, like iOS Messages */
     var io = null;
     function watch() {
@@ -447,14 +425,6 @@
 // exactly as before (same 600ms delay, same animation, same removal time)
 // while the concurrent animated load never exceeds one.
 (function() {
-  // Strip the single-load marker, keeping the canonical URL in the bar.
-  try {
-    var _u = new URL(location.href);
-    if (_u.searchParams.get("r") === "1") {
-      _u.searchParams.delete("r");
-      history.replaceState(null, "", _u.pathname + _u.search + _u.hash);
-    }
-  } catch (e) {}
   var curEl = null, curCls = "", curDelay = null, curRemove = null;
   function clearFlash() {
     if (curDelay) { clearTimeout(curDelay); curDelay = null; }
