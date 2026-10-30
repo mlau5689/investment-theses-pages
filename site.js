@@ -80,6 +80,7 @@
     { slug: "usar/",   label: "USAR" },
         { slug: "rivian/", label: "RIVN" },
     { slug: "asml/",   label: "ASML" },
+    { slug: "googl/",  label: "GOOGL" },
     { slug: "spacex-tesla-merger/", label: "Merger" },
     { slug: "terafab/", label: "Terafab" },
     { slug: "rocket-lab/", label: "RKLB" }
@@ -201,7 +202,7 @@
     var SVG_DISC = '<svg class="upd-disc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 
     var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", RIVN: "rivian",
-      ASML: "asml", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
+      ASML: "asml", GOOGL: "googl", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
 
     function rowHTML(u) {
       var bc = u.sentiment === "positive" ? "pos" : u.sentiment === "negative" ? "neg" : "neu";
