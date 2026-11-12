@@ -224,10 +224,11 @@
       }
       var sub = u.summary ? '<span class="upd-sub">' + esc(u.summary) + '</span>' : "";
       var secchip = u.section_title ? '<span class="upd-secin">in ' + esc(u.section_title) + '</span>' : "";
+      var prio = u.priority === "P1" ? '<span class="upd-prio p1">P1</span>' : u.priority === "P2" ? '<span class="upd-prio p2">P2</span>' : "";
       return '<div class="upd" id="' + esc(u.id) + '">' +
         '<a class="upd-row" href="' + href + '">' +
         '<span class="upd-badge ' + bc + '" aria-hidden="true">' + bi + '</span>' +
-        '<span class="upd-main"><span class="upd-t">' + tick + esc(u.title) + '</span>' + sub + secchip + '</span>' +
+        '<span class="upd-main"><span class="upd-t">' + tick + prio + esc(u.title) + '</span>' + sub + secchip + '</span>' +
         SVG_DISC + '</a></div>';
     }
 
