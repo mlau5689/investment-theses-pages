@@ -75,6 +75,9 @@
   var scriptSrc = (document.currentScript && document.currentScript.src) || "";
   var siteRoot = scriptSrc.replace(/site\.js(\?.*)?(#.*)?$/, "");
   var PAGES = [
+    { slug: "ant/",    label: "ANT" },
+    { slug: "openai/", label: "OpenAI" },
+    { slug: "open-models/", label: "Open Models" },
     { slug: "spcx/",   label: "SPCX" },
     { slug: "tsla/",   label: "TSLA" },
     { slug: "usar/",   label: "USAR" },
@@ -228,7 +231,7 @@
     var SVG_DASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>';
     var SVG_DISC = '<svg class="upd-disc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 
-    var SLUGS = { SPCX: "spcx", TSLA: "tsla", USAR: "usar", RIVN: "rivian",
+    var SLUGS = { ANT: "ant", OpenAI: "openai", "Open Models": "open-models", SPCX: "spcx", TSLA: "tsla", USAR: "usar", RIVN: "rivian",
       ASML: "asml", GOOGL: "googl", NVDA: "nvda", Merger: "spacex-tesla-merger", Terafab: "terafab", RKLB: "rocket-lab" };
 
     function rowHTML(u) {
