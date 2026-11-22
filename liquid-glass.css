@@ -256,6 +256,28 @@ body { transition: background-color .5s var(--ease-ios); }
 .updates.closed .upd-collapsible { grid-template-rows: 0fr; }
 .upd-collapsible-in { overflow: hidden; min-height: 0; }
 
+/* ---------- Generic collapsible blocks (landing card, thesis summary) ----------
+   Same grid-rows trick as the updates section, under the generic names. */
+.collapse-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .45s var(--ease-ios); }
+[data-collapse].closed .collapse-body { grid-template-rows: 0fr; }
+.collapse-body-in { overflow: hidden; min-height: 0; }
+.collapse-chev { flex: none; width: 18px; height: 18px; color: var(--ink-3); transition: transform .35s var(--ease-ios); }
+[data-collapse].closed .collapse-chev { transform: rotate(-90deg); }
+/* Collapsible landing card: the head is a button, the title reads like a card h3 */
+.card-head { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 0; background: none; border: 0; cursor: pointer; text-align: left; font-family: var(--font); color: var(--ink); }
+.card-head:active { opacity: .7; }
+.card-head .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; }
+.card-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.thesis-card .collapse-body-in { display: flex; flex-direction: column; gap: 10px; }
+.thesis-card .collapse-body-in p { flex: 1; }
+/* Collapsible thesis section: the head carries the section kicker + title */
+.collapse-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 0; background: none; border: 0; cursor: pointer; text-align: left; font-family: var(--font); color: var(--ink); }
+.collapse-head:active { opacity: .7; }
+.collapse-head-text { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.collapse-title { font-size: 26px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+.collapse-sec { margin-bottom: 28px; }
+.collapse-sec .section { padding-top: 14px; }
+
 /* iOS segmented controls: sort + filter, kept to two so it never clutters */
 .upd-controls { display: flex; gap: 10px; padding: 2px 20px 12px; flex-wrap: wrap; }
 .seg { display: inline-flex; background: rgba(120,120,128,.14); border-radius: 10px; padding: 2px; }

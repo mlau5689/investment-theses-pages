@@ -155,6 +155,32 @@
     buildNav();
   }
 
+  /* ---------- generic collapsible blocks (landing card, thesis summary) ----------
+     Same pattern as the Recent updates section: a [data-collapse] container
+     with class "closed" hides its .collapse-body via grid-template-rows 0fr;
+     a [data-collapse-toggle] button inside it flips the class. Collapsed by
+     default; the toggle is the only trigger. */
+  (function initCollapse() {
+    function wire() {
+      var btns = document.querySelectorAll("[data-collapse-toggle]");
+      for (var i = 0; i < btns.length; i++) {
+        (function (btn) {
+          btn.addEventListener("click", function () {
+            var box = btn.closest ? btn.closest("[data-collapse]") : null;
+            if (!box) return;
+            var closed = box.classList.toggle("closed");
+            btn.setAttribute("aria-expanded", closed ? "false" : "true");
+          });
+        })(btns[i]);
+      }
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", wire);
+    } else {
+      wire();
+    }
+  })();
+
   /* ---------- recent updates (living log): iMessage-style paged scroll ---------- */
   (function initUpdates() {
     var sec = document.getElementById("updates");
@@ -440,12 +466,25 @@
     if (!h) return;
     var el = document.getElementById(h);
     if (!el) return;
+    /* Deep links must open a collapsed ancestor first, or the target stays
+       hidden inside a 0fr row (e.g. the totality thesis summary). */
+    var anc = el.parentElement;
+    while (anc) {
+      if (anc.classList && anc.classList.contains("closed") &&
+          anc.hasAttribute && anc.hasAttribute("data-collapse")) {
+        anc.classList.remove("closed");
+        var tog = anc.querySelector("[data-collapse-toggle]");
+        if (tog) tog.setAttribute("aria-expanded", "true");
+      }
+      anc = anc.parentElement;
+    }
     clearFlash();
     curDelay = setTimeout(function() {
       curDelay = null;
       curEl = el;
       curCls = h.indexOf('loc-') === 0 ? 'loc-flash' : 'sec-flash';
       el.classList.add(curCls);
+      el.scrollIntoView({ behavior: "auto", block: "center" });
       curRemove = setTimeout(function() { clearFlash(); }, curCls === 'loc-flash' ? 3600 : 2600);
     }, 600);
   }
