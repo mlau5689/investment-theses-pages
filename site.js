@@ -18,13 +18,21 @@
   var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6a8.5 8.5 0 1 0 10.6 10.6z"/></svg>';
   var HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/></svg>';
 
+  var SYS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/></svg>';
   var toggleBtn = null;
   function paintToggle() {
     if (!toggleBtn) return;
-    var dark = currentTheme() === "dark";
-    toggleBtn.innerHTML = dark ? SUN : MOON;
-    toggleBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
-    toggleBtn.title = dark ? "Light mode" : "Dark mode";
+    /* The icon shows what the next tap does: dark -> light, light -> system, system -> opposite of the system theme. */
+    var stored = storedTheme();
+    var next;
+    if (stored === "dark") next = { icon: SUN, label: "Switch to light mode" };
+    else if (stored === "light") next = { icon: SYS, label: "Follow system theme" };
+    else next = systemTheme() === "dark"
+      ? { icon: SUN, label: "Switch to light mode" }
+      : { icon: MOON, label: "Switch to dark mode" };
+    toggleBtn.innerHTML = next.icon;
+    toggleBtn.setAttribute("aria-label", next.label);
+    toggleBtn.title = next.label;
   }
   function setTheme(t) {
     if (t === "dark" || t === "light") {
@@ -37,7 +45,11 @@
     paintToggle();
   }
   window.__toggleTheme = function () {
-    setTheme(currentTheme() === "dark" ? "light" : "dark");
+    /* Cycle: dark -> light -> follow system -> opposite of the system theme. */
+    var stored = storedTheme();
+    if (stored === "dark") setTheme("light");
+    else if (stored === "light") setTheme(null);
+    else setTheme(systemTheme() === "dark" ? "light" : "dark");
   };
   /* If the OS theme changes and the user never picked, follow it live */
   if (window.matchMedia) {
