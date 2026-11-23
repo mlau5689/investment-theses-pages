@@ -3,6 +3,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Open Models Thesis</title>
 <link rel="stylesheet" href="../liquid-glass.css?v=20261122f">
+<style>
+/* Page specifics (kept local; shared system lives in liquid-glass.css) */
+.layout { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 48px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+.toc ul { list-style: none; margin: 0; padding: 0; }
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -71,6 +77,7 @@
 </section>
 <!-- RECENT-UPDATES:END -->
 
+      <div class="layout">
       <div class="toc" aria-label="Contents">
         <strong>On this page</strong>
         <ul>
@@ -213,6 +220,7 @@
             </div>
           </section>
         </article>
+      </div>
       </div>
 
 </div>
