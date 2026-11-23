@@ -2,6 +2,7 @@
 :root {
   color-scheme: light dark;
   --bg: #F2F2F7; --card: rgba(255,255,255,.72); --card-solid: #FFFFFF;
+  --surface: var(--card-solid); --surface-muted: rgba(120,120,128,.12);
   --ink: #1C1C1E; --ink-2: #3A3A3C; --ink-3: #8E8E93;
   --hair: rgba(0,0,0,.08);
   --blue: #007AFF; --green: #34C759; --orange: #FF9500; --red: #FF3B30;
@@ -20,6 +21,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #000000; --card: rgba(28,28,30,.72); --card-solid: #1C1C1E;
+    --surface-muted: rgba(255,255,255,.08);
     --ink: #F2F2F7; --ink-2: #E5E5EA; --ink-3: #98989F;
     --hair: rgba(255,255,255,.12);
     --blue: #0A84FF; --green: #30D158; --orange: #FF9F0A; --red: #FF453A;
@@ -30,6 +32,7 @@
 }
 :root[data-theme="dark"] {
     --bg: #000000; --card: rgba(28,28,30,.72); --card-solid: #1C1C1E;
+    --surface-muted: rgba(255,255,255,.08);
     --ink: #F2F2F7; --ink-2: #E5E5EA; --ink-3: #98989F;
     --hair: rgba(255,255,255,.12);
     --blue: #0A84FF; --green: #30D158; --orange: #FF9F0A; --red: #FF453A;
