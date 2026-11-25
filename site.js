@@ -17,6 +17,8 @@
   var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>';
   var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6a8.5 8.5 0 1 0 10.6 10.6z"/></svg>';
   var HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/></svg>';
+  var CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+  var CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
 
   var SYS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/></svg>';
   var toggleBtn = null;
@@ -86,20 +88,26 @@
   // Derive the site root from this script's own URL, so links work at any depth.
   var scriptSrc = (document.currentScript && document.currentScript.src) || "";
   var siteRoot = scriptSrc.replace(/site\.js(\?.*)?(#.*)?$/, "");
+  /* Alphabetical by label, always (case-insensitive): the bar is a public
+     index, so its order must be stable and predictable, never editorial.
+     test_nav_order.py enforces this. ("Open Models" before "OpenAI": space
+     sorts before "A"; "Terafab" before "TSLA": "te" < "ts".)
+     Keep each line's exact text: publish_public.sh scrubs the PLTR and
+     AI Stack lines from the public copy by string match. */
   var PAGES = [
     { slug: "ant/",    label: "ANT" },
-    { slug: "openai/", label: "OpenAI" },
-    { slug: "open-models/", label: "Open Models" },
-    { slug: "spcx/",   label: "SPCX" },
-    { slug: "tsla/",   label: "TSLA" },
-    { slug: "usar/",   label: "USAR" },
-        { slug: "rivian/", label: "RIVN" },
     { slug: "asml/",   label: "ASML" },
     { slug: "googl/",  label: "GOOGL" },
-    { slug: "nvda/",   label: "NVDA" },
     { slug: "spacex-tesla-merger/", label: "Merger" },
+    { slug: "nvda/",   label: "NVDA" },
+    { slug: "open-models/", label: "Open Models" },
+    { slug: "openai/", label: "OpenAI" },
+        { slug: "rivian/", label: "RIVN" },
+    { slug: "rocket-lab/", label: "RKLB" },
+    { slug: "spcx/",   label: "SPCX" },
     { slug: "terafab/", label: "Terafab" },
-    { slug: "rocket-lab/", label: "RKLB" }
+    { slug: "tsla/",   label: "TSLA" },
+    { slug: "usar/",   label: "USAR" }
   ];
   function currentSlug() {
     try {
@@ -123,6 +131,32 @@
     links.scrollLeft += (ar.left + ar.width / 2) - (lr.left + lr.width / 2);
   }
 
+  function scrollLinks(links, dir) {
+    /* iOS-style paging: one swipe-width at a time, smooth unless the user
+       asked for reduced motion. The strip itself keeps native momentum
+       swipe on touch; these buttons are the click/tap equivalent. */
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var amount = Math.round(links.clientWidth * 0.8) * dir;
+    try {
+      links.scrollBy({ left: amount, behavior: reduced ? "auto" : "smooth" });
+    } catch (e) {
+      links.scrollLeft += amount;
+    }
+  }
+
+  function updateScrollState(nav, links, prevBtn, nextBtn) {
+    /* Chevrons and edge fades exist only when there is more to scroll in
+       that direction; when everything fits, both chevrons vanish. */
+    var max = links.scrollWidth - links.clientWidth;
+    var canL = links.scrollLeft > 4;
+    var canR = max > 4 && links.scrollLeft < max - 4;
+    nav.classList.toggle("can-scroll-l", canL);
+    nav.classList.toggle("can-scroll-r", canR);
+    nav.classList.toggle("no-overflow", max <= 4);
+    prevBtn.disabled = !canL;
+    nextBtn.disabled = !canR;
+  }
+
   function buildNav() {
     var slug = currentSlug();
     var nav = document.createElement("nav");
@@ -139,6 +173,12 @@
     var div0 = document.createElement("div");
     div0.className = "nav-divider";
     nav.appendChild(div0);
+    var prevBtn = document.createElement("button");
+    prevBtn.className = "nav-scroll nav-scroll-prev";
+    prevBtn.type = "button";
+    prevBtn.innerHTML = CHEV_L;
+    prevBtn.setAttribute("aria-label", "Scroll theses left");
+    nav.appendChild(prevBtn);
     var links = document.createElement("div");
     links.className = "nav-links";
     PAGES.forEach(function (p) {
@@ -150,6 +190,12 @@
       links.appendChild(a);
     });
     nav.appendChild(links);
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "nav-scroll nav-scroll-next";
+    nextBtn.type = "button";
+    nextBtn.innerHTML = CHEV_R;
+    nextBtn.setAttribute("aria-label", "Scroll theses right");
+    nav.appendChild(nextBtn);
     var div = document.createElement("div");
     div.className = "nav-divider";
     nav.appendChild(div);
@@ -160,8 +206,15 @@
     nav.appendChild(toggleBtn);
     document.body.insertBefore(nav, document.body.firstChild);
     paintToggle();
+    prevBtn.addEventListener("click", function () { scrollLinks(links, -1); });
+    nextBtn.addEventListener("click", function () { scrollLinks(links, 1); });
+    function refresh() { updateScrollState(nav, links, prevBtn, nextBtn); }
+    links.addEventListener("scroll", refresh, { passive: true });
+    window.addEventListener("resize", refresh);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
     centerActive(links);
-    if (window.requestAnimationFrame) window.requestAnimationFrame(function () { centerActive(links); });
+    refresh();
+    if (window.requestAnimationFrame) window.requestAnimationFrame(function () { centerActive(links); refresh(); });
   }
 
   if (document.readyState === "loading") {

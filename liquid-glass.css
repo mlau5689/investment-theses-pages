@@ -168,6 +168,33 @@ a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-ra
 .site-nav a.nav-link:hover { background: rgba(142,142,147,.16); color: var(--ink); text-decoration: none; }
 .site-nav a.nav-link.active { background: var(--blue-t); color: var(--blue); font-weight: 700; }
 .site-nav a.nav-link svg { width: 16px; height: 16px; }
+/* Click-scroll chevrons: iOS-style, they exist only when there is more to
+   scroll in that direction, and vanish entirely when everything fits. */
+.site-nav .nav-scroll {
+  border: none; background: transparent; cursor: pointer; flex: none;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; color: var(--ink-2);
+  transition: opacity .25s var(--ease-ios);
+}
+.site-nav .nav-scroll:hover { background: rgba(142,142,147,.16); color: var(--ink); }
+.site-nav .nav-scroll svg { width: 16px; height: 16px; }
+.site-nav .nav-scroll:disabled { opacity: .28; pointer-events: none; }
+.site-nav.no-overflow .nav-scroll { display: none; }
+/* Edge fades on the scrollable strip, so the pills visibly continue past the
+   dock's edge instead of clipping hard. Mask (not an overlay) so the blur
+   behind the dock still shows through. */
+.site-nav.can-scroll-l .nav-links {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 100%);
+  mask-image: linear-gradient(to right, transparent, #000 28px, #000 100%);
+}
+.site-nav.can-scroll-r .nav-links {
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent);
+}
+.site-nav.can-scroll-l.can-scroll-r .nav-links {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+}
 .site-nav .nav-divider { width: 1px; height: 24px; background: var(--hair); flex: none; margin: 0 4px; }
 .site-nav a.nav-home {
   display: inline-flex; align-items: center; justify-content: center;
